@@ -1,0 +1,3 @@
+function isotropic_hardening_rate = isotropic_hardening_evolution(plastic_multiplier)
+isotropic_hardening_rate = plastic_multiplier;
+end

@@ -1,0 +1,5 @@
+mex mtimesx.c -DDEFINEUNIX -largeArrayDims -lmwblas CFLAGS="$CFLAGS -DNDEBUG -Ofast -O3 -march=native -fopenmp" LDFLAGS="$LDFLAGS -fopenmp"
+
+% CXXFLAGS="$CXXFLAGS -fopenmp" LDFLAGS="$LDFLAGS -fopenmp"
+% mex -v GCC='/usr/bin/gcc49' mtimesx.c -DDEFINEUNIX -largeArrayDims -lmwblas
+% mex CXXFLAGS="\$CXXFLAGS -std=c++11 -fopenmp" CXXOPTIMFLAGS='\$CXXOPTIMFLAGS -Ofast -DNDEBUG' LDOPTIMFLAGS="$LDOPTIMFLAGS -fopenmp -O2" -lgomp -I"/home/khue/Libs/Eigen" mexMyFunction.cpp

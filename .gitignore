@@ -1,0 +1,15 @@
+*.m~
+*.mat
+*.dat
+*.asv
+*.xdmf
+*.h5
+*.o
+*.pvd
+*.vtu
+\.tags1
+\.tags
+
+output
+profile_results/
+

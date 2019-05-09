@@ -1,0 +1,6 @@
+[submodule "submodules/mbeautifier"]
+	path = submodules/mbeautifier
+	url = https://github.com/davidvarga/MBeautifier.git
+[submodule "submodules/matlab2tikz"]
+	path = submodules/matlab2tikz
+	url = https://github.com/matlab2tikz/matlab2tikz.git
