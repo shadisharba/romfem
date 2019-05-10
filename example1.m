@@ -7,7 +7,7 @@ tic;
 main(0, @() one_cycle('latin'));
 toc;
 tic;
-main(0, @() one_cycle('NR'));
+main(0, @() one_cycle('nr'));
 toc;
 
 % #!/bin/bash

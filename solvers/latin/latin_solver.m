@@ -130,10 +130,13 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
     end
 end
 
+% collect the solution "after convergence" in global_fields
+global_fields.initial_values = local_fields.initial_values;
+%%{ internal variables
 global_fields.back_stress = local_fields.back_stress;
 global_fields.isotropic_hardening = local_fields.isotropic_hardening;
 global_fields.internal_damage = local_fields.internal_damage;
-global_fields.initial_values = local_fields.initial_values;
+%}
 
 solution = extract_relevant_info(numerical_model_obj, global_fields, solver_parameters, cycles_to_save);
 solution.results.err_indicator = err_indicator;

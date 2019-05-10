@@ -1,4 +1,4 @@
-function solution = newton_solver_pod(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, previous_cycle)
+function solution = newton_solver_pod(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, previous_cycle, rb)
 global build_mode_debug;
 global convergence_plot;
 global save_mat_files;
@@ -39,20 +39,18 @@ local_fields = global_fields;
 free_dof = numerical_model_obj.boundary_conditions.free_dof;
 submesh = numerical_model_obj.submesh;
 
-ROB = load('pod_rob.mat');
-nn=1;
-gradient_operator_r = (ROB.u(:,1:nn)'*submesh.gradient_operator(:,free_dof)')';
-integral_gradient_operator_r = submesh.integral_gradient_operator(:,free_dof)*ROB.u(:,1:nn);
+gradient_operator_r = submesh.gradient_operator(:, free_dof) * rb;
+integral_gradient_operator_r = submesh.integral_gradient_operator(:, free_dof) * rb;
 
 for time_step = 2:length(numerical_model_obj.temporal.mesh)
     
     % displacment control only
-    f_ext = ROB.u(:,1:nn)'*zeros(length(free_dof), 1);
+    f_ext = rb' * zeros(length(free_dof), 1);
     % elastic solution
     displacement = global_fields.elastic_result.displacement(:, time_step);
     strain = global_fields.elastic_result.strain(:, time_step);
     
-    norm_first_residual_free_dof = norm(ROB.u(:,1:nn)'*global_fields.elastic_result.first_residual(:, time_step));
+    norm_first_residual_free_dof = norm(rb'*global_fields.elastic_result.first_residual(:, time_step));
     
     local_fields = update_internal_variables(numerical_model_obj, strain, global_fields.initial_values, time_step, solver_parameters, true);
     
@@ -74,7 +72,7 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
         
         delta_displacement = stiffness \ minus_residual;
         
-        displacement(free_dof) = displacement(free_dof) + ROB.u(:,1:nn) * delta_displacement;
+        displacement(free_dof) = displacement(free_dof) + rb * delta_displacement;
         
         relative_err = compute_relative_error(minus_residual, norm_first_residual_free_dof, delta_displacement, norm(displacement(free_dof)));
         
@@ -116,7 +114,6 @@ if build_mode_debug
     fprintf('---> #%5d, err %e,  %d,  stress %e,  strain %e,  D %e \n', ...
         0, 0, 0, ...
         max(equivalent_stress(:)), max(j2_eps(:)), max_damage);
-    
     
     
 end

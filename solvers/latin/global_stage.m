@@ -27,11 +27,11 @@ global_fields.number_of_modes(end+1) = size(global_fields.strain_spatial_modes, 
 
 global_fields.strain = global_fields.elastic_result.strain.full + global_fields.strain_spatial_modes * global_fields.temporal_modes;
 
-global_fields.stress = local_fields.stress + local_fields.global_search_direction * (global_fields.strain - local_fields.strain); % global search direction equation
+% global_fields.stress = local_fields.stress + local_fields.global_search_direction * (global_fields.strain - local_fields.strain); % global search direction equation
 
 % TODONOW: sth wrong is going when using the following formulation
-% global_fields.sum_residual = global_fields.sum_residual - local_fields.minus_residual;
-% global_fields.stress = global_fields.elastic_result.stress.full + (global_search_direction * global_fields.strain_spatial_modes) * global_fields.temporal_modes + global_fields.sum_residual;
+global_fields.sum_residual = global_fields.sum_residual - local_fields.minus_residual;
+global_fields.stress = global_fields.elastic_result.stress.full + (local_fields.global_search_direction * global_fields.strain_spatial_modes) * global_fields.temporal_modes + global_fields.sum_residual;
 
 global_fields.strain_increment = global_fields.strain - local_fields.strain;
 global_fields.stress_increment = global_fields.stress - local_fields.stress;

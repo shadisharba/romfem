@@ -1,16 +1,17 @@
 function extract_and_save_rob()
 
-load('numerical_model.mat');
+clc
+clear
 
+!mv output/numerical_model.mat .
+
+load('numerical_model.mat');
 load('nr_solution.mat');
 
 free_dof = numerical_model_obj.boundary_conditions.free_dof;
-submesh = numerical_model_obj.submesh;
-
-[u,s,v] = svds(nr_solution(1).results.displacement(free_dof,:),20);
+[u, s, ~] = svds(nr_solution(1).results.displacement(free_dof, :), size(nr_solution(1).results.displacement, 2));
 
 semilogy(diag(s)/s(1))
-
-save('pod_rob.mat','u');
+save('pod_rob_full.mat', 'u');
 
 end
