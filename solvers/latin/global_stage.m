@@ -1,4 +1,9 @@
 function global_fields = global_stage(global_fields, numerical_model, local_fields, iter)
+% internal variables
+global_fields.back_stress = local_fields.back_stress;
+global_fields.isotropic_hardening = local_fields.isotropic_hardening;
+global_fields.internal_damage = local_fields.internal_damage;
+
 old_global_fields = global_fields;
 score = 0;
 

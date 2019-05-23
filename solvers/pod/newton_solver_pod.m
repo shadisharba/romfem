@@ -84,12 +84,8 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
         
     end
     
-    global_fields.displacement(:, time_step) = displacement;
     global_fields.stress(:, time_step) = local_fields.stress;
     global_fields.strain(:, time_step) = local_fields.strain;
-    global_fields.back_stress(:, time_step) = local_fields.back_stress;
-    global_fields.isotropic_hardening(:, time_step) = local_fields.isotropic_hardening;
-    global_fields.internal_damage(:, time_step) = local_fields.internal_damage;
     global_fields.initial_values = local_fields.initial_values;
     
     if iter == solver_parameters.max_iter

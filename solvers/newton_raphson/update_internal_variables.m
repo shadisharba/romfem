@@ -1,4 +1,5 @@
 function local_fields = update_internal_variables(numerical_model, strain, initial_values, time_step, solver_parameters, compute_tangent)
+% TODO: this update is sensitive to the time step, which is normal for the current material model but recheck the implementation!
 
 material = numerical_model.material;
 if compute_tangent

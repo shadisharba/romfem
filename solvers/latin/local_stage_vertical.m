@@ -1,4 +1,4 @@
-function local_fields = local_stage_vertical(numerical_model, old_global_fields, ~, solver_parameters)
+function local_fields = local_stage_vertical(numerical_model, old_global_fields, solver_parameters)
 
 local_fields.initial_values = old_global_fields.initial_values;
 
@@ -12,11 +12,10 @@ for time_step = 2:length(numerical_model.temporal.mesh)
     
     local_fields.stress(:, time_step) = local_fields_incremental.stress;
     
-    %%{ internal variables
+    % internal variables
     local_fields.back_stress(:, time_step) = local_fields_incremental.back_stress;
     local_fields.isotropic_hardening(:, time_step) = local_fields_incremental.isotropic_hardening;
     local_fields.internal_damage(:, time_step) = local_fields_incremental.internal_damage;
-    %}
     
     local_fields.initial_values = local_fields_incremental.initial_values;
     

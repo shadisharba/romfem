@@ -67,8 +67,8 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
         hold on
     end
     
-    % local_fields = local_stage_vertical(numerical_model_obj, global_fields, local_fields, solver_parameters);
-    local_fields = local_stage_horizontal(numerical_model_obj, global_fields, local_fields, solver_parameters);
+    % local_fields = local_stage_vertical(numerical_model_obj, global_fields, solver_parameters);
+    local_fields = local_stage_horizontal(numerical_model_obj, global_fields, solver_parameters);
     if isempty(local_fields)
         solution = [];
         return
@@ -88,7 +88,7 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
         equivalent_stress = sqrt(3/2.*double_dot_product(deviatoric_stress, deviatoric_stress));
         equivalent_strain = compute_equivalent_strain(global_fields.strain);
         
-        max_damage = full(max(local_fields.internal_damage(:)));
+        max_damage = full(max(local_fields.initial_values.internal_damage(:)));
         if nnz(max_damage) == 0
             max_damage = 0;
         end
@@ -130,13 +130,8 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
     end
 end
 
-% collect the solution "after convergence" in global_fields
+% collect the initial_values "after convergence" in global_fields
 global_fields.initial_values = local_fields.initial_values;
-%%{ internal variables
-global_fields.back_stress = local_fields.back_stress;
-global_fields.isotropic_hardening = local_fields.isotropic_hardening;
-global_fields.internal_damage = local_fields.internal_damage;
-%}
 
 solution = extract_relevant_info(numerical_model_obj, global_fields, solver_parameters, cycles_to_save);
 solution.results.err_indicator = err_indicator;

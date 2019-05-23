@@ -20,11 +20,10 @@ R_out.results.stress = copy_cyclic(R_in.results.stress, scaling_factor, shift);
 R_out.results.strain = copy_cyclic(R_in.results.strain, scaling_factor, shift);
 R_out.results.sum_residual = copy_cyclic(R_in.results.sum_residual, scaling_factor, shift);
 
-%%{ internal variables
+% internal variables
 R_out.results.back_stress = copy_cyclic(R_in.results.back_stress, scaling_factor, shift);
 R_out.results.isotropic_hardening = repmat(R_in.results.isotropic_hardening(:, end), [1, size(R_in.results.isotropic_hardening, 2)]);
 R_out.results.internal_damage = repmat(R_in.results.internal_damage(:, end), [1, size(R_in.results.internal_damage, 2)]);
-%}
 
 % plot([R_in.results.elastic_result.(field{:}).temporal_modes,nan,R_out.results.elastic_result.(field{:}).temporal_modes])
 % id6 = 148 * 6 - 3;
