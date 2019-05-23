@@ -96,7 +96,7 @@ xlabel('Time (sec)');
 box on; grid on; hold off
 
 subplot(5, 1, 4);
-err = abs(stress1-stress2) ./ stress1;
+err = abs(stress1-stress2) / norm(stress1);
 err(~isfinite(err)) = 0;
 err = err * 100;
 plot(tempoal_domain, err);
@@ -106,7 +106,7 @@ title('stress');
 box on; grid on; hold off
 
 subplot(5, 1, 5);
-err = abs(strain1-strain2) ./ strain1;
+err = abs(strain1-strain2) / norm(strain1);
 err(~isfinite(err)) = 0;
 err = err * 100;
 plot(tempoal_domain, err);
@@ -134,3 +134,39 @@ legend
 ylabel('Normalised error indicator');
 xlabel('Number of iterations');
 saveastex('output/temporal_scheme_1_4.tex', save_figure)
+
+%% plot energy
+clc
+close all
+load('matlab.mat', 'numerical_model_obj');
+
+solution2 = latin;
+
+damage = solution2.internal_damage;
+stress = solution2.stress;
+strain = solution2.strain;
+back_stress = solution2.back_stress;
+isotropic_hardening = solution2.isotropic_hardening;
+ 
+material = numerical_model_obj.material;
+elastic_strain = compute_elastic_strain(stress, material.inv_elasticity_tensor_diagonal, repelem(damage, 6, 1));
+free_energy = 0.5 * double_dot_product(stress, elastic_strain) + ...
+    material.user_material.c / 2 * double_dot_product(compute_internal_kinematic(material,back_stress), compute_internal_kinematic(material,back_stress)) + ...
+    material.user_material.r_inf * (isotropic_hardening + exp(-material.user_material.r_exp * isotropic_hardening)/material.user_material.r_exp);
+% surf(free_energy)
+subplot(4,1,1)
+plot(free_energy(885,:))
+
+[equivalent_apparent_stress, deviatoric_apparent_stress, equivalent_stress] = compute_equivalent_stress(stress, back_stress, repelem(damage, 6, 1));
+dissipation = max(0, equivalent_apparent_stress-isotropic_hardening-material.user_material.sigma_y) + ...
+    material.user_material.a / (2*material.user_material.c) * double_dot_product(back_stress, back_stress) + ...
+    material.user_material.S / (material.user_material.s+1) * (((compute_energy_release_rate(stress, material.inv_elasticity_tensor_diagonal, damage) ./ material.user_material.S).^(material.user_material.s+1)) ./ (1 - damage));
+% surf(dissipation)
+subplot(4,1,2)
+plot(dissipation(885,:))
+
+subplot(4,1,3)
+plot(cumsum(dissipation(885,:)))
+
+subplot(4,1,4)
+plot(damage(148,:))

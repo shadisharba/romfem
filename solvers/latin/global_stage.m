@@ -34,8 +34,25 @@ global_fields.strain = global_fields.elastic_result.strain.full + global_fields.
 
 % global_fields.stress = local_fields.stress + local_fields.global_search_direction * (global_fields.strain - local_fields.strain); % global search direction equation
 
-% TODONOW: sth wrong is going when using the following formulation
 global_fields.sum_residual = global_fields.sum_residual - local_fields.minus_residual;
+
+%%{
+% TODONOW
+v1 = global_fields.temporal_modes./(sqrt(sum(global_fields.temporal_modes.^2,2)));
+stress_space_modes = global_fields.sum_residual * v1';
+global_fields.sum_residual = stress_space_modes * v1;
+% compare the error with nr
+% % - stress formulation using \hat{f} then svd on that and check the decay of singular values [use H-matrices here?]
+% % imagesc(global_fields.sum_residual)
+% % x = global_fields.sum_residual - global_fields.strain_spatial_modes * (global_fields.strain_spatial_modes' * global_fields.sum_residual);
+% % x2 = global_fields.sum_residual - y;
+% % [u,s,v] = svds(global_fields.sum_residual,40); % randomised_svd
+% % % semilogy(diag(s)/s(1))
+% % global_fields.sum_residual = u * s * v';
+% % norm(stress - V * S * L')/norm(stress)
+% % [q,r]=qr(stress,0); // Reflectors and QR for the stress decomposition
+%}
+
 global_fields.stress = global_fields.elastic_result.stress.full + (local_fields.global_search_direction * global_fields.strain_spatial_modes) * global_fields.temporal_modes + global_fields.sum_residual;
 
 global_fields.strain_increment = global_fields.strain - local_fields.strain;

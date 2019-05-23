@@ -12,6 +12,8 @@ solver_parameters.solver = 'nr';
 nr_timing = toc;
 save('nr_solution.mat', 'nr_solution', 'nr_timing');
 
+% !mv output/numerical_model.mat .
+
 !rm -rf output/*
 tic;
 solver_parameters.solver = 'latin';
