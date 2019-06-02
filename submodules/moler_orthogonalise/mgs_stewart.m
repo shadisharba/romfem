@@ -1,6 +1,10 @@
+% Posted by Cleve Moler, October 17, 2016
+% downloaded from: https://blogs.mathworks.com/cleve/2016/10/17/compare-gram-schmidt-and-householder-orthogonalization-algorithms-2/
+
 function [Q, R] = mgs_stewart(X)
 % Modified Gram-Schmidt.  [Q,R] = mgs(X);
 % G. W. Stewart, "Matrix Algorithms, Volume 1", SIAM, 1998.
+
 [n, p] = size(X);
 Q = zeros(n, p);
 R = zeros(p, p);

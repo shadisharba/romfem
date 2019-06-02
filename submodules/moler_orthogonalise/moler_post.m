@@ -1,3 +1,21 @@
+% Posted by Cleve Moler, October 27, 2016
+% downloaded from: https://blogs.mathworks.com/cleve/2016/10/27/apologies-to-gram-schmidt/
+
+%% References
+% G. W. Stewart,
+% _Matrix Algorithms: Volume 1: Basic Decompositions_,
+% SIAM, xix+458, 1998.
+% <http://epubs.siam.org/doi/book/10.1137/1.9781611971408
+% http://epubs.siam.org/doi/book/10.1137/1.9781611971408>
+%
+% Ake Bjorck,
+% _Numerical Methods for Least Squares Problems_,
+% SIAM, xvii+407, 1996.
+% <http://epubs.siam.org/doi/book/10.1137/1.9781611971484
+% http://epubs.siam.org/doi/book/10.1137/1.9781611971484>
+
+%%
+% _Copyright 2016 The MathWorks, Inc._
 
 %% Apologies to Gram-Schmidt
 % This is a follow-up to my previous follow-up,
@@ -129,19 +147,3 @@ compare(X);
 % * Modified Gram-Schmidt.  |Q'*Q| varies like the condition of |X|
 %   and fails completely when |X| is singular.
 % * Householder triangularization.  |Q'*Q| is always close to |I|
-
-%% References
-% G. W. Stewart,
-% _Matrix Algorithms: Volume 1: Basic Decompositions_,
-% SIAM, xix+458, 1998.
-% <http://epubs.siam.org/doi/book/10.1137/1.9781611971408
-% http://epubs.siam.org/doi/book/10.1137/1.9781611971408>
-%
-% Ake Bjorck,
-% _Numerical Methods for Least Squares Problems_,
-% SIAM, xvii+407, 1996.
-% <http://epubs.siam.org/doi/book/10.1137/1.9781611971484
-% http://epubs.siam.org/doi/book/10.1137/1.9781611971484>
-
-%%
-% _Copyright 2016 The MathWorks, Inc._

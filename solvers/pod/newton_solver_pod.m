@@ -16,7 +16,7 @@ end
 
 if isempty(previous_cycle)
     numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh);
-    if save_mat_files && build_mode_debug
+    if save_mat_files
         warning('off', 'all');
         save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
         warning('on', 'all');

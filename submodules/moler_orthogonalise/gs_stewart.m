@@ -1,6 +1,10 @@
+% Posted by Cleve Moler, October 27, 2016
+% downloaded from: https://blogs.mathworks.com/cleve/2016/10/27/apologies-to-gram-schmidt/
+
 function [Q, R] = gs_stewart(X)
 % Classical Gram-Schmidt.  [Q,R] = gs(X);
 % G. W. Stewart, "Matrix Algorithms, Volume 1", SIAM, 1998.
+
 [n, p] = size(X);
 Q = zeros(n, p);
 R = zeros(p, p);

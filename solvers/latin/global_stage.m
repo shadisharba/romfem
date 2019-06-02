@@ -1,4 +1,4 @@
-function global_fields = global_stage(global_fields, numerical_model, local_fields, iter)
+function global_fields = global_stage(global_fields, numerical_model, local_fields, iter, solver_parameters)
 % internal variables
 global_fields.back_stress = local_fields.back_stress;
 global_fields.isotropic_hardening = local_fields.isotropic_hardening;
@@ -22,7 +22,7 @@ if max(score) < 0.1 % TODO: 0.3 %parameter
 end
 
 % the essential boundary and initial conditions are still satisfied when computing global_fields.displacement_spatial_modes * global_fields.temporal_modes
-if size(global_fields.displacement_spatial_modes, 2) > 1
+if size(global_fields.strain_spatial_modes, 2) > 1
     [global_fields.strain_spatial_modes, global_fields.temporal_modes] = orthogonalise_space_modes(global_fields.strain_spatial_modes, global_fields.temporal_modes, 'svds_decomposed');
 end
 % [global_fields.displacement_spatial_modes, global_fields.temporal_modes] = orthogonalise_space_modes(global_fields.displacement_spatial_modes, global_fields.temporal_modes, 'svds');
@@ -38,9 +38,11 @@ global_fields.sum_residual = global_fields.sum_residual - local_fields.minus_res
 
 %%{
 % TODONOW
-v1 = global_fields.temporal_modes./(sqrt(sum(global_fields.temporal_modes.^2,2)));
-stress_space_modes = global_fields.sum_residual * v1';
-global_fields.sum_residual = stress_space_modes * v1;
+if solver_parameters.stress_pgd
+    v1 = global_fields.temporal_modes./(sqrt(sum(global_fields.temporal_modes.^2,2)));
+    stress_space_modes = global_fields.sum_residual * v1';
+    global_fields.sum_residual = stress_space_modes * v1;
+end
 % compare the error with nr
 % % - stress formulation using \hat{f} then svd on that and check the decay of singular values [use H-matrices here?]
 % % imagesc(global_fields.sum_residual)

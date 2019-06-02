@@ -16,7 +16,7 @@ end
 
 if isempty(previous_cycle)
     numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh);
-    if save_mat_files && build_mode_debug
+    if save_mat_files
         warning('off', 'all');
         save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
         warning('on', 'all');
@@ -83,6 +83,7 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
     
     global_fields.stress(:, time_step) = local_fields.stress;
     global_fields.strain(:, time_step) = local_fields.strain;
+    global_fields.internal_damage(:, time_step) = local_fields.internal_damage;
     global_fields.initial_values = local_fields.initial_values;
     
     if iter == solver_parameters.max_iter
@@ -112,7 +113,7 @@ if build_mode_debug
     
 end
 
-solution = extract_relevant_info(numerical_model_obj, global_fields, solver_parameters, cycles_to_save);
+solution = extract_relevant_info(numerical_model_obj, global_fields, relative_err, solver_parameters, cycles_to_save);
 
 diary off
 end

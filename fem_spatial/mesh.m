@@ -145,7 +145,7 @@ classdef mesh < handle
                     
                     
                     
-                    global_gradient_operator = global_gradient_operator ./ [1, 1, 1, sqrt(2), sqrt(2), sqrt(2)]'; % Mandel notation [sqrt(2) = 1/2 * sqrt(2)] % https://en.wikipedia.org/wiki/Deformation_(mechanics)
+                    global_gradient_operator = global_gradient_operator ./ [1, 1, 1, sqrt(2), sqrt(2), sqrt(2)]'; % Mandel notation [1 / sqrt(2) = 1/2 * sqrt(2)] % https://en.wikipedia.org/wiki/Deformation_(mechanics)
                     % 6 components x (8 nodes x 3 dof)
                     
                     element_local_shape_functions_stack{quadrature_idx} = local_shape_functions_evaluated;

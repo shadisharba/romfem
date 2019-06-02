@@ -1,4 +1,7 @@
-function compare_stewart(X)
+% Posted by Cleve Moler, October 17, 2016
+% downloaded from: https://blogs.mathworks.com/cleve/2016/10/17/compare-gram-schmidt-and-householder-orthogonalization-algorithms-2/
+
+function moler_compare(X)
 % compare(X). Compare three QR decompositions.
 
 I = eye(size(X));

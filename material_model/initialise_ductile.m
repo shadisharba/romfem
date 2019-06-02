@@ -16,7 +16,7 @@ if isempty(initial_guess)
     global_fields.strain = global_fields.elastic_result.strain.full;
     global_fields.sum_residual = zeros(n_gp*gp_dof, numerical_model.temporal.dof);
     
-    global_fields.displacement_spatial_modes = [];
+    % global_fields.displacement_spatial_modes = [];
     global_fields.strain_spatial_modes = [];
     global_fields.temporal_modes = [];
     
@@ -39,7 +39,7 @@ else
     global_fields.strain = initial_guess.strain;
     global_fields.sum_residual = initial_guess.sum_residual;
     
-    global_fields.displacement_spatial_modes = initial_guess.displacement_spatial_modes;
+    % global_fields.displacement_spatial_modes = initial_guess.displacement_spatial_modes;
     global_fields.strain_spatial_modes = initial_guess.strain_spatial_modes;
     global_fields.temporal_modes = initial_guess.temporal_modes;
     

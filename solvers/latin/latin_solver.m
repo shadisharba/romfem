@@ -16,7 +16,7 @@ end
 
 if isempty(previous_cycle)
     numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh);
-    if save_mat_files && build_mode_debug
+    if save_mat_files
         warning('off', 'all');
         save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
         warning('on', 'all');
@@ -74,7 +74,7 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
         return
     end
     
-    global_fields = global_stage(global_fields, numerical_model_obj, local_fields, iter);
+    global_fields = global_stage(global_fields, numerical_model_obj, local_fields, iter, solver_parameters);
     
     err_indicator = error_indicator(global_fields, numerical_model_obj.submesh, numerical_model_obj.temporal, iter, err_indicator);
     
@@ -133,7 +133,7 @@ end
 % collect the initial_values "after convergence" in global_fields
 global_fields.initial_values = local_fields.initial_values;
 
-solution = extract_relevant_info(numerical_model_obj, global_fields, solver_parameters, cycles_to_save);
+solution = extract_relevant_info(numerical_model_obj, global_fields, err_indicator, solver_parameters, cycles_to_save);
 solution.results.err_indicator = err_indicator;
 
 diary off

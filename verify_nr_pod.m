@@ -1,16 +1,16 @@
 function verify_nr_pod(input_file_name)
 
 add_folder_to_path
+!rm -rf output/*
 
 rng(0)
 [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name('any');
 
-!rm -rf output/*
 tic;
 solver_parameters.solver = 'nr';
-[~, nr_solution] = solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, true);
+solver_parameters.output_path = 'output/nr/plate_mesh';
+solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
 nr_timing = toc;
-save('nr_solution.mat', 'nr_solution', 'nr_timing');
 
 extract_and_save_rob()
 
@@ -19,13 +19,16 @@ u = load('pod_rob_full.mat');
 u = u.u(:, 1:n);
 save('pod_rob.mat', 'u');
 
-!rm -rf output/*
 tic;
 solver_parameters.solver = 'nr_pod';
-[~, nr_pod_solution] = solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, true);
+solver_parameters.output_path = 'output/nr_pod/plate_mesh';
+solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
 nr_pod_timing = toc;
-save('nr_pod_solution.mat', 'nr_pod_solution', 'nr_pod_timing');
 
-post_process_verify()
+diary('output/speedup.txt')
+fprintf('NR : %e,\t latin : %e, \t speedup %e \n', nr_timing, nr_pod_timing, nr_timing/nr_pod_timing);
+diary('off')
 
+% error = norm(solution1.displacement-solution2.displacement) / norm(solution1.displacement);
+% disp(error * 100)
 end

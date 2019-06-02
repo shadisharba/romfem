@@ -1,8 +1,12 @@
+% Posted by Cleve Moler, October 3, 2016
+% downloaded from: https://blogs.mathworks.com/cleve/2016/10/03/householder-reflections-and-the-qr-decomposition/
+
 function [U, R] = house_qr_stewart(A)
 % Householder reflections for QR decomposition.
 % [U,R] = house_qr(A) returns
 % U, the reflector generators for use by house_apply.
 % R, the upper triangular factor.
+
 H = @(u, x) x - u * (u' * x);
 [m, n] = size(A);
 U = zeros(m, n);
@@ -22,6 +26,7 @@ function [u, nu] = house_gen(x)
 % [u,nu] = housegen(x).
 % H = I - uu' with Hx = -+ nu e_1
 %    returns nu = norm(x).
+
 u = x;
 nu = norm(x);
 if nu == 0

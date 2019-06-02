@@ -1,24 +1,25 @@
 function verify_latin_nr(input_file_name)
 
 add_folder_to_path
+!rm -rf output/*
 
 rng(0)
 [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name('any');
 
-!rm -rf output/*
 tic;
 solver_parameters.solver = 'nr';
-[~, nr_solution] = solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, true);
+solver_parameters.output_path = 'output/nr/plate_mesh';
+solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
 nr_timing = toc;
-save('nr_solution.mat', 'nr_solution', 'nr_timing');
 
-% !mv output/numerical_model.mat .
-
-!rm -rf output/*
 tic;
 solver_parameters.solver = 'latin';
-[~, latin_solution] = solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, true);
+solver_parameters.output_path = 'output/latin/plate_mesh';
+solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
 latin_timing = toc;
-save('latin_solution.mat', 'latin_solution', 'latin_timing');
+
+diary('output/speedup.txt')
+fprintf('NR : %e,\t latin : %e, \t speedup %e \n', nr_timing, latin_timing, nr_timing/latin_timing);
+diary('off')
 
 end
