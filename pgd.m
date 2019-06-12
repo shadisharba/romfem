@@ -14,7 +14,6 @@ classdef pgd < handle
             obj.temporal_modes = temporal_modes;
         end
         function full_x = full(obj)
-            warning('full is being used');
             full_x = obj.spatial_modes * obj.temporal_modes;
         end
         function deviatoric_x = deviatoric(x)

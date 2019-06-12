@@ -21,8 +21,6 @@ for cycle_number = 1:length(user_load) % compute the cycles incrementally
     elseif strcmp(solver_parameters.solver, 'nr_pod')
         rb = load('pod_rob.mat');
         current_solution = newton_solver_pod(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution, rb.u);
-    elseif strcmp(solver_parameters.solver, 'latin')
-        current_solution = latin_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution);
     else
         error('not implemented');
     end

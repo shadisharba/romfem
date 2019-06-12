@@ -46,7 +46,7 @@ for i = 1:length(amplitude)
     user_load(i) = loading(1, period, 10, amplitude(i), 0);
 end
 
-solver_parameters.solver = 'latin';
+solver_parameters.solver = 'nr';
 solver_parameters.elasticity_reduction_factor = 0.41;
 solver_parameters.max_iter = 100;
 solver_parameters.stagnation_tol = 1E-3;
