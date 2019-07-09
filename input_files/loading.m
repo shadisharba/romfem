@@ -17,7 +17,7 @@ classdef loading < handle
             total_time = number_of_cycles * period;
             number_of_time_steps = number_of_cycles * steps_per_cycle_div_4 * 4 + 1; % 4 is used to capture the wave peaks and 1 is for the time point zero
             
-            obj.temporal_mesh = linspace(0, total_time, number_of_time_steps);
+            obj.temporal_mesh = linspace(0, total_time, number_of_time_steps)';
             obj.magnitude = amplitude * sin(omega*obj.temporal_mesh+phase);
             obj.magnitude(abs(obj.magnitude) <= 1e-15) = 0; %parameter
         end
@@ -28,6 +28,10 @@ classdef loading < handle
             % shift is used for zero values in obj_old.magnitude
             shift = new_load.magnitude - scaling_factor .* old_load.magnitude;
             shift(abs(shift) <= 1e-15) = 0; %parameter
+            
+            % use scatteredInterpolant if the temporal discretisation is
+            % not the same in all the cycles
+            % https://de.mathworks.com/help/matlab/math/interpolating-scattered-data.html
         end
         
     end

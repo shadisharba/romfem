@@ -7,12 +7,12 @@ classdef numerical_model < handle
         submesh
         
         temporal
-        parameters
+        solver_parameters
         
     end
     methods
         % material mesh submesh boundary_conditions
-        function numerical_model = numerical_model(user_mesh, user_material, user_boundary_conditions, user_temporal_mesh)
+        function numerical_model = numerical_model(user_mesh, user_material, user_boundary_conditions, user_temporal_mesh,solver_parameters)
             
             numerical_model.mesh = mesh(user_mesh);
             
@@ -27,6 +27,7 @@ classdef numerical_model < handle
             
             numerical_model.temporal = temporal_mesh(user_temporal_mesh);
             
+            numerical_model.solver_parameters = solver_parameters;
         end
         
         % TODO can we change the stiffness to row-major in MATLAB?

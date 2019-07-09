@@ -17,7 +17,6 @@ topology.local_coordinates = [-1, -1, -1; ...
     1, 1, 1; ...
     -1, 1, 1];
 
-
 syms xi eta zeta % ensure the function arguments order
 shape_functions = prod(1+topology.local_coordinates'.*[xi; eta; zeta], 1) / 8;
 

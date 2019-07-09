@@ -19,12 +19,15 @@ displacement = zeros(spatial_dofs, 1);
 displacement(essential_dof) = numerical_model.boundary_conditions.essential_displacement(:, col);
 displacement(free_dof) = numerical_model.submesh.K_FF \ residual;
 
-elastic_result.first_residual = pgd(residual, temporal_function);
+is_orthogonal = false;
 
-elastic_result.displacement = pgd(displacement, temporal_function);
+elastic_result.first_residual = pgd(residual, [], temporal_function',is_orthogonal);
 
-elastic_result.strain = pgd(numerical_model.submesh.gradient_operator*displacement, temporal_function);
+elastic_result.displacement = pgd(displacement, [], temporal_function',is_orthogonal);
 
-elastic_result.stress = pgd(material.elasticity_tensor_diagonal*elastic_result.strain.spatial_modes, temporal_function);
+elastic_result.strain = numerical_model.submesh.gradient_operator* elastic_result.displacement;
+
+elastic_result.stress = material.elasticity_tensor_diagonal*elastic_result.strain;
+
 
 end

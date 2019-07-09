@@ -16,7 +16,7 @@ end
 
 if isempty(previous_cycle)
     numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh);
-    if save_mat_files && build_mode_debug
+    if save_mat_files
         warning('off', 'all');
         save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
         warning('on', 'all');
@@ -81,11 +81,8 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
         
     end
     
-    global_fields.displacement(:, time_step) = displacement;
     global_fields.stress(:, time_step) = local_fields.stress;
     global_fields.strain(:, time_step) = local_fields.strain;
-    global_fields.back_stress(:, time_step) = local_fields.back_stress;
-    global_fields.isotropic_hardening(:, time_step) = local_fields.isotropic_hardening;
     global_fields.internal_damage(:, time_step) = local_fields.internal_damage;
     global_fields.initial_values = local_fields.initial_values;
     
@@ -102,7 +99,7 @@ end
 if build_mode_debug
     deviatoric_stress = deviatoric(global_fields.stress);
     equivalent_stress = sqrt(3/2.*double_dot_product(deviatoric_stress, deviatoric_stress));
-    j2_eps = compute_equivalent_strain(global_fields.strain);
+    equivalent_strain = compute_equivalent_strain(global_fields.strain);
     
     max_damage = max(local_fields.internal_damage(:));
     if nnz(max_damage) == 0
@@ -110,13 +107,13 @@ if build_mode_debug
     end
     fprintf('---> #%5d, err %e,  %d,  stress %e,  strain %e,  D %e \n', ...
         0, 0, 0, ...
-        max(equivalent_stress(:)), max(j2_eps(:)), max_damage);
+        max(equivalent_stress(:)), max(equivalent_strain(:)), max_damage);
     
     
     
 end
 
-solution = extract_relevant_info(numerical_model_obj, global_fields, solver_parameters, cycles_to_save);
+solution = extract_relevant_info(numerical_model_obj, global_fields, relative_err, solver_parameters, cycles_to_save);
 
 diary off
 end

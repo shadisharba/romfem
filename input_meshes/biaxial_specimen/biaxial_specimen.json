@@ -1,0 +1,82 @@
+{
+    "name" : "Biaxial-nonaffine",
+    "Cores" : 2,
+    "Part": [{
+        "name" : "biaxial_specimen",
+        "Material" : "rubber"
+    }],
+    "Material" : [{
+        "name" : "rubber",
+        "ElasticModulus" : 0.4,
+        "poissons_ratio" : 0.48,
+        "NonAffineStretchParameter" : 0.1,
+        "SegmentsPerChain" : 50
+    }],
+    "steps" : [{
+        "name" : "BiaxialDisplacement",
+        "module" : "solid_mechanics",
+        "solution" : "equilibrium",
+        "nonlinear_options" : {
+            "residual_tolerance" : 1.0e-3,
+            "displacement_tolerance" : 1.0e-3
+        },
+        "time" : {
+            "period" : 1.0,
+            "increments" : {
+                "initial" : 1.0,
+                "minimum" : 1e-3,
+                "maximum" : 1.0,
+                "adaptive" : true
+            }
+        },
+        "meshes" : [{
+            "name" : "biaxial_specimen",
+            "constitutive" : {
+                "name" : "Microsphere",
+                "type" : "NonAffine",
+                "quadrature" : "BO33"
+            },
+            "element_options" : {
+                "quadrature" : "full"
+            },
+            "boundaries" :
+            [{
+                "name" : "xsym",
+                "type" : "displacement",
+                "time" : [0.0, 1.0],
+                "x" : [0.0, 0.0]
+            },
+            {
+                "name" : "ysym",
+                "type" : "displacement",
+                "time" : [0.0, 1.0],
+                "y" : [0.0, 0.0]
+            },
+            {
+                "name" : "zsym",
+                "type" : "displacement",
+                "time" : [0.0, 1.0],
+                "z" : [0.0, 0.0]
+            },
+            {
+                "name" : "xload",
+                "type" : "displacement",
+                "time" : [0.0, 1.0],
+                "x" : [0.0, 6.0]
+            },
+            {
+                "name" : "yload",
+                "type" : "displacement",
+                "time" : [0.0, 1.0],
+                "y" : [0.0, 6.0]
+            }],
+            "visualisation" : {
+                "fields" : ["displacement", "deformation_gradient", "cauchy_stress"],
+                "WriteEvery": 1
+            }
+        }],
+        "linear_solver" : {
+            "type" : "Iterative"
+        }
+    }]
+}

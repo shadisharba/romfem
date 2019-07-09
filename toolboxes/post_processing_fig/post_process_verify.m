@@ -1,143 +1,95 @@
+add_folder_to_path
+
 clc
 clear
+close all
+
+save_figure = true;
 
 [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = one_cycle('any');
+% load and temporal domain
+applied_load = cell2mat({user_load(:).magnitude});
+tempoal_domain = [0, diff(cell2mat({user_load(:).temporal_mesh}))];
+tempoal_domain = cumsum(subplus(tempoal_domain)); % tempoal_domain < 0 -> 0
 
-load('nr_solution.mat');
-load('latin_solution.mat');
+% results_path = uigetdir('output/nr');
+results_path = 'output/nr';
+names1 = dir([results_path, filesep, '*/qoi.mat']);
+results_path = 'output/latin';
+names2 = dir([results_path, filesep, '*/qoi.mat']);
+assert(length(names1) == length(names2))
 
-diary('output/speedup.txt')
-fprintf('NR : %e,\t latin : %e, \t speedup %e \n', nr_timing, latin_timing, nr_timing/latin_timing);
-diary('off')
+load('/home/alameddin/src/romfem/output/numerical_model.mat')
 
-[~, idx] = max(nr_solution(end).results.internal_damage(:, end));
-id6 = idx * 6 - 3;
+%% plot damage [all cycles on one figure w.r.t time]
+damage1 = [];
+damage2 = [];
+error_damage = zeros(length(names1), 1);
+error_stress = zeros(length(names1), 1);
+error_strain = zeros(length(names1), 1);
 
-nr_damage = [];
-nr_stress = [];
-nr_strain = [];
-latin_damage = [];
-latin_stress = [];
-latin_strain = [];
-tempoal_domain = [];
-applied_load = [];
-n_modes = [];
-t0 = 0;
-for i = 1:length(user_load)
-    applied_load = [applied_load, user_load(i).magnitude];
-    tempoal_domain = [tempoal_domain, t0 + user_load(i).temporal_mesh];
-    t0 = tempoal_domain(end);
-    nr_damage = [nr_damage, nr_solution(i).results.internal_damage(idx, :)];
-    nr_stress = [nr_stress, nr_solution(i).results.stress(id6, :)];
-    nr_strain = [nr_strain, nr_solution(i).results.strain(id6, :)];
-    latin_damage = [latin_damage, latin_solution(i).results.internal_damage(idx, :)];
-    latin_stress = [latin_stress, latin_solution(i).results.stress(id6, :)];
-    latin_strain = [latin_strain, latin_solution(i).results.strain(id6, :)];
-    n_modes = [n_modes, latin_solution(i).results.number_of_modes(end)];
+for saved_cycle = 1:length(names1)
+    solution1 = load([names1(saved_cycle).folder, filesep, names1(saved_cycle).name]);
+    solution2 = load([names2(saved_cycle).folder, filesep, names2(saved_cycle).name]);
+    idx = 148;
+    id6 = idx * 6 - 3;
+    element_id_vtk = floor(idx/8); % vtk is numbered from zero
+    % [~, id] = max(global_fields.internal_damage(:, end));
+    damage1 = [damage1, solution1.global_fields.internal_damage(idx, :)];
+    damage2 = [damage2, solution2.global_fields.internal_damage(idx, :)];
+    
+    % Volume = sum(numerical_model_obj.mesh.integration_coefficient(:))/6;
+    % T = user_load(saved_cycle).temporal_mesh(end);
+    nrm_scalar_field = @(x) sqrt(sum(temporal_integration(numerical_model_obj.mesh.integration_coefficient(1:6:end, 1:6:end)*x.^2, numerical_model_obj.temporal)));
+    
+    error_damage(saved_cycle) = nrm_scalar_field(solution1.global_fields.internal_damage-solution2.global_fields.internal_damage) / nrm_scalar_field(solution1.global_fields.internal_damage) * 100;
+    
+    nrm = @(x) sqrt(sum(temporal_integration(double_dot_product(x, spatial_integration(x, numerical_model_obj.mesh)), numerical_model_obj.temporal)));
+    
+    error_stress(saved_cycle) = nrm(solution1.global_fields.stress-solution2.global_fields.stress) / nrm(solution1.global_fields.stress) * 100;
+    
+    error_strain(saved_cycle) = nrm(solution1.global_fields.strain-solution2.global_fields.strain) / nrm(solution1.global_fields.strain) * 100;
 end
 
-%% plot damage and error
 figure
-% norm(nr_solution.results.internal_damage-latin_solution.results.internal_damage) % / norm(nr_solution.results.internal_damage)
-% volume and time average?? 1/T 1/V integral integral ...
-subplot(5, 1, [1, 2]);
-plot(tempoal_domain, nr_damage, 'LineWidth', 1.5, 'LineStyle', '-', 'Color', 'black', 'DisplayName', 'HFM');
+subplot(3, 1, [1, 2]);
+plot(tempoal_domain, damage1, 'LineWidth', 1.5, 'LineStyle', '-', 'Color', 'black', 'DisplayName', 'HFM');
 hold on
-plot(tempoal_domain, latin_damage, 'Marker', '*', 'LineWidth', 1, 'LineStyle', '--', 'Color', 'red', 'DisplayName', 'ROM');
+plot(tempoal_domain, damage2, 'Marker', '*', 'LineWidth', 1, 'LineStyle', '--', 'Color', 'red', 'DisplayName', 'ROM');
 ylabel('Damage');
 xlabel('Time (sec)');
 legend
-box on
-grid on
-hold off
+box on; grid on; hold off
 
-subplot(5, 1, 3);
-err = abs(nr_damage-latin_damage) ./ nr_damage;
+subplot(3, 1, 3);
+err = abs(damage1-damage2) ./ damage1;
 err(~isfinite(err)) = 0;
 err = err * 100;
 plot(tempoal_domain, err);
 ylabel('Relative error (%)');
 xlabel('Time (sec)');
-box on
-grid on
-hold off
+box on; grid on; hold off
+saveastex('output/damage_comparison.tex', save_figure)
 
-subplot(5, 1, 4);
-err = abs(nr_stress-latin_stress) ./ nr_stress;
-err(~isfinite(err)) = 0;
-err = err * 100;
-plot(tempoal_domain, err);
-ylabel('Relative error (%)');
-xlabel('Time (sec)');
-title('stress');
-box on
-grid on
-hold off
-
-subplot(5, 1, 5);
-err = abs(nr_strain-latin_strain) ./ nr_strain;
-err(~isfinite(err)) = 0;
-err = err * 100;
-plot(tempoal_domain, err);
-ylabel('Relative error (%)');
-xlabel('Time (sec)');
-title('strain');
-box on
-grid on
-hold off
-
-filename = 'output/temporal_scheme_1_2.tex';
-cleanfigure;
-saveas(gcf, filename(1:end-4), 'epsc')
-matlab2tikz('figurehandle', gcf, 'filename', filename, 'standalone', true);
-close
-
-%% plot load
 figure
-plot(tempoal_domain, applied_load, 'LineWidth', 1.5, 'LineStyle', '-', 'Color', 'black');
-ylabel('Prescribed displacement (mm)');
-xlabel('Time (sec)');
-% title('Number of PGD modes in each cycle');
-box on
-grid on
-hold off
-filename = 'output/temporal_scheme_1_1.tex';
-cleanfigure;
-saveas(gcf, filename(1:end-4), 'epsc')
-matlab2tikz('figurehandle', gcf, 'filename', filename, 'standalone', true);
-close
-
-%% plot number of modes
-figure
-bar(n_modes)
-ylabel('Number of PGD modes');
+subplot(3, 1, 1);
+plot(error_damage)
+ylabel('Relative error (%)');
 xlabel('Number of cycles');
-% title('Number of PGD modes in each cycle');
-box on
-grid on
-hold off
-filename = 'output/temporal_scheme_1_3.tex';
-cleanfigure;
-saveas(gcf, filename(1:end-4), 'epsc')
-matlab2tikz('figurehandle', gcf, 'filename', filename, 'standalone', true);
-close
+title('damage');
+box on; grid on; hold off
 
-%% plot error indicator
-figure
-for i = 1:length(user_load)
-    semilogy(latin_solution(i).results.err_indicator./latin_solution(i).results.err_indicator(1), 'DisplayName', sprintf('Cycle %d', i));
-    % TODO: indic(1, 1) = 1;
-    hold on
-end
-legend
-ylabel('Normalised error indicator');
-xlabel('Number of iterations');
-% title('Error indicator w.r.t. number of iterations for all nodal cycles');
-box on
-grid on
-hold off
-filename = 'output/temporal_scheme_1_4.tex';
-cleanfigure;
-saveas(gcf, filename(1:end-4), 'epsc')
-matlab2tikz('figurehandle', gcf, 'filename', filename, 'standalone', true);
-close
+subplot(3, 1, 2);
+plot(error_stress)
+ylabel('Relative error (%)');
+xlabel('Number of cycles');
+title('stress');
+box on; grid on; hold off
+
+subplot(3, 1, 3);
+plot(error_strain)
+ylabel('Relative error (%)');
+xlabel('Number of cycles');
+title('strain');
+box on; grid on; hold off
+saveastex('output/error_space_time.tex', save_figure)
