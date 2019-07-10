@@ -1,14 +1,14 @@
-function obj = extract_relevant_info(numerical_model, global_fields, err_indicator, parameters, cycles_to_save)
+function obj = extract_relevant_info(numerical_model_obj, global_fields, err_indicator, cycles_to_save)
 global save_mat_files;
 
 global_fields = frmfield(global_fields, {'strain_increment', 'stress_increment'}); % strain stress back_stress isotropic_hardening
 
 if save_mat_files && cycles_to_save
-    save(sprintf('%s/qoi.mat', parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v6');
+    save(sprintf('%s/qoi.mat', numerical_model_obj.solver_parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v6');
 end
 
 obj.results = global_fields;
-obj.numerical_model = numerical_model;
+obj.numerical_model = numerical_model_obj;
 end
 
 % it's faster to store the results in /tmp/ 

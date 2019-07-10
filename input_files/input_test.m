@@ -1,4 +1,4 @@
-function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = one_cycle_fine(solver)
+function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_test(solver)
 close all;
 clc;
 clearAllMemoizedCaches
@@ -13,9 +13,9 @@ global clean_output;
 
 build_mode_debug = true;
 convergence_plot = false;
-cyclic_plot = false;
+cyclic_plot = true;
 save_mat_files = true;
-profiler = false;
+profiler = true;
 parallel = false;
 clean_output = true;
 
@@ -23,14 +23,16 @@ if ~nargout
     return
 end
 
-user_mesh = 'plate_fine.mesh';
+user_mesh = 'plate.mesh';
 ductile_material = true;
 clamped = false; % clamped or sym B.C.
 tension = true; % tension or bending
 
-amplitude = [20] * 1e-5;
-period = [10];
-timestep_per_cycle_div4 = 8;
+amplitude = [36,38] * 1e-4;
+period = [5,10];
+% amplitude = [40,41,42,43,44,44,43,42,41,40] * 1e-4;
+% period = [5,10,5,10,5,10,5,10,5,10];
+timestep_per_cycle_div4 = 10;
 
 cycles_to_save = 1:length(amplitude);
 

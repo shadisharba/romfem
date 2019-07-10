@@ -1,38 +1,9 @@
-function solution = newton_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, previous_cycle)
+function [global_fields, relative_err] = newton_solver(numerical_model_obj, global_fields)
 global build_mode_debug;
-global convergence_plot;
-global save_mat_files;
-global cyclic_plot;
 
-%             temporal.amplitude = user_temporal.amplitude;
-% the elastic solution is already scaled to the current load
-
-solver_parameters.output_path = [solver_parameters.output_path, '_', datestr(now, 'yyyymmdd_HHMMSSFFF')];
-
-if build_mode_debug && cycles_to_save
-    mkdir(solver_parameters.output_path);
-    diary(sprintf('%s/Out_terminal.txt', solver_parameters.output_path));
-end
-
-if isempty(previous_cycle)
-    numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh);
-    if save_mat_files
-        warning('off', 'all');
-        save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
-        warning('on', 'all');
-    end
-    % Initialisation
-    global_fields = initialise_ductile(numerical_model_obj, []);
-else
-    numerical_model_obj = previous_cycle.numerical_model;
-    numerical_model_obj.temporal = temporal_mesh(user_load.temporal_mesh);
-    user_boundary_conditions(1).magnitude(1, :) = user_load.magnitude;
-    numerical_model_obj.boundary_conditions = boundary_conditions(previous_cycle.numerical_model.mesh, user_boundary_conditions);
-    
-    % cycle by cycle
-    % initialisation based on the previously generated modes
-    global_fields = initialise_ductile(numerical_model_obj, previous_cycle.results);
-end
+global_fields.stress = full(global_fields.stress);
+global_fields.strain = full(global_fields.strain);
+global_fields.displacement = zeros(numerical_model_obj.mesh.dof,numerical_model_obj.temporal.dof);
 
 local_fields = global_fields;
 
@@ -49,7 +20,7 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
     
     norm_first_residual_free_dof = norm(global_fields.elastic_result.first_residual(:, time_step));
     
-    local_fields = update_internal_variables(numerical_model_obj, strain, global_fields.initial_values, time_step, solver_parameters, true);
+    local_fields = update_internal_variables(numerical_model_obj, strain, global_fields.initial_values, time_step, true);
     
     f_int = submesh.integral_gradient_operator' * local_fields.stress;
     minus_residual = f_ext - f_int(free_dof);
@@ -57,7 +28,7 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
     
     iter = 0;
     
-    while norm(relative_err) > solver_parameters.convergence_tol && iter < solver_parameters.max_iter
+    while norm(relative_err) > numerical_model_obj.solver_parameters.convergence_tol && iter < numerical_model_obj.solver_parameters.max_iter
         
         stiffness = submesh.gradient_operator' * local_fields.algorithmic_tangent_diagonal * submesh.integral_gradient_operator;
         
@@ -75,18 +46,19 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
         
         strain = numerical_model_obj.submesh.gradient_operator * displacement;
         
-        local_fields = update_internal_variables(numerical_model_obj, strain, global_fields.initial_values, time_step, solver_parameters, true);
+        local_fields = update_internal_variables(numerical_model_obj, strain, global_fields.initial_values, time_step, true);
         
         iter = iter + 1;
         
     end
     
+    global_fields.displacement(:, time_step) = displacement;
     global_fields.stress(:, time_step) = local_fields.stress;
     global_fields.strain(:, time_step) = local_fields.strain;
     global_fields.internal_damage(:, time_step) = local_fields.internal_damage;
     global_fields.initial_values = local_fields.initial_values;
     
-    if iter == solver_parameters.max_iter
+    if iter == numerical_model_obj.solver_parameters.max_iter
         warning('Newton-Raphson solver did not converge, current relative error: %e', norm(relative_err));
     end
     
@@ -97,38 +69,11 @@ for time_step = 2:length(numerical_model_obj.temporal.mesh)
 end
 
 if build_mode_debug
-    deviatoric_stress = deviatoric(global_fields.stress);
-    equivalent_stress = sqrt(3/2.*double_dot_product(deviatoric_stress, deviatoric_stress));
-    equivalent_strain = compute_equivalent_strain(global_fields.strain);
-    
     max_damage = max(local_fields.internal_damage(:));
     if nnz(max_damage) == 0
         max_damage = 0;
     end
-    fprintf('---> #%5d, err %e,  %d,  stress %e,  strain %e,  D %e \n', ...
-        0, 0, 0, ...
-        max(equivalent_stress(:)), max(equivalent_strain(:)), max_damage);
-    
-    
-    
+    fprintf('--- --- --- > maximum damage %e \n', max_damage);
 end
 
-solution = extract_relevant_info(numerical_model_obj, global_fields, relative_err, solver_parameters, cycles_to_save);
-
-diary off
-end
-
-
-function relative_err = compute_relative_error(minus_residual, norm_first_residual_free_dof, delta_displacement, norm_displacement)
-if norm_first_residual_free_dof
-    relative_err_focre = norm(minus_residual) / norm_first_residual_free_dof;
-else
-    relative_err_focre = norm(minus_residual);
-end
-if norm_displacement
-    relative_err_displacement = norm(delta_displacement) / norm_displacement;
-else
-    relative_err_displacement = norm(delta_displacement);
-end
-relative_err = max(relative_err_focre, relative_err_displacement);
 end

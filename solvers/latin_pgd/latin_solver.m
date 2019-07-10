@@ -1,42 +1,12 @@
-function solution = latin_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, previous_cycle)
+function [global_fields, err_indicator] = latin_solver(numerical_model_obj, global_fields)
 global build_mode_debug;
 global convergence_plot;
-global save_mat_files;
 global cyclic_plot;
 
-%             temporal.amplitude = user_temporal.amplitude;
-% the elastic solution is already scaled to the current load
-
-solver_parameters.output_path = [solver_parameters.output_path, '_', datestr(now, 'yyyymmdd_HHMMSSFFF')];
-
-if build_mode_debug && cycles_to_save
-    mkdir(solver_parameters.output_path);
-    diary(sprintf('%s/Out_terminal.txt', solver_parameters.output_path));
-end
-
-if isempty(previous_cycle)
-    numerical_model_obj = numerical_model(user_mesh, user_material, user_boundary_conditions, user_load.temporal_mesh, solver_parameters);
-    if save_mat_files
-        warning('off', 'all');
-        save('output/numerical_model.mat', '-mat', 'numerical_model_obj', '-v6');
-        warning('on', 'all');
-    end
-    % Initialisation
-    global_fields = initialise_ductile(numerical_model_obj, []);
-else
-    numerical_model_obj = previous_cycle.numerical_model;
-    numerical_model_obj.temporal = temporal_mesh(user_load.temporal_mesh);
-    user_boundary_conditions(1).magnitude(1, :) = user_load.magnitude;
-    numerical_model_obj.boundary_conditions = boundary_conditions(previous_cycle.numerical_model.mesh, user_boundary_conditions);
-    
-    % cycle by cycle
-    % initialisation based on the previously generated modes
-    global_fields = initialise_ductile(numerical_model_obj, previous_cycle.results);
-end
 
 local_fields = global_fields;
 err_indicator = 1;
-stag = 1;
+stagnation = 1;
 iter = 0;
 
 if convergence_plot
@@ -58,7 +28,7 @@ end
 % err_indicator = error_indicator(global_fields, local_fields, numerical_model_obj.submesh, numerical_model_obj.temporal, iter, err_indicator);
 
 %% LATIN Iterations
-while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_parameters.max_iter
+while err_indicator(end) > numerical_model_obj.solver_parameters.convergence_tol && iter < numerical_model_obj.solver_parameters.max_iter
     iter = iter + 1;
     
     if cyclic_plot
@@ -67,10 +37,11 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
         hold on
     end
     
-    % local_fields = local_stage_vertical(numerical_model_obj, global_fields, solver_parameters);
-    local_fields = local_stage_horizontal(numerical_model_obj, global_fields, solver_parameters, iter);
+    % local_fields = local_stage_vertical(numerical_model_obj, global_fields);
+    local_fields = local_stage_horizontal(numerical_model_obj, global_fields, iter);
     if isempty(local_fields)
-        solution = [];
+        global_fields = [];
+        err_indicator = [];
         return
     end
     
@@ -79,7 +50,7 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
     err_indicator = error_indicator(global_fields, numerical_model_obj.submesh, numerical_model_obj.temporal, iter, err_indicator);
     
     if iter > 1
-        stag = abs(err_indicator(end-1)-err_indicator(end)) / (err_indicator(end-1) + err_indicator(end));
+        stagnation = abs(err_indicator(end-1)-err_indicator(end)) / (err_indicator(end-1) + err_indicator(end));
     end
     
     if build_mode_debug
@@ -93,19 +64,13 @@ while err_indicator(end) > solver_parameters.convergence_tol && iter < solver_pa
         if convergence_plot
             scatter((local_fields.strain(idx, idy)), (local_fields.stress(idx, idy)));
             scatter((global_fields.strain(idx, idy)), (global_fields.stress(idx, idy)), 'filled');
-            %             [~,idx]=max(equivalent_stress(:,end));
-            %             [a,b]=max(equivalent_stress,[],1);
-            %             [~,d]=max(a);
-            %             row=b(d)
-            %             col=d
         end
     end
     
-    if err_indicator(end) < solver_parameters.convergence_tol % && (iter > 1)
+    if err_indicator(end) < numerical_model_obj.solver_parameters.convergence_tol % && (iter > 1)
         break
-    elseif stag < solver_parameters.stagnation_tol
-        % stagnation
-        fprintf('stagnation : \t %e \n', stag);
+    elseif stagnation < numerical_model_obj.solver_parameters.stagnation_tol
+        fprintf('stagnation : \t %e \n', stagnation);
         break
     end
     % break if the error is increasing
@@ -119,8 +84,4 @@ end
 % collect the initial_values "after convergence" in global_fields
 global_fields.initial_values = local_fields.initial_values;
 
-solution = extract_relevant_info(numerical_model_obj, global_fields, err_indicator, solver_parameters, cycles_to_save);
-solution.results.err_indicator = err_indicator;
-
-diary off
 end

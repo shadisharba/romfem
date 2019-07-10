@@ -1,4 +1,4 @@
-function local_fields = update_internal_variables(numerical_model, strain, initial_values, time_step, solver_parameters, compute_tangent)
+function local_fields = update_internal_variables(numerical_model, strain, initial_values, time_step, compute_tangent)
 % TODO: this update is sensitive to the time step, which is normal for the current material model but recheck the implementation!
 
 material = numerical_model.material;
@@ -46,7 +46,7 @@ if nnz(row)
         iter = 0;
         r = 1;
         delta_y = 1;
-        while max(norm(r), norm(delta_y)) > solver_parameters.convergence_tol && iter < solver_parameters.max_iter
+        while max(norm(r), norm(delta_y)) > numerical_model.solver_parameters.convergence_tol && iter < numerical_model.solver_parameters.max_iter
             [r, jacobian] = constitutive_model(y, material, delta_t, idx, eps_e_trial, old_internal_isotropic, old_back_stres, old_damage);
             delta_y = -jacobian \ r;
             y = y + delta_y;
@@ -58,11 +58,11 @@ if nnz(row)
         isotropic_hardening(row_range(idx)) = y(14);
         internal_damage(row_range(idx)) = y(15);
         
-        internal_plastic_strain(row_6_range(idx)) = old_eps_p(idx) + plastic_strain_evolution(y(1), normal_tilde(stress(row_6_range(idx)), back_stress(row_6_range(idx)), internal_damage(row_range(idx))), internal_damage(row_range(idx)));
+        internal_plastic_strain(row_6_range(idx)) = old_eps_p(idx) + plastic_strain_evolution(y(1), normal_tilde(stress(row_6_range(idx)), back_stress(row_6_range(idx)), internal_damage(row_range(idx))), 1-internal_damage(row_range(idx)));
         internal_isotropic(row_range(idx)) = old_internal_isotropic(idx) + isotropic_hardening_evolution(y(1));
         internal_kinematic(row_6_range(idx)) = compute_internal_kinematic(material, back_stress(row_6_range(idx)));
     end
-    if iter == solver_parameters.max_iter
+    if iter == numerical_model.solver_parameters.max_iter
         warning('check the update_of_internal_variables');
     end
     if compute_tangent
@@ -91,7 +91,7 @@ back_stress = y(8:13);
 isotropic_hardening = y(14);
 internal_damage = y(15);
 
-N_tilde = normal_tilde(stress, back_stress, internal_damage);
+N_tilde = normal_tilde(stress, back_stress, 1-internal_damage);
 sigma_dev = deviatoric(stress);
 tau_dev = sigma_dev / (1 - internal_damage) - back_stress;
 
@@ -102,15 +102,13 @@ d_ntilde_d_sigma = (sqrt(1.5) / (1 - internal_damage) * (deviatoric_identity(6) 
 d_ntilde_d_beta = -(sqrt(1.5) * (eye(6) / norm(tau_dev) - (tau_dev * tau_dev') / (norm(tau_dev)^3)));
 d_ntilde_d_damage = sqrt(1.5) / (1 - internal_damage)^2 * (sigma_dev / norm(tau_dev) - ((tau_dev * tau_dev') * sigma_dev) / (norm(tau_dev)^3));
 damage_condition = evaluate_damage_evolution_condition(material, sqrt(3/2*double_dot_product(sigma_dev, sigma_dev)), internal_isotropic_trial(idx, delta_plastic_multiplier));
-A_d_lambda = -((compute_energy_release_rate(stress, material.inv_elasticity_tensor, internal_damage) / material.user_material.S).^material.user_material.s) ./ (1 - internal_damage) * damage_condition;
+A_d_lambda = -((compute_energy_release_rate(stress, material.inv_elasticity_tensor, 1-internal_damage) / material.user_material.S).^material.user_material.s) ./ (1 - internal_damage) * damage_condition;
 
 f = [delta_plastic_multiplier - delta_t * evaluate_plastic_multiplier(material, evaluate_yield_function(compute_equivalent_stress(stress, back_stress, 1-internal_damage), isotropic_hardening, material.user_material.sigma_y)); ...
-    stress - compute_stress(eps_e_trial(idx)-plastic_strain_evolution(delta_plastic_multiplier, N_tilde, internal_damage), material.elasticity_tensor, 1-internal_damage); ...
+    stress - compute_stress(eps_e_trial(idx)-plastic_strain_evolution(delta_plastic_multiplier, N_tilde, 1-internal_damage), material.elasticity_tensor, 1-internal_damage); ...
     back_stress - old_back_stres(idx) - compute_back_stress(material, kinematic_hardening_evolution(material, delta_plastic_multiplier, N_tilde, back_stress)); ...
     isotropic_hardening - compute_isotropic_hardening(material, internal_isotropic_trial(idx, delta_plastic_multiplier)); ...
-    internal_damage - old_damage(idx) - damage_evolution(material, compute_energy_release_rate(stress, material.inv_elasticity_tensor, internal_damage), delta_plastic_multiplier, internal_damage, damage_condition)];
-
-
+    internal_damage - old_damage(idx) - damage_evolution(material, compute_energy_release_rate(stress, material.inv_elasticity_tensor, 1-internal_damage), delta_plastic_multiplier, 1-internal_damage, damage_condition)];
 
 jacobian = speye(15);
 jacobian(1, 2:7) = A_lambda_f * N_tilde ./ (1 - internal_damage);
@@ -130,8 +128,8 @@ jacobian(15, 1) = A_d_lambda;
 jacobian(15) = jacobian(15) + delta_plastic_multiplier * A_d_lambda ./ (1 - internal_damage);
 end
 
-function normal_tilde = normal_tilde(sigma, beta, D)
-[equivalent_apparent_stress, deviatoric_apparent_stress, ~] = compute_equivalent_stress(sigma, beta, 1-D);
+function normal_tilde = normal_tilde(sigma, beta, one_minus_damage)
+[equivalent_apparent_stress, deviatoric_apparent_stress] = compute_equivalent_stress(sigma, beta, one_minus_damage);
 
 normal_tilde = evaluate_normal_without_damage(deviatoric_apparent_stress, equivalent_apparent_stress);
 end

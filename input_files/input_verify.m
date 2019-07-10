@@ -1,13 +1,7 @@
-function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = one_cycle(solver)
+function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_verify(solver)
 close all;
 clc;
 clearAllMemoizedCaches
-
-% setenv('LD_LIBRARY_PATH','');   % setenv('LD_LIBRARY_PATH',pwd);
-% setenv('LD_PRELOAD','');    %  setenv LD_PRELOAD /lib/libgcc_s.so.1
-
-feature accel on
-% mtimesx('SPEEDOMP', 'OMP_SET_NUM_THREADS(8)'); % mtimesx
 
 global build_mode_debug;
 global convergence_plot;
@@ -20,7 +14,7 @@ global clean_output;
 build_mode_debug = true;
 convergence_plot = false;
 cyclic_plot = false;
-save_mat_files = false;
+save_mat_files = true;
 profiler = false;
 parallel = false;
 clean_output = true;
@@ -29,19 +23,10 @@ if ~nargout
     return
 end
 
-user_mesh = 'plate.mesh'; % 'plate_fine.mesh'
+user_mesh = 'plate.mesh';
 ductile_material = true;
 clamped = false; % clamped or sym B.C.
 tension = true; % tension or bending
-
-% elastic
-% amplitude = [20,30,10] * 1e-4;
-% period = [50,30,70];
-
-% test
-% amplitude = [34,34] * 1e-4;
-% period = [15,15];
-% timestep_per_cycle_div4 = 25;
 
 % results
 % amplitude = [34,35,34] * 1e-4;
@@ -49,8 +34,8 @@ tension = true; % tension or bending
 % timestep_per_cycle_div4 = 50;
 
 % example
-amplitude = [40,40] * 1e-4;
-period = [5,10];
+amplitude = [40,41,42,43,44,44,43,42,41,40] * 1e-4;
+period = [5,10,5,10,5,10,5,10,5,10];
 timestep_per_cycle_div4 = 50;
 
 cycles_to_save = 1:length(amplitude);
@@ -78,13 +63,10 @@ if ductile_material
     % S shifts the range or the curve but the ratio of the limits is (higher S, slower evolutio) % s controls the slope (higher s, slower evolutio)
     user_material = struct('S', 0.6, 's', 2, 'E', 134e3, 'nu', 0.3, 'n', 2.5, 'k', 1220, 'c', 2/3*5500, 'a', 250, ...
         'sigma_y', 85, 'sigma_u', 137, 'sigma_inf', 60, 'r_inf', 30, 'r_exp', 2, 'eps_p_d', 0, 'm', 4, 'd_c', 0.2);
-    
     % 'eps_p_d', 0.2,
 else
     user_material = struct('S', 2.8, 's', 2, 'E', 200e3, 'nu', 0.3, 'n', 12.5, 'k', 195, 'c', 2/3*20600, 'a', 140, ...
         'sigma_y', 180, 'sigma_u', 450, 'sigma_inf', 140, 'r_inf', 6, 'r_exp', 2, 'eps_p_d', 0.12, 'm', 2, 'd_c', 0.2);
-    
-    
 end
 
 %     T = 20;
@@ -116,11 +98,11 @@ else % 'symmetry'
     user_boundary_conditions(end+1).name = 'xsym';
     user_boundary_conditions(end).direction = 1;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-    
+
     user_boundary_conditions(end+1).name = 'ysym';
     user_boundary_conditions(end).direction = 2;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-    
+
     user_boundary_conditions(end+1).name = 'zsym';
     user_boundary_conditions(end).direction = 3;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));

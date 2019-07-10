@@ -1,7 +1,7 @@
 function verify_nr_pod(input_file_name)
 
 add_folder_to_path
-!rm -rf output/*
+rmdir('output', 's'); mkdir('output');
 
 rng(0)
 [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name('any');
@@ -15,9 +15,9 @@ nr_timing = toc;
 extract_and_save_rob()
 
 n = 1;
-u = load('pod_rob_full.mat');
+u = load('output/pod_full_rob.mat');
 u = u.u(:, 1:n);
-save('pod_rob.mat', 'u');
+save('output/pod_rob.mat', 'u');
 
 tic;
 solver_parameters.solver = 'nr_pod';

@@ -2,7 +2,7 @@
 % works only with hex elements
 [file, path] = uigetfile('output/*qoi.mat');
 load(fullfile(path, file), 'global_fields');
-load('/home/alameddin/src/romfem/output/numerical_model.mat');
+load('output/numerical_model.mat');
 
 exported_data = [];
 input_structure = [];

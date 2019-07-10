@@ -6,7 +6,7 @@ add_folder_to_path
 
 if nargin == 0
     node_index = 0;
-    input_file_name = @one_cycle;
+    input_file_name = @() input_verify('latin');
 end
 
 % parallel pool settings
@@ -23,7 +23,8 @@ global clean_output;
 
 if clean_output
     % this will delete timing.txt
-    !rm -rf output/*
+    rmdir('output', 's'); mkdir('output');
+    % !rm -rf output/*
 end
 
 if parallel

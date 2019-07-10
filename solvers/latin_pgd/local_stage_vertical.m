@@ -1,14 +1,14 @@
-function local_fields = local_stage_vertical(numerical_model, old_global_fields, solver_parameters)
+function local_fields = local_stage_vertical(numerical_model, old_global_fields)
 
 local_fields.initial_values = old_global_fields.initial_values;
 
-local_fields.global_search_direction = solver_parameters.elasticity_reduction_factor .* numerical_model.material.elasticity_tensor_diagonal;
+local_fields.global_search_direction = numerical_model.solver_parameters.elasticity_reduction_factor .* numerical_model.material.elasticity_tensor_diagonal;
 
 local_fields.strain = old_global_fields.strain;
 
 for time_step = 2:length(numerical_model.temporal.mesh)
     
-    local_fields_incremental = update_internal_variables(numerical_model, local_fields.strain(:, time_step), local_fields.initial_values, time_step, solver_parameters, true);
+    local_fields_incremental = update_internal_variables(numerical_model, local_fields.strain(:, time_step), local_fields.initial_values, time_step, true);
     
     local_fields.stress(:, time_step) = local_fields_incremental.stress;
     

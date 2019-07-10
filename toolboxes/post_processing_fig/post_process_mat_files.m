@@ -6,10 +6,10 @@ close all
 
 save_figure = true;
 
-[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = one_cycle('any');
+[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_verify('any');
 % load and temporal domain
-applied_load = cell2mat({user_load(:).magnitude});
-tempoal_domain = [0, diff(cell2mat({user_load(:).temporal_mesh}))];
+applied_load = cell2mat({user_load(:).magnitude}');
+tempoal_domain = [0; diff(cell2mat({user_load(:).temporal_mesh}'))];
 tempoal_domain = cumsum(subplus(tempoal_domain)); % tempoal_domain < 0 -> 0
 
 % results_path = uigetdir('output/');
@@ -29,7 +29,7 @@ temporal_functions = cell(1, length(names));
 counter = 1;
 for file = names'
     load([file.folder, filesep, file.name]);
-    temporal_functions{counter} = global_fields.temporal_modes;
+    temporal_functions{counter} = global_fields.temporal_modes';
     temporal_functions{counter+1} = nan;
     counter = counter + 2;
 end
@@ -142,7 +142,7 @@ for saved_cycle = 1:length(names)
     current_number_of_modes = size(global_fields.strain_spatial_modes, 2);
     for current_pair = 1:current_number_of_modes
         subplot(2, current_number_of_modes, current_pair)
-        plot(global_fields.temporal_modes(current_pair, :));
+        plot(global_fields.temporal_modes(:,current_pair));
         subplot(2, current_number_of_modes, current_pair+current_number_of_modes)
         siz = size(global_fields.strain_spatial_modes(:, current_pair));
         imagesc(reshape(global_fields.strain_spatial_modes(:, current_pair), 6, siz(1)/6)', [min(global_fields.strain_spatial_modes(:)), max(global_fields.strain_spatial_modes(:))]);
@@ -158,7 +158,7 @@ end
 % load any of the "qoi.mat" files
 [file, path] = uigetfile('output/*qoi.mat');
 load(fullfile(path, file), 'global_fields');
-strain = global_fields.strain_spatial_modes * global_fields.temporal_modes;
+strain = global_fields.strain_spatial_modes * global_fields.temporal_modes';
 [spatial_modes_svd, singular_values_svd, ~] = svds(strain, size(global_fields.strain_spatial_modes, 2));
 inner_product_spatial_modes = abs(global_fields.strain_spatial_modes'*spatial_modes_svd);
 inner_product_spatial_modes = inner_product_spatial_modes / max(inner_product_spatial_modes(:));
@@ -233,14 +233,14 @@ colorbar
 %% plot energy
 [file, path] = uigetfile('output/*qoi.mat');
 sol = load(fullfile(path, file));
-load('/home/alameddin/src/romfem/output/numerical_model.mat')
+load('output/numerical_model.mat')
 
 material = numerical_model_obj.material;
-damage = sol.global_fields.internal_damage;
-stress = sol.global_fields.stress;
-strain = sol.global_fields.strain;
-back_stress = sol.global_fields.back_stress;
-isotropic_hardening = sol.global_fields.isotropic_hardening;
+damage = full(sol.global_fields.internal_damage);
+stress = full(sol.global_fields.stress);
+strain = full(sol.global_fields.strain);
+back_stress = full(sol.global_fields.back_stress);
+isotropic_hardening = full(sol.global_fields.isotropic_hardening);
 
 idx = 148;
 id6 = idx * 6 - 3;
@@ -253,10 +253,10 @@ free_energy = 0.5 * double_dot_product(stress, elastic_strain) + ...
 subplot(4, 1, 1)
 plot(free_energy(id6, :))
 
-[equivalent_apparent_stress, deviatoric_apparent_stress, equivalent_stress] = compute_equivalent_stress(stress, back_stress, repelem(1-damage, 6, 1));
+[equivalent_apparent_stress, deviatoric_apparent_stress] = compute_equivalent_stress(stress, back_stress, repelem(1-damage, 6, 1));
 dissipation = max(0, equivalent_apparent_stress-isotropic_hardening-material.user_material.sigma_y) + ...
     material.user_material.a / (2 * material.user_material.c) * double_dot_product(back_stress, back_stress) + ...
-    material.user_material.S / (material.user_material.s + 1) * (((compute_energy_release_rate(stress, material.inv_elasticity_tensor_diagonal, damage) ./ material.user_material.S).^(material.user_material.s + 1)) ./ (1 - damage));
+    material.user_material.S / (material.user_material.s + 1) * (((compute_energy_release_rate(stress, material.inv_elasticity_tensor_diagonal, 1-damage) ./ material.user_material.S).^(material.user_material.s + 1)) ./ (1 - damage));
 % surf(dissipation)
 subplot(4, 1, 2)
 plot(dissipation(id6, :))

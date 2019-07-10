@@ -16,17 +16,21 @@ for cycle_number = 1:length(user_load) % compute the cycles incrementally
         current_solution = duplicate_cycles(current_solution, scaling_factor, shift);
     end
     
+    [numerical_model_obj, global_fields] = initialise_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution);
+
     if strcmp(solver_parameters.solver, 'nr')
-        current_solution = newton_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution);
+        [global_fields, err_indicator] = newton_solver(numerical_model_obj, global_fields);
     elseif strcmp(solver_parameters.solver, 'nr_pod')
-        rb = load('pod_rob.mat');
-        current_solution = newton_solver_pod(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution, rb.u);
+        rb = load('output/pod_rob.mat');
+        [global_fields, err_indicator] = newton_solver_pod(numerical_model_obj, global_fields, rb.u);
     elseif strcmp(solver_parameters.solver, 'latin')
-        current_solution = latin_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution);
+        [global_fields, err_indicator] = latin_solver(numerical_model_obj, global_fields);
     else
         error('not implemented');
     end
     
+    current_solution = finalise_solver(numerical_model_obj, global_fields, err_indicator, sum(cycle_number == cycles_to_save));
+
     if sum(cycle_number == cycles_to_save)
         fprintf('******* cycle %5d \n', cycle_number);
     end

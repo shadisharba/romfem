@@ -6,10 +6,10 @@ close all
 
 save_figure = true;
 
-[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = one_cycle('any');
+[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_verify('any');
 % load and temporal domain
 applied_load = cell2mat({user_load(:).magnitude});
-tempoal_domain = [0, diff(cell2mat({user_load(:).temporal_mesh}))];
+tempoal_domain = [0; diff(cell2mat({user_load(:).temporal_mesh}'))];
 tempoal_domain = cumsum(subplus(tempoal_domain)); % tempoal_domain < 0 -> 0
 
 % results_path = uigetdir('output/nr');
@@ -19,7 +19,7 @@ results_path = 'output/latin';
 names2 = dir([results_path, filesep, '*/qoi.mat']);
 assert(length(names1) == length(names2))
 
-load('/home/alameddin/src/romfem/output/numerical_model.mat')
+load('output/numerical_model.mat')
 
 %% plot damage [all cycles on one figure w.r.t time]
 damage1 = [];
@@ -37,17 +37,17 @@ for saved_cycle = 1:length(names1)
     % [~, id] = max(global_fields.internal_damage(:, end));
     damage1 = [damage1, solution1.global_fields.internal_damage(idx, :)];
     damage2 = [damage2, solution2.global_fields.internal_damage(idx, :)];
-    
+
     % Volume = sum(numerical_model_obj.mesh.integration_coefficient(:))/6;
     % T = user_load(saved_cycle).temporal_mesh(end);
     nrm_scalar_field = @(x) sqrt(sum(temporal_integration(numerical_model_obj.mesh.integration_coefficient(1:6:end, 1:6:end)*x.^2, numerical_model_obj.temporal)));
-    
+
     error_damage(saved_cycle) = nrm_scalar_field(solution1.global_fields.internal_damage-solution2.global_fields.internal_damage) / nrm_scalar_field(solution1.global_fields.internal_damage) * 100;
-    
+
     nrm = @(x) sqrt(sum(temporal_integration(double_dot_product(x, spatial_integration(x, numerical_model_obj.mesh)), numerical_model_obj.temporal)));
-    
+
     error_stress(saved_cycle) = nrm(solution1.global_fields.stress-solution2.global_fields.stress) / nrm(solution1.global_fields.stress) * 100;
-    
+
     error_strain(saved_cycle) = nrm(solution1.global_fields.strain-solution2.global_fields.strain) / nrm(solution1.global_fields.strain) * 100;
 end
 
