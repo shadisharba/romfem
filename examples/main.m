@@ -23,7 +23,8 @@ global clean_output;
 
 if clean_output
     % this will delete timing.txt
-    rmdir('output', 's'); mkdir('output');
+    rmdir('output', 's');
+    mkdir('output');
     % !rm -rf output/*
 end
 
@@ -41,7 +42,7 @@ else
     rng(0)
     [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name();
     if profiler
-        sa_profile(@() solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save,false));
+        sa_profile(@() solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false));
     else
         solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
     end

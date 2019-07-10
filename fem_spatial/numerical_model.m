@@ -12,7 +12,7 @@ classdef numerical_model < handle
     end
     methods
         % material mesh submesh boundary_conditions
-        function numerical_model = numerical_model(user_mesh, user_material, user_boundary_conditions, user_temporal_mesh,solver_parameters)
+        function numerical_model = numerical_model(user_mesh, user_material, user_boundary_conditions, user_temporal_mesh, solver_parameters)
             
             numerical_model.mesh = mesh(user_mesh);
             

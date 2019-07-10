@@ -21,13 +21,13 @@ displacement(free_dof) = numerical_model.submesh.K_FF \ residual;
 
 is_orthogonal = false;
 
-elastic_result.first_residual = pgd(residual, [], temporal_function',is_orthogonal);
+elastic_result.first_residual = pgd(residual, [], temporal_function', is_orthogonal);
 
-elastic_result.displacement = pgd(displacement, [], temporal_function',is_orthogonal);
+elastic_result.displacement = pgd(displacement, [], temporal_function', is_orthogonal);
 
-elastic_result.strain = numerical_model.submesh.gradient_operator* elastic_result.displacement;
+elastic_result.strain = numerical_model.submesh.gradient_operator * elastic_result.displacement;
 
-elastic_result.stress = material.elasticity_tensor_diagonal*elastic_result.strain;
+elastic_result.stress = material.elasticity_tensor_diagonal * elastic_result.strain;
 
 
 end

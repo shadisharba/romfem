@@ -34,8 +34,8 @@ tension = true; % tension or bending
 % timestep_per_cycle_div4 = 50;
 
 % example
-amplitude = [40,41,42,43,44,44,43,42,41,40] * 1e-4;
-period = [5,10,5,10,5,10,5,10,5,10];
+amplitude = [40, 41, 42, 43, 44, 44, 43, 42, 41, 40] * 1e-4;
+period = [5, 10, 5, 10, 5, 10, 5, 10, 5, 10];
 timestep_per_cycle_div4 = 50;
 
 cycles_to_save = 1:length(amplitude);
@@ -98,11 +98,11 @@ else % 'symmetry'
     user_boundary_conditions(end+1).name = 'xsym';
     user_boundary_conditions(end).direction = 1;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-
+    
     user_boundary_conditions(end+1).name = 'ysym';
     user_boundary_conditions(end).direction = 2;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-
+    
     user_boundary_conditions(end+1).name = 'zsym';
     user_boundary_conditions(end).direction = 3;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));

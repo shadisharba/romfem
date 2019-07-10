@@ -1,6 +1,6 @@
 function add_folder_to_path()
 
-output_folder = fullfile(pwd,'output');
+output_folder = fullfile(pwd, 'output');
 if ~exist(output_folder, 'dir')
     mkdir(output_folder);
 end
@@ -30,7 +30,7 @@ feature accel on
 % MBeautify.formatFiles('/home/alameddin/src/romfem/', '*.m')
 % folders = dir;
 % for folder = folders'
-%     MBeautify.formatFiles([pwd, filesep, folder.name], '*.m')
+%     MBeautify.formatFiles(fullfile(pwd, folder.name), '*.m')
 % end
 
 % ! rm -rf output/*

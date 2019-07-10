@@ -15,8 +15,8 @@ new_load.magnitude(end) = [];
 out = copy_cyclic(old_load.magnitude, scaling_factor, shift);
 plot(linspace(0, 5, length(old_load.magnitude)), old_load.magnitude, linspace(5, 7.5, length(out)), out)
 
-out = copy_cyclic([old_load.magnitude,old_load.magnitude*2], scaling_factor, shift);
-plot(linspace(0, 5, length(old_load.magnitude)), [old_load.magnitude,old_load.magnitude*2]', linspace(5, 7.5, length(out)), out')
+out = copy_cyclic([old_load.magnitude, old_load.magnitude * 2], scaling_factor, shift);
+plot(linspace(0, 5, length(old_load.magnitude)), [old_load.magnitude, old_load.magnitude * 2]', linspace(5, 7.5, length(out)), out')
 
-out = copy_cyclic([old_load.magnitude,old_load.magnitude*2]', scaling_factor, shift);
-plot(linspace(0, 5, length(old_load.magnitude)), [old_load.magnitude,old_load.magnitude*2], linspace(5, 7.5, length(out)), out)
+out = copy_cyclic([old_load.magnitude, old_load.magnitude * 2]', scaling_factor, shift);
+plot(linspace(0, 5, length(old_load.magnitude)), [old_load.magnitude, old_load.magnitude * 2], linspace(5, 7.5, length(out)), out)

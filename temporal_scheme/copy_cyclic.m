@@ -17,7 +17,7 @@ if isa(x_old, 'pgd')
     h = x_old(:, end) - x_scaled(:, 1);
     g = x_old(:, end) - x_scaled(:, end) - h;
     
-    x_new = x_scaled + pgd(g, [], t) + pgd(h, [], ones(length(scale_factor),1));
+    x_new = x_scaled + pgd(g, [], t) + pgd(h, [], ones(length(scale_factor), 1));
     
 else
     t = linspace(0, 1, length(scale_factor))';

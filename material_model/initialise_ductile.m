@@ -14,7 +14,7 @@ if isempty(initial_guess)
     
     global_fields.stress = global_fields.elastic_result.stress;
     global_fields.strain = global_fields.elastic_result.strain;
-    global_fields.sum_residual = pgd(zeros(n_gp*gp_dof, 1), [],numerical_model.temporal.mesh);
+    global_fields.sum_residual = pgd(zeros(n_gp*gp_dof, 1), [], numerical_model.temporal.mesh);
     
     % global_fields.displacement_spatial_modes = [];
     global_fields.strain_spatial_modes = [];

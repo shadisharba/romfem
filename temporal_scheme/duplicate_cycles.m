@@ -29,4 +29,3 @@ R_out.results.internal_damage = repmat(R_in.results.internal_damage(:, end), [1,
 % id6 = 148 * 6 - 3;
 % plot([R_in.results.stress(id6,:),nan,R_out.results.stress(id6,:)])
 end
-

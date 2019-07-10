@@ -11,7 +11,7 @@ obj.results = global_fields;
 obj.numerical_model = numerical_model_obj;
 end
 
-% it's faster to store the results in /tmp/ 
+% it's faster to store the results in /tmp/
 % clc
 % clear all
 %

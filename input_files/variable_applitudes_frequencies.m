@@ -81,11 +81,11 @@ else % 'symmetry'
     user_boundary_conditions(end+1).name = 'xsym';
     user_boundary_conditions(end).direction = 1;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-
+    
     user_boundary_conditions(end+1).name = 'ysym';
     user_boundary_conditions(end).direction = 2;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-
+    
     user_boundary_conditions(end+1).name = 'zsym';
     user_boundary_conditions(end).direction = 3;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));

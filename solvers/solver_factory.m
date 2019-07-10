@@ -17,7 +17,7 @@ for cycle_number = 1:length(user_load) % compute the cycles incrementally
     end
     
     [numerical_model_obj, global_fields] = initialise_solver(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load(cycle_number), sum(cycle_number == cycles_to_save), current_solution);
-
+    
     if strcmp(solver_parameters.solver, 'nr')
         [global_fields, err_indicator] = newton_solver(numerical_model_obj, global_fields);
     elseif strcmp(solver_parameters.solver, 'nr_pod')
@@ -30,7 +30,7 @@ for cycle_number = 1:length(user_load) % compute the cycles incrementally
     end
     
     current_solution = finalise_solver(numerical_model_obj, global_fields, err_indicator, sum(cycle_number == cycles_to_save));
-
+    
     if sum(cycle_number == cycles_to_save)
         fprintf('******* cycle %5d \n', cycle_number);
     end
