@@ -6,7 +6,7 @@ rng(0) % affects the initialisation
 
 load('matlab.mat')
 
-%%
+%
 gp = numerical_model.mesh.number_of_quadrature;
 ncomp = numerical_model.mesh.quadrature_dof;
 n_t = numerical_model.temporal.dof;
@@ -34,6 +34,9 @@ output = vertcat(reshape(full(internal_plastic_strain),[ncomp,gp*n_t])...
 % scatter3(strainn(1,:),strainn(2,:),strainn(3,:));
 % figure
 % scatter3(strainn(1,:),strainn(2,:),stressn(1,:));
+
+%%
+knn = fitcknn(input,output);
 
 %% Choose a Training Function
 % For a list of all training functions type: help nntrain
@@ -74,6 +77,7 @@ net.layers{2}.transferFcn = 'poslin'; %'logsig'; %  purelin  tansig satlin radba
 net.trainParam.epochs = 100;
 net.performParam.normalization = 'percent'; % normalizes errors between -1 and 1 [[this affects the results and the stoping criterion]]
 % net.performParam.regularization = 0.001; % orces the network response to be smoother and less likely to overfit
+   net.trainParam.showWindow=false;
 
 %% Train the Network
 [net,tr] = train(net,input,output);

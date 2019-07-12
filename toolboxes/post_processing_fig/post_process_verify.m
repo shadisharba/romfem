@@ -57,7 +57,7 @@ plot(tempoal_domain, damage1, 'LineWidth', 1.5, 'LineStyle', '-', 'Color', 'blac
 hold on
 plot(tempoal_domain, damage2, 'Marker', '*', 'LineWidth', 1, 'LineStyle', '--', 'Color', 'red', 'DisplayName', 'ROM');
 ylabel('Damage');
-xlabel('Time (sec)');
+xlabel('t [s]');
 legend
 box on; grid on; hold off
 
@@ -66,29 +66,29 @@ err = abs(damage1-damage2) ./ damage1;
 err(~isfinite(err)) = 0;
 err = err * 100;
 plot(tempoal_domain, err);
-ylabel('Relative error (%)');
-xlabel('Time (sec)');
+ylabel('Relative error [%]');
+xlabel('t [s]');
 box on; grid on; hold off
 saveastex('output/damage_comparison.tex', save_figure)
 
 figure
 subplot(3, 1, 1);
-plot(error_damage)
-ylabel('Relative error (%)');
+bar(error_damage)
+ylabel('Relative error [%]');
 xlabel('Number of cycles');
 title('damage');
 box on; grid on; hold off
 
 subplot(3, 1, 2);
-plot(error_stress)
-ylabel('Relative error (%)');
+bar(error_stress)
+ylabel('Relative error [%]');
 xlabel('Number of cycles');
 title('stress');
 box on; grid on; hold off
 
 subplot(3, 1, 3);
-plot(error_strain)
-ylabel('Relative error (%)');
+bar(error_strain)
+ylabel('Relative error [%]');
 xlabel('Number of cycles');
 title('strain');
 box on; grid on; hold off

@@ -20,8 +20,8 @@ names = dir([results_path, '*/qoi.mat']);
 %% plot load
 figure
 plot(tempoal_domain, applied_load, 'LineWidth', 1.5, 'LineStyle', '-', 'Color', 'black');
-ylabel('Prescribed displacement (mm)');
-xlabel('Time (sec)');
+ylabel('Prescribed displacement [mm]');
+xlabel('t [s]');
 saveastex('output/prescribed_displacement.tex', save_figure)
 
 %% temporal functions [all cycles on one figure]
@@ -42,13 +42,13 @@ end
 temporal_functions_mat = cell2mat(temporal_functions);
 plot(temporal_functions_mat(1, :));
 ylabel('Amplitude');
-xlabel('Time (sec)');
+xlabel('t [s]');
 saveastex('output/first_temporal_mode.tex', save_figure)
 
 figure
 plot(sum(temporal_functions_mat, 1));
 ylabel('Amplitude');
-xlabel('Time (sec)');
+xlabel('t [s]');
 saveastex('output/sum_temporal_modes.tex', save_figure)
 
 %% plot damage [all cycles on one figure w.r.t number of cycles]
@@ -105,7 +105,7 @@ end
 figure
 plot(damage)
 ylabel('Damage');
-xlabel('Time (sec)');
+xlabel('t [s]');
 saveastex(sprintf('output/stress_strain_%d.tex', saved_cycle), save_figure)
 
 %% stress-strain curve [each cycle on a new figure]
@@ -118,7 +118,7 @@ for saved_cycle = 1:length(names)
         plot(global_fields.strain(id6, :), global_fields.stress(id6, :));
         hold on
     end
-    ylabel('stress (MPa)');
+    ylabel('stress [MPa]');
     xlabel('strain');
     saveastex(sprintf('output/stress_strain_%d.tex', saved_cycle), save_figure)
 end

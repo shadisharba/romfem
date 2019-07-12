@@ -28,9 +28,9 @@ ductile_material = true;
 clamped = false; % clamped or sym B.C.
 tension = true; % tension or bending
 
-amplitude = [20] * 1e-5;
+amplitude = [40] * 1e-5;
 period = [10];
-timestep_per_cycle_div4 = 8;
+timestep_per_cycle_div4 = 50;
 
 cycles_to_save = 1:length(amplitude);
 
@@ -80,11 +80,11 @@ else % 'symmetry'
     user_boundary_conditions(end+1).name = 'xsym';
     user_boundary_conditions(end).direction = 1;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-    
+
     user_boundary_conditions(end+1).name = 'ysym';
     user_boundary_conditions(end).direction = 2;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));
-    
+
     user_boundary_conditions(end+1).name = 'zsym';
     user_boundary_conditions(end).direction = 3;
     user_boundary_conditions(end).magnitude = zeros(1, length(user_load(1).temporal_mesh));

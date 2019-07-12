@@ -4,7 +4,14 @@ global save_mat_files;
 global_fields = frmfield(global_fields, {'strain_increment', 'stress_increment'}); % strain stress back_stress isotropic_hardening
 
 if save_mat_files && cycles_to_save
-    save(sprintf('%s/qoi.mat', numerical_model_obj.solver_parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v6');
+    % https://undocumentedmatlab.com/blog/trapping-warnings-efficiently
+    s = warning('error','MATLAB:save:sizeTooBigForMATFile');
+    try
+        save(sprintf('%s/qoi.mat', numerical_model_obj.solver_parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v6');
+    catch ME
+        save(sprintf('%s/qoi.mat', numerical_model_obj.solver_parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v7.3', '-nocompression');
+    end
+    warning(s);
 end
 
 obj.results = global_fields;
