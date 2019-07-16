@@ -8,11 +8,11 @@ score = 0;
 
 % if parameters.iter<3
 if iter ~= 1 || size(global_fields.temporal_modes, 1)
-    delta_time_mode = temporal_update(global_fields.strain_spatial_modes, local_fields, numerical_model);
+    delta_time_mode = temporal_update(global_fields.strain_spatial_modes, local_fields, numerical_model,global_fields.temporal_modes);
     score = vecnorm(delta_time_mode)./ vecnorm(global_fields.temporal_modes);
 end
 
-if max(score) < 0.1 % TODO: 0.3 %parameter
+if max(score) < 0.1 % TODO: 0.3 %parameter % && size(global_fields.temporal_modes, 1) < 3
     global_fields = new_modes(global_fields, numerical_model, local_fields);
 else
     idx = score > 1e-6; %parameter
