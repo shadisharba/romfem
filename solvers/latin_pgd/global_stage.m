@@ -22,7 +22,7 @@ end
 strain_correction = pgd(global_fields.strain_spatial_modes,[],global_fields.temporal_modes);
 
 % the essential boundary and initial conditions are still satisfied when computing strain_correction.full
-strain_correction.orthonormalise_modes(@rsvd,1e-8); % parameter
+strain_correction.orthonormalise_modes(@rsvd);
 global_fields.strain_spatial_modes = strain_correction.spatial_modes;
 global_fields.temporal_modes = strain_correction.temporal_modes * strain_correction.singular_values;
 
@@ -34,11 +34,5 @@ global_fields.sum_residual = global_fields.sum_residual - local_fields.minus_res
 
 global_fields.stress = (global_fields.elastic_result.stress + local_fields.global_search_direction * strain_correction) + global_fields.sum_residual;
 % global_fields.stress = local_fields.stress + local_fields.global_search_direction * (global_fields.strain - local_fields.strain); % global search direction equation
-
-global_fields.strain_increment = global_fields.strain - local_fields.strain;
-global_fields.stress_increment = global_fields.stress - local_fields.stress;
-
-global_fields.sum_stresses = 0.5 * (global_fields.stress + local_fields.stress);
-global_fields.sum_strains = 0.5 * (global_fields.strain + local_fields.strain);
 
 end

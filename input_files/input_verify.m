@@ -46,9 +46,9 @@ for i = 1:length(amplitude)
 end
 
 solver_parameters.solver = solver;
-solver_parameters.strain_pgd = false;
-solver_parameters.stress_pgd = false;
-solver_parameters.local_stage_pgd = false;
+solver_parameters.local_stage_pgd = false; % when true, use convergence_tol 1e-6
+solver_parameters.error_indecator_pgd = false;
+solver_parameters.update_error = 2; % calculate the error every n iterations
 solver_parameters.elasticity_reduction_factor = 1;
 solver_parameters.max_iter = 100;
 solver_parameters.stagnation_tol = 1E-2;

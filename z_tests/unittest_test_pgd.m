@@ -48,6 +48,28 @@ approx_zero(x.full-x_full)
 
 approx_zero(x.is_orthogonal-0)
 
+approx_zero(full(x./2)-x_full./2)
+
+approx_zero(full(2.*x)-2.*x_full)
+
+approx_zero(full(2*x)-2.*x_full)
+
+approx_zero(full(x.*2)-2.*x_full)
+
+approx_zero(full(x*2)-2.*x_full)
+
 x.orthonormalise_modes(@rsvd);
 
-approx_zero(x.is_orthogonal-1)
+approx_zero(x.is_orthogonal-1) % orthogonal
+
+approx_zero(full(x+x)-2*x_full) % add two orthogonal outer products
+
+approx_zero(full(x.*x)-x_full.*x_full)
+
+% approx_zero(x_full./(2*x_full) - full(x./(2*x))) % works only if y has one mode only
+
+x_pgd.compress_pgd(0.1)
+
+approx_zero(full(x./x_pgd) - (x_full./x_pgd.full))
+
+% x.compress_pgd(0.05)

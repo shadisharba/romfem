@@ -47,10 +47,12 @@ while err_indicator(end) > numerical_model_obj.solver_parameters.convergence_tol
     
     global_fields = global_stage(global_fields, numerical_model_obj, local_fields, iter);
     
-    err_indicator = error_indicator(global_fields, numerical_model_obj.submesh, numerical_model_obj.temporal, iter, err_indicator);
+    if mod(iter,numerical_model_obj.solver_parameters.update_error)==1
+        err_indicator = error_indicator(global_fields, local_fields, numerical_model_obj.submesh, numerical_model_obj.temporal, iter, err_indicator, numerical_model_obj.solver_parameters);
     
-    if iter > 1
-        stagnation = abs(err_indicator(end-1)-err_indicator(end)) / (err_indicator(end-1) + err_indicator(end));
+        if iter > 1
+            stagnation = abs(err_indicator(end-1)-err_indicator(end)) / (err_indicator(end-1) + err_indicator(end));
+        end    
     end
     
     if build_mode_debug

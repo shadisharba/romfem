@@ -7,7 +7,8 @@ local_fields.global_search_direction = numerical_model.solver_parameters.elastic
 ncomp = numerical_model.mesh.quadrature_dof;
 temporal_dof = numerical_model.temporal.dof;
 
-n = 4;
+n = old_global_fields.strain.size + 1; % 2*iter old_global_fields.strain.size+n
+rejection_tol = 1e-8;
 
 if iter <= -3
     gp = numerical_model.mesh.number_of_quadrature;
@@ -37,7 +38,7 @@ else
     internal_isotropic = sparse(repmat(old_global_fields.initial_values.internal_isotropic, [1, temporal_dof]));
     internal_damage = sparse(repmat(old_global_fields.initial_values.internal_damage, [1, temporal_dof]));
     
-    if ~numerical_model.solver_parameters.strain_pgd
+    if ~numerical_model.solver_parameters.local_stage_pgd
         stress = full(old_global_fields.stress);
     else
         stress = old_global_fields.stress;
@@ -48,9 +49,8 @@ else
     old_internal_damage = old_global_fields.internal_damage;
     
     one_minus_internal_damage_pgd_old = repelem(1-old_internal_damage, ncomp, 1);
-    if numerical_model.solver_parameters.strain_pgd
-        %     one_minus_internal_damage_pgd_old = full_to_pgd(one_minus_internal_damage_pgd_old,2*iter,1e-8); % eps
-        one_minus_internal_damage_pgd_old = full_to_pgd(one_minus_internal_damage_pgd_old, old_global_fields.strain.size+n, 1e-8); % eps
+    if numerical_model.solver_parameters.local_stage_pgd
+        one_minus_internal_damage_pgd_old = full_to_pgd(one_minus_internal_damage_pgd_old, 1);
     end
     
     [equivalent_apparent_stress, deviatoric_apparent_stress] = compute_equivalent_stress(stress, back_stress, one_minus_internal_damage_pgd_old);
@@ -62,6 +62,9 @@ else
     
     if max(equivalent_apparent_stress(:)) > 2 * material.user_material.sigma_y
         local_fields = local_stage_vertical(numerical_model, old_global_fields);
+        if numerical_model.solver_parameters.local_stage_pgd
+            error('this is not tested yet');
+        end
         return
         %     stress = stress / 1.5;
     end
@@ -107,13 +110,7 @@ else
     end
 end
 
-one_minus_internal_damage_pgd = repelem(1-internal_damage, ncomp, 1);
-if numerical_model.solver_parameters.strain_pgd
-    %     one_minus_internal_damage_pgd = full_to_pgd(one_minus_internal_damage_pgd,2*iter,1e-8); % eps
-    one_minus_internal_damage_pgd = full_to_pgd(one_minus_internal_damage_pgd, old_global_fields.strain.size+n, 1e-8); % eps
-end
-
-elastic_strain = compute_elastic_strain(stress, material.inv_elasticity_tensor_diagonal, one_minus_internal_damage_pgd);
+elastic_strain = compute_elastic_strain(stress, material.inv_elasticity_tensor_diagonal, one_minus_internal_damage_pgd_old);
 
 local_fields.strain = elastic_strain + internal_plastic_strain;
 local_fields.stress = stress;
@@ -127,14 +124,8 @@ local_fields.initial_values.internal_kinematic = internal_kinematic(:, end);
 local_fields.initial_values.internal_isotropic = internal_isotropic(:, end);
 local_fields.initial_values.internal_damage = internal_damage(:, end);
 
-if numerical_model.solver_parameters.strain_pgd
-    % TODO: compare the error with nr
-    local_fields.strain = full_to_pgd(local_fields.strain, old_global_fields.strain.size+n, 1e-8); % eps
-    %     local_fields.strain = full_to_pgd(local_fields.strain,2*iter,1e-8); % eps
-    %     old_global_fields.strain.normalise_spatial_modes;
-    %     strain = pgd(local_fields.strain * old_global_fields.strain.temporal_modes,[],old_global_fields.strain.temporal_modes);
-    %     local_fields.strain = strain + full_to_pgd(local_fields.strain - strain,2);
-    %     local_fields.strain = pgd(old_global_fields.strain.spatial_modes, [], (old_global_fields.strain.spatial_modes' * local_fields.strain)');
+if numerical_model.solver_parameters.local_stage_pgd
+    local_fields.strain = full_to_pgd(local_fields.strain, n, rejection_tol); 
 end
 
 local_fields.minus_residual = local_fields.global_search_direction * (local_fields.strain - old_global_fields.strain);
@@ -148,12 +139,25 @@ local_fields.minus_residual = local_fields.global_search_direction * (local_fiel
 
 end
 
-% full_to_pgd(local_fields.back_stress,20,1e-8)
-% full_to_pgd(local_fields.back_stress,20,1e-8)
-% full_to_pgd(local_fields.strain,20,1e-8)
+% full_to_pgd(local_fields.back_stress,20,1e-13)
+% full_to_pgd(local_fields.back_stress,20,1e-13)
+% full_to_pgd(local_fields.strain,20,1e-13)
 % decomposin the internal variables is possible but requires more modes due
 % to the involved nonlinearity
 
 % use it only with
 % [equivalent_apparent_stress, deviatoric_apparent_stress, equivalent_stress] = compute_equivalent_stress(stress, back_stress, repelem(old_internal_damage, ncomp, 1));
 % [f_vp, row, col, row6] = evaluate_yield_function(equivalent_apparent_stress, isotropic_hardening, material.user_material.sigma_y);
+
+%% if numerical_model.solver_parameters.local_stage_pgd
+% [expensive and didn't give good results] old_global_fields.strain.normalise_spatial_modes;
+%         strain = pgd(local_fields.strain * old_global_fields.strain.temporal_modes,[],old_global_fields.strain.temporal_modes);
+%         local_fields.strain = strain + full_to_pgd(local_fields.strain - strain,2);
+
+% [too less info] local_fields.strain = pgd(old_global_fields.strain.spatial_modes, [], (old_global_fields.strain.spatial_modes' * local_fields.strain)');
+
+% [very expensive and didn't give good results] nn = length(old_global_fields.strain.spatial_modes);
+%     complement = speye(nn) - old_global_fields.strain.spatial_modes * old_global_fields.strain.spatial_modes';
+%     [spatial_modes, singular_values, temporal_modes] = rsvd(complement, n, rejection_tol);
+%     local_fields.strain = pgd(spatial_modes, [], (spatial_modes' * local_fields.strain)');
+%     local_fields.strain.orthonormalise_modes(@rsvd,1e-8);

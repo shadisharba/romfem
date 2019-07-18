@@ -9,6 +9,7 @@ classdef pgd < handle
         temporal_modes = []; % column vectors
         singular_values = []; % sparse diagonal matrix
         is_orthogonal = false;
+        rejection_tol = 1e-8; % parameter
     end
 
     methods
@@ -29,7 +30,37 @@ classdef pgd < handle
         function full_matrix = full(pgd_object)
             full_matrix = pgd_object.spatial_modes * pgd_object.singular_values * pgd_object.temporal_modes';
         end
-
+        function sum_x = sum(x)
+            sum_x = sum(sum(full(x)));
+        end
+        function sqrt_x = sqrt(x)
+            sqrt_x = sqrt(full(x));
+        end
+        function size_x = size(x)
+            size_x = size(x.spatial_modes, 2);
+        end
+        
+        function [dof_spatial, dof_temporal] = dof(x)
+            dof_spatial = size(x.spatial_modes, 1);
+            dof_temporal = size(x.temporal_modes, 1);
+        end
+        % indexing: https://de.mathworks.com/help/matlab/matlab_oop/code-patterns-for-subsref-and-subsasgn-methods.html
+        function varargout = subsref(x, index)
+            if length(index) == 2
+                [varargout{1:nargout}] = builtin('subsref', x, index);
+                return;
+            end
+            switch index.type
+                case '.'
+                    [varargout{1:nargout}] = builtin('subsref', x, index); % Execute built-in function from overloaded method
+                case '()'
+                    varargout{1} = x.spatial_modes(index.subs{1}, :) * x.singular_values * x.temporal_modes(index.subs{2},:)';
+                otherwise
+                    error('Not an implemented indexing expression')
+            end
+        end
+        % subsindex(x) subsasgn(x)
+        
         function orthonormalise_modes(x, svd_function_handle,tol)
             if size(x) > 1
                 [q_s, r_s] = qr_decomp(x.spatial_modes);
@@ -44,12 +75,18 @@ classdef pgd < handle
                 if exist('tol', 'var')
                     x.compress_pgd(tol);
                 else
-                    x.compress_pgd(eps);
+                    x.compress_pgd(x.rejection_tol);
                 end
             end
         end
-
-        function compress_pgd(x, rejection_tol)
+        function x = normalise_spatial_modes(x) % by reference so x will be changed
+            norm_space = vecnorm(x.spatial_modes);
+            norm_time = vecnorm(x.temporal_modes);
+            x.spatial_modes = x.spatial_modes ./ norm_space;
+            x.singular_values = x.singular_values .* norm_space .* norm_time;
+            x.temporal_modes = x.temporal_modes ./ norm_time;
+        end
+        function compress_pgd(x, rejection_tol) % TODO: add test
             assert(x.is_orthogonal == true)
             score_modes = (diag(x.singular_values) / x.singular_values(1));
             idx_to_delete = score_modes < rejection_tol;
@@ -60,6 +97,21 @@ classdef pgd < handle
                 x.singular_values(idx_to_delete, :) = [];
             end
         end
+        
+        function deviatoric_x = deviatoric(x) % by value
+            deviatoric_x = pgd(deviatoric(x.spatial_modes), x.singular_values, x.temporal_modes);
+        end
+        function x_times_y = double_dot_product(x, y) % number of modes is squared here
+            [x_permutations, y_permutations] = ndgrid(1:size(x), 1:size(y));
+
+            diag_x = diag(x.singular_values);
+            diag_y = diag(y.singular_values);
+
+            x_times_y = pgd(double_dot_product(x.spatial_modes(:, x_permutations(:)), y.spatial_modes(:, y_permutations(:))), ...
+                diag(diag_x(x_permutations(:)) .* diag_y(y_permutations(:))) ...
+                , x.temporal_modes(:,x_permutations(:)).*y.temporal_modes(:,y_permutations(:)));
+            x_times_y.orthonormalise_modes(@rsvd);
+        end
 
         function x_plus_y = plus(x, y) % +
             if isempty(x)
@@ -67,20 +119,20 @@ classdef pgd < handle
                 return;
             end
             if isa(x, 'pgd') && isa(y, 'pgd')
-                if x.is_orthogonal && y.is_orthogonal
-                    z_s = x.spatial_modes' * y.spatial_modes;
-                    z_t = x.temporal_modes' * y.temporal_modes;
-
-                    [q_s, r_s] = qr_decomp(y.spatial_modes-x.spatial_modes*z_s);
-                    [q_t, r_t] = qr_decomp(y.temporal_modes-x.temporal_modes*z_t);
-
-                    core = [x.singular_values + z_s * y.singular_values * z_t', z_s * y.singular_values * r_t'; ...
-                        r_s * y.singular_values * z_t', r_s * y.singular_values * r_t'];
-                    
-                    x_plus_y = pgd(horzcat(x.spatial_modes, q_s), core, horzcat(x.temporal_modes, q_t));
-                else
+%                 if x.is_orthogonal && y.is_orthogonal
+%                     z_s = x.spatial_modes' * y.spatial_modes;
+%                     z_t = x.temporal_modes' * y.temporal_modes;
+% 
+%                     [q_s, r_s] = qr_decomp(y.spatial_modes-x.spatial_modes*z_s);
+%                     [q_t, r_t] = qr_decomp(y.temporal_modes-x.temporal_modes*z_t);
+% 
+%                     core = [x.singular_values + z_s * y.singular_values * z_t', z_s * y.singular_values * r_t'; ...
+%                         r_s * y.singular_values * z_t', r_s * y.singular_values * r_t'];
+%                     
+%                     x_plus_y = pgd(horzcat(x.spatial_modes, q_s), core, horzcat(x.temporal_modes, q_t));
+%                 else
                     x_plus_y = pgd(horzcat(x.spatial_modes, y.spatial_modes), blkdiagmex(x.singular_values, y.singular_values), horzcat(x.temporal_modes, y.temporal_modes));
-                end
+%                 end
                 x_plus_y.orthonormalise_modes(@rsvd);
             else
                 x_plus_y = full(x) + full(y);
@@ -109,7 +161,7 @@ classdef pgd < handle
         function x_times_y = times(x, y) % .*
             if isa(x, 'pgd') && isa(y, 'pgd')
             
-                                        [x_permutations, y_permutations] = ndgrid(1:size(x), 1:size(y));
+            [x_permutations, y_permutations] = ndgrid(1:size(x), 1:size(y));
 
             diag_x = diag(x.singular_values);
             diag_y = diag(y.singular_values);
@@ -117,24 +169,21 @@ classdef pgd < handle
             x_times_y = pgd(x.spatial_modes(:, x_permutations(:)) .* y.spatial_modes(:, y_permutations(:)), ...
                 diag(diag_x(x_permutations(:)) .* diag_y(y_permutations(:))) ...
                 , x.temporal_modes(:,x_permutations(:)).*y.temporal_modes(:,y_permutations(:)));
-            
+            x_times_y.orthonormalise_modes(@rsvd);            
             elseif isa(y, 'pgd')
-                x_times_y = pgd(y.spatial_modes, y.singular_values, x.*y.temporal_modes);
+                x_times_y = pgd(y.spatial_modes, x .* y.singular_values, y.temporal_modes);
+                x_times_y.is_orthogonal = y.is_orthogonal;
+            elseif isscalar(y)
+                x_times_y = pgd(x.spatial_modes, y .* x.singular_values, x.temporal_modes);
+                x_times_y.is_orthogonal = x.is_orthogonal;
             else
-                x_times_y = pgd(x.spatial_modes, x.singular_values, y.*x.temporal_modes);
+                x_times_y = pgd(x.spatial_modes, x.singular_values, y .* x.temporal_modes);
             end
         end
         function x_div_y = rdivide(x, y) % ./ Right element-wise division
-            if isa(x, 'pgd') && isa(y, 'pgd')
+            if isa(x, 'pgd') && isa(y, 'pgd') && y.size==1 % only if y has one mode only
                 
-                 [x_permutations, y_permutations] = ndgrid(1:size(x), 1:size(y));
-
-            diag_x = diag(x.singular_values);
-            diag_y = diag(y.singular_values);
-
-            x_div_y = pgd(x.spatial_modes(:, x_permutations(:)) ./ y.spatial_modes(:, y_permutations(:)), ...
-                diag(diag_x(x_permutations(:)) ./ diag_y(y_permutations(:))) ...
-                , x.temporal_modes(:,x_permutations(:))./y.temporal_modes(:,y_permutations(:)));
+            x_div_y = pgd(x.spatial_modes ./ y.spatial_modes, x.singular_values ./ y.singular_values, x.temporal_modes ./ y.temporal_modes);
             
             elseif isa(y, 'pgd')
                 error('not implemented');
@@ -142,57 +191,6 @@ classdef pgd < handle
                 x_div_y = pgd(x.spatial_modes, x.singular_values, x.temporal_modes./y);
             end
         end
-
-        function deviatoric_x = deviatoric(x) % by value
-            deviatoric_x = pgd(deviatoric(x.spatial_modes), x.singular_values, x.temporal_modes);
-        end
-        function x_times_y = double_dot_product(x, y) % number of modes is squared here
-            [x_permutations, y_permutations] = ndgrid(1:size(x), 1:size(y));
-
-            diag_x = diag(x.singular_values);
-            diag_y = diag(y.singular_values);
-
-            x_times_y = pgd(double_dot_product(x.spatial_modes(:, x_permutations(:)), y.spatial_modes(:, y_permutations(:))), ...
-                diag(diag_x(x_permutations(:)) .* diag_y(y_permutations(:))) ...
-                , x.temporal_modes(:,x_permutations(:)).*y.temporal_modes(:,y_permutations(:)));
-        end
-        function sum_x = sum(x)
-            sum_x = sum(sum(full(x)));
-        end
-        function sqrt_x = sqrt(x)
-            sqrt_x = sqrt(full(x));
-        end
-        function size_x = size(x)
-            size_x = size(x.spatial_modes, 2);
-        end
-        function [dof_spatial, dof_temporal] = dof(x)
-            dof_spatial = size(x.spatial_modes, 1);
-            dof_temporal = size(x.temporal_modes, 1);
-        end
-        function x = normalise_spatial_modes(x) % by reference so x will be changed
-            norm_space = vecnorm(x.spatial_modes);
-            norm_time = vecnorm(x.temporal_modes);
-            x.spatial_modes = x.spatial_modes ./ norm_space;
-            x.singular_values = x.singular_values .* norm_space .* norm_time;
-            x.temporal_modes = x.temporal_modes ./ norm_time;
-        end
-        
-        % indexing: https://de.mathworks.com/help/matlab/matlab_oop/code-patterns-for-subsref-and-subsasgn-methods.html
-        function varargout = subsref(x, index)
-            if length(index) == 2
-                [varargout{1:nargout}] = builtin('subsref', x, index);
-                return;
-            end
-            switch index.type
-                case '.'
-                    [varargout{1:nargout}] = builtin('subsref', x, index); % Execute built-in function from overloaded method
-                case '()'
-                    varargout{1} = x.spatial_modes(index.subs{1}, :) * x.singular_values * x.temporal_modes(index.subs{2},:)';
-                otherwise
-                    error('Not an implemented indexing expression')
-            end
-        end
-        % subsindex(x) subsasgn(x)
 
     end
 end
