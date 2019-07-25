@@ -16,35 +16,32 @@ mkdir(t);
 c.JobStorageLocation = t;
 poolobj = gcp('nocreate');
 
-input_file_name();
-global profiler;
-global parallel;
-global clean_output;
+[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode] = input_file_name();
 
-if clean_output
+if build_mode.clean_output
     % this will delete timing.txt
     rmdir('output', 's');
     mkdir('output');
     % !rm -rf output/*
 end
 
-if parallel
+if build_mode.parallel
     if isempty(poolobj)
         parpool(c);
     end
     spmd
         rng(mod(str2double(datestr(now, 'yymmddHHMMSSFFF'))+1e1*labindex+1e2*node_index, 2^32-1), 'simdTwister');
-        [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name();
-        solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
+        [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode] = input_file_name();
+        solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode, false);
     end
     delete(poolobj);
 else
     rng(0)
-    [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_file_name();
-    if profiler
-        sa_profile(@() solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false));
+    [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode] = input_file_name();
+    if build_mode.profiler
+        sa_profile(@() solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode, false));
     else
-        solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, false);
+        solver_factory(solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode, false);
     end
 end
 

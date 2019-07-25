@@ -6,7 +6,7 @@ close all
 
 save_figure = true;
 
-[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save] = input_verify('any');
+[solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode] = input_verify('any');
 % load and temporal domain
 applied_load = cell2mat({user_load(:).magnitude}');
 tempoal_domain = [0; diff(cell2mat({user_load(:).temporal_mesh}'))];

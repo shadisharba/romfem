@@ -1,5 +1,4 @@
-function obj = extract_relevant_info(numerical_model_obj, global_fields, err_indicator, cycles_to_save)
-global save_mat_files;
+function obj = extract_relevant_info(numerical_model_obj, global_fields, err_indicator, cycles_to_save, save_mat_files)
 
 global_fields = frmfield(global_fields, {'strain_increment', 'stress_increment'}); % strain stress back_stress isotropic_hardening
 

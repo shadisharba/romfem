@@ -1,8 +1,8 @@
 function deviatoric_operator = deviatoric_identity(number_of_rows)
-components = 6;
-deviatoric_operator = speye(components);
+tensor_components = 6;
+deviatoric_operator = speye(tensor_components);
 deviatoric_operator(1:3, 1:3) = deviatoric_operator(1:3, 1:3) - 1 / 3;
-deviatoric_operator = kron(speye(number_of_rows/components), deviatoric_operator);
+deviatoric_operator = kron(speye(number_of_rows/tensor_components), deviatoric_operator);
 end
 
 % 2D

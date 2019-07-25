@@ -1,7 +1,7 @@
 function x_yimes_y = double_dot_product(X, Y)
 % double_dot_product for symmetric tensors with 6 stored components
-components = 6;
-dims = [components, size(X, 1) / components, size(X, 2)];
+tensor_components = 6;
+dims = [tensor_components, size(X, 1) / tensor_components, size(X, 2)];
 x_yimes_y = shiftdim(sum(reshape(X.*Y, dims), 1), 1);
 end
 
