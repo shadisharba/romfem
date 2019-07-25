@@ -5,8 +5,8 @@ f_vp = max(0, equivalent_apparent_stress-isotropic_hardening-sigma_y);
 row = unique(row);
 col = unique(col);
 
-componenets = 6;
-row6 = [row * componenets - [(componenets - 1):-1:0]]';
+tensor_components = 6;
+row6 = [row * tensor_components - [(tensor_components - 1):-1:0]]';
 row6 = row6(:);
 
 f_vp = f_vp(row, col);

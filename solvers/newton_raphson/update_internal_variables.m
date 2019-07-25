@@ -6,7 +6,7 @@ if compute_tangent
     local_fields.algorithmic_tangent_diagonal = material.elasticity_tensor_diagonal;
 end
 
-ncomp = numerical_model.mesh.quadrature_dof;
+tensor_components = numerical_model.mesh.tensor_components;
 
 internal_plastic_strain = initial_values.internal_plastic_strain;
 internal_isotropic = initial_values.internal_isotropic;
@@ -18,14 +18,14 @@ isotropic_hardening = compute_isotropic_hardening(material, internal_isotropic);
 
 repelem_memoized = memoize(@repelem);
 elastic_strain = strain - internal_plastic_strain;
-stress = compute_stress(elastic_strain, material.elasticity_tensor_diagonal, repelem_memoized(1-internal_damage, ncomp));
+stress = compute_stress(elastic_strain, material.elasticity_tensor_diagonal, repelem_memoized(1-internal_damage, tensor_components));
 
-[f_vp, row, ~, row6] = evaluate_yield_function(compute_equivalent_stress(stress, back_stress, repelem_memoized(1-internal_damage, ncomp, 1)), isotropic_hardening, material.user_material.sigma_y);
+[f_vp, row, ~, row6] = evaluate_yield_function(compute_equivalent_stress(stress, back_stress, repelem_memoized(1-internal_damage, tensor_components, 1)), isotropic_hardening, material.user_material.sigma_y);
 
 if nnz(row)
     delta_t = numerical_model.temporal.mesh(time_step) - numerical_model.temporal.mesh(time_step-1);
     
-    row_6_range = @(idx) row6(1+ncomp*(idx - 1):idx*ncomp);
+    row_6_range = @(idx) row6(1+tensor_components*(idx - 1):idx*tensor_components);
     row_range = @(idx) row(idx);
     
     stress_trial = @(idx) stress(row_6_range(idx));

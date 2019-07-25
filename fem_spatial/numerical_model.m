@@ -8,7 +8,7 @@ classdef numerical_model < handle
         
         temporal
         solver_parameters
-        
+        build_mode
     end
     methods
         % material mesh submesh boundary_conditions
