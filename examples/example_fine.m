@@ -9,7 +9,7 @@ rng(0)
 
 user_mesh = 'plate_fine.mesh';
 
-[user_boundary_conditions,user_load] = loading_history(false,true,20 * 1e-5,10,50);
+[user_boundary_conditions, user_load] = loading_history(false, true, 20*1e-5, 10, 50);
 
 solver_parameters.local_stage_pgd = false; % when true, use convergence_tol 1e-6
 solver_parameters.error_indecator_pgd = false;

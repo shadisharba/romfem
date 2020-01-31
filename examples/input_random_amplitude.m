@@ -3,7 +3,7 @@ close all;
 clc;
 clearAllMemoizedCaches
 
-build_mode = struct('build_mode_debug',false,'convergence_plot',false,'save_mat_files',false,'cyclic_plot',false,'profiler',false,'parallel',true,'clean_output',false);
+build_mode = struct('build_mode_debug', false, 'convergence_plot', false, 'save_mat_files', false, 'cyclic_plot', false, 'profiler', false, 'parallel', true, 'clean_output', false);
 
 if ~nargout
     return
@@ -18,7 +18,7 @@ number_of_cycles = 1e4;
 a = 53e-4;
 b = 56e-4;
 amplitude = a + (b - a) .* rand(1, number_of_cycles);
-period = 10 * ones(1,number_of_cycles);
+period = 10 * ones(1, number_of_cycles);
 timestep_per_cycle_div4 = 10;
 [user_boundary_conditions, user_load] = loading_history(clamped, tension, amplitude, period, timestep_per_cycle_div4);
 
@@ -46,4 +46,3 @@ else
 end
 
 end
-

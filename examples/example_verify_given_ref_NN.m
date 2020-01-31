@@ -14,9 +14,10 @@ rng(0)
 amplitude = [40, 41, 42, 43, 44, 44, 43, 42, 41, 40] * 1e-4;
 period = [5, 10, 5, 10, 5, 10, 5, 10, 5, 10];
 timestep_per_cycle_div4 = 10;
-[user_boundary_conditions,user_load] = loading_history(false,true,amplitude,period,timestep_per_cycle_div4);
+[user_boundary_conditions, user_load] = loading_history(false, true, amplitude, period, timestep_per_cycle_div4);
 solver_parameters.local_stage_neural_networks = 5; % number of iterations with neural networks
 %}
+
 %% convergence
 %{
 amplitude = [56] * 1e-4;

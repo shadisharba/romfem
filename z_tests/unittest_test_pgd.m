@@ -70,6 +70,6 @@ approx_zero(full(x.*x)-x_full.*x_full)
 
 x_pgd.compress_pgd(0.1)
 
-approx_zero(full(x./x_pgd) - (x_full./x_pgd.full))
+approx_zero(full(x./x_pgd)-(x_full ./ x_pgd.full))
 
 % x.compress_pgd(0.05)

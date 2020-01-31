@@ -3,7 +3,7 @@ close all;
 clc;
 clearAllMemoizedCaches
 
-build_mode = struct('build_mode_debug',true,'convergence_plot',false,'save_mat_files',true,'cyclic_plot',false,'profiler',false,'parallel',false,'clean_output',true);
+build_mode = struct('build_mode_debug', true, 'convergence_plot', false, 'save_mat_files', true, 'cyclic_plot', false, 'profiler', false, 'parallel', false, 'clean_output', true);
 
 if ~nargout
     return

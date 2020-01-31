@@ -1,0 +1,69 @@
+## error indicator
+-   Don’t use a global search direction to see the stagnation and the issue with the current error indicator
+-   why can’t we compute an actual error, K u - F and sigma - C (1-D) eps_e
+-   how to compute the error in a multi-field formulation or mixed formulation finite element
+
+## Issues
+-   To break the error indicator change the search direction in the local stage to sigma = 1_scaling_factor_local _ sigma;
+-   modify the factor multiplied by the elasticity tensor
+-   apply the load incrementally (maybe over the first three cycles) 0.1F to 1F
+-   force control/ Traction (should changed the boundary conditions applied when generating the space modes)
+
+
+## Randomness
+-   there are tools to generate random loads (check /home/alameddin/src/random_loading)
+-   Relate the variance of the input to the output (maybe: mean input variance → LATIN → mean output variance?)
+-   random loading: we can start using the result of a previous different load (also works with multi-parameters)
+-   elastic solution for a variable amplitude case may be obtained by decomposing the load using FFT, solve for each frequency the sum the iFFT of the solutions
+
+
+## Done
+-   modes optimisation
+-   large time steps compared to Newton-Raphson
+-   2D -> 3D
+-   PGD hardening
+-   validation with incremental model
+-   adaptive two time scale
+-   new formulation
+    -   No stress separation (No theoretical limitation on the load amplitude)
+    -   No EE or CC operators
+    -   Could change the local stage to have any damage model
+    -   no relaxation
+-   We could use here large time steps and still get accurate results (this is written in “A multi-temporal scale approach to high cycle fatigue simulation”)
+    **Deprecated LATIN formulation**
+-   Start with a plastic guess then add damage [didn't work as expected, the number of iterations is increased compared to the damage and plasticity at once]
+-   The off-diagonal terms in the search direction are ignored
+    -   The search direction may be averaged over space but not over time
+-   svd(delta R, # pgd modes) and insert this into the minimisation scheme
+-   dD1/dN - dD2/dN to decide on the jump length
+
+## Notes
+-   the damage book (Desmorat) page 89
+    -   Train axial and biaxial then compute torsion
+-   Only updating the first mode, always decreases the error. Only when another mode is added, problems might occur
+-   when the shape of Y is not smooth, try to refine the mesh
+-   high loads give high values for Y (at the first some iterations) which leads to nonphysical behaviour of damage (D>>1)
+-   the more you update the smoother the time functions get
+-   Do not smooth or relax the damage variable
+-   Now if we write the elastic strain correction in PGD form, we still need to write the plastic stain correction in \\Cref{eq:plastic_correction} in terms of another PGD form which leads to having two pairs of space and time functions and the time functions will not be proportional to each other. Thus a staggered scheme is needed.
+-   High stresses or forces cause a noticeable peaks (why decreasing dt does not help?) another example is available in cognard1999large.
+-   use Galerkin for the time discretisation? (should be easier with DG, Reulen 100) check the PGD file, could be improved?
+
+
+
+
+
+
+
+
+
+
+-   Time homogenisation?
+    -   Gui… presentation: can’t be done for any model
+    -   combined cycle fatigue
+    -   linear problem is solve in the frequency domain
+-   PGD for the plastic strain & the hardening terms in the local stage [don’t think that it’s doable, we are not solving a linear system here, we only evaluate a function]
+-   decomposition into linear regions with POD and nonlinear with PGD (only when damage and plasticity are concentrated). Dirichlet boundary conditions
+-   gradient damage model
+-   PGD parametrised over the load amplitude (it’s more important to count for the initial conditions than the load amplitude)
+-   HCF: the local stage to the same one used in XTFEM

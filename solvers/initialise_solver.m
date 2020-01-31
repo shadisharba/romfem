@@ -21,7 +21,7 @@ else
     numerical_model_obj.temporal = temporal_mesh(user_load.temporal_mesh);
     user_boundary_conditions(1).magnitude(1, :) = user_load.magnitude;
     numerical_model_obj.boundary_conditions = boundary_conditions(previous_cycle.numerical_model.mesh, user_boundary_conditions);
-
+    
     % cycle by cycle
     % initialisation based on the previously generated modes
     global_fields = initialise_ductile(numerical_model_obj, previous_cycle.results);

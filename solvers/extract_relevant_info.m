@@ -4,7 +4,7 @@ global_fields = frmfield(global_fields, {'strain_increment', 'stress_increment'}
 
 if save_mat_files && cycles_to_save
     % https://undocumentedmatlab.com/blog/trapping-warnings-efficiently
-    s = warning('error','MATLAB:save:sizeTooBigForMATFile');
+    s = warning('error', 'MATLAB:save:sizeTooBigForMATFile');
     try
         save(sprintf('%s/qoi.mat', numerical_model_obj.solver_parameters.output_path), '-mat', 'global_fields', 'err_indicator', '-v6');
     catch ME

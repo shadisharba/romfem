@@ -1,9 +1,9 @@
-function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save,build_mode] = input_verify(solver)
+function [solver_parameters, user_mesh, user_material, user_boundary_conditions, user_load, cycles_to_save, build_mode] = input_verify(solver)
 close all;
 clc;
 clearAllMemoizedCaches
 
-build_mode = struct('build_mode_debug',true,'convergence_plot',false,'save_mat_files',true,'cyclic_plot',false,'profiler',false,'parallel',false,'clean_output',true);
+build_mode = struct('build_mode_debug', true, 'convergence_plot', false, 'save_mat_files', true, 'cyclic_plot', false, 'profiler', false, 'parallel', false, 'clean_output', true);
 
 if ~nargout
     return
