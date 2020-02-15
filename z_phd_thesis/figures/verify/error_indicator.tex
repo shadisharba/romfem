@@ -1,0 +1,254 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\documentclass[tikz]{standalone}
+\usepackage[tuenc]{fontspec}
+\setmainfont{FreeSerif}
+\usepackage{pgfplots}
+\usepackage{grffile}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{amsmath}
+
+\begin{document}
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\definecolor{mycolor2}{rgb}{0.85000,0.32500,0.09800}%
+\definecolor{mycolor3}{rgb}{0.92900,0.69400,0.12500}%
+\definecolor{mycolor4}{rgb}{0.49400,0.18400,0.55600}%
+\definecolor{mycolor5}{rgb}{0.46600,0.67400,0.18800}%
+\definecolor{mycolor6}{rgb}{0.30100,0.74500,0.93300}%
+\definecolor{mycolor7}{rgb}{0.63500,0.07800,0.18400}%
+%
+	\scriptsize
+\begin{tikzpicture}
+	\useasboundingbox (-8mm,-8mm) rectangle (49mm,30mm);
+\begin{axis}[%
+width=44mm,
+height=31.5mm,
+at={(0.5mm,-3mm)},
+scale only axis,
+xmin=0,
+xmax=22,
+xlabel style={font=\color{white!15!black},yshift=4},
+xlabel={Number of iterations},
+ymode=log,
+ymin=1e-12,
+ymax=1,
+yminorticks=true,
+ylabel style={font=\color{white!15!black},xshift=-3},
+ylabel={Normalised error indicator},
+%yticklabels={$10^{-12}$},
+%yticklabel style= {xshift=11,yshift=1.5},
+yticklabel style= {xshift=3},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+yminorgrids,
+legend style={at={(1,1)},anchor=north east,legend cell align=left, align=left, draw=white!15!black,row sep=-4pt,column sep=-1pt,legend columns = 1},
+ylabel shift = -6,
+]
+\addplot [color=mycolor1,thick,mark=*,dotted, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+3	0.0295994751656619\\
+4	0.00354945680756118\\
+5	0.000330602927508921\\
+6	2.5542665706089e-05\\
+7	1.71604215768275e-06\\
+8	1.0355718753584e-07\\
+9	5.76440200626823e-09\\
+10	3.02718030533953e-10\\
+11	1.53540558996213e-11\\
+};
+\addlegendentry{\scriptsize  01}
+
+\addplot [color=mycolor2,thick,mark=*,dotted, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.407839204189396\\
+3	0.181794321226826\\
+4	0.0557363711083751\\
+5	0.0133149472313767\\
+6	0.00260098728450455\\
+7	0.000440311352101104\\
+8	6.64552717473866e-05\\
+9	9.18350716974708e-06\\
+10	1.1868249568273e-06\\
+11	1.46204769417361e-07\\
+12	1.74146873965619e-08\\
+13	2.01273359951677e-09\\
+14	2.21880207095071e-10\\
+15	2.22042279624109e-11\\
+16	2.6295645473248e-12\\
+};
+\addlegendentry{\scriptsize  02}
+
+\addplot [color=mycolor4,thick,mark=*,dotted, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.296636600255443\\
+3	0.0813976239683007\\
+4	0.0161515940186815\\
+5	0.00251047144051124\\
+6	0.000328008703581761\\
+7	3.74264831600455e-05\\
+9	3.968904998823e-07\\
+10	3.75161334376745e-08\\
+11	3.05487357527378e-09\\
+13	1.89269613462134e-11\\
+};
+\addlegendentry{\scriptsize  03}
+
+\addplot [color=mycolor5,thick,mark=*,dotted, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.682533850812606\\
+3	0.453392914582888\\
+4	0.206290954383524\\
+5	0.0762145056434539\\
+6	0.0224461089046636\\
+7	0.00583048815543885\\
+8	0.00133946419447698\\
+9	0.0002811157108139\\
+10	5.48015389328495e-05\\
+11	1.01144796020472e-05\\
+12	1.79540455004362e-06\\
+13	3.10192696980017e-07\\
+14	5.24968704357955e-08\\
+15	8.70302833706876e-09\\
+16	1.4075526349013e-09\\
+17	2.21031947647659e-10\\
+18	3.36615978589212e-11\\
+19	5.04814247059444e-12\\
+};
+\addlegendentry{\scriptsize  04}
+
+\addplot [color=mycolor6,thick,mark=*,dotted, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+3	0.16953011730398\\
+4	0.0504281752690773\\
+5	0.0116132977099161\\
+6	0.00224553355330264\\
+7	0.000376508115061869\\
+8	5.63379909449982e-05\\
+9	7.67440219087924e-06\\
+10	9.68344003337933e-07\\
+11	1.15028403628641e-07\\
+12	1.30645213415985e-08\\
+13	1.43779583906296e-09\\
+14	1.54742748414454e-10\\
+15	1.63834664171564e-11\\
+16	1.91538103322114e-12\\
+};
+\addlegendentry{\scriptsize  05}
+
+\addplot [color=mycolor1,thick,mark=*, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.849615250103645\\
+3	0.661495102670107\\
+4	0.357692074474054\\
+5	0.158880993881201\\
+6	0.0555989973614559\\
+7	0.0174003154444744\\
+8	0.00477542360487333\\
+9	0.00119850819440104\\
+10	0.000277904799293384\\
+11	6.06682112819799e-05\\
+13	2.66527445793777e-06\\
+14	5.36913165354965e-07\\
+15	1.02044783334311e-07\\
+16	1.91305319973377e-08\\
+17	3.5210643986944e-09\\
+19	1.14224370941467e-10\\
+20	2.13800647154433e-11\\
+21	4.59528463551546e-12\\
+};
+\addlegendentry{\scriptsize  06}
+
+\addplot [color=mycolor2,thick,mark=*, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.34515741723354\\
+3	0.113930520367856\\
+4	0.0284972208130001\\
+5	0.00553900038704971\\
+6	0.000911364456396758\\
+7	0.000130188259543691\\
+8	1.66272529882e-05\\
+9	1.93866672100019e-06\\
+10	2.10323484963668e-07\\
+11	2.16159009413162e-08\\
+12	2.139167685656e-09\\
+13	2.06296304198114e-10\\
+15	1.82683988533843e-12\\
+};
+\addlegendentry{\scriptsize  07}
+
+\addplot [color=mycolor4,thick,mark=*, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.60364699952931\\
+3	0.305203778607204\\
+4	0.111099762415501\\
+5	0.0330208261897752\\
+6	0.00817216144287342\\
+7	0.00177963994298257\\
+8	0.000347595274579747\\
+9	6.23293102962018e-05\\
+10	1.04554577846503e-05\\
+11	1.78223718337124e-06\\
+12	3.11874562533811e-07\\
+13	4.79796290701904e-08\\
+15	9.36870801443967e-10\\
+17	1.76052176389494e-11\\
+18	3.16403824586192e-12\\
+};
+\addlegendentry{\scriptsize  08}
+
+\addplot [color=mycolor5,thick,mark=*, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.233085455495591\\
+3	0.0484619892803356\\
+4	0.00756654250587333\\
+5	0.000930216521643782\\
+6	9.63646109620268e-05\\
+7	8.71213278270487e-06\\
+8	7.68972096682042e-07\\
+9	6.08627911803192e-08\\
+10	4.18015640384852e-09\\
+11	2.75310712222234e-10\\
+12	1.76379620031256e-11\\
+13	1.32810673833199e-12\\
+};
+\addlegendentry{\scriptsize  09}
+
+\addplot [color=mycolor6,thick,mark=*, mark options={solid}, mark size=1pt]
+  table[row sep=crcr]{%
+1	1\\
+2	0.358785609498089\\
+3	0.106303246698918\\
+4	0.0233805499570998\\
+5	0.00418802091069988\\
+6	0.000637836351085149\\
+7	8.59323431724525e-05\\
+8	1.05275386445755e-05\\
+9	1.20229680138541e-06\\
+10	1.3081386252237e-07\\
+11	1.37832188300201e-08\\
+12	1.41727575668155e-09\\
+14	1.44023795641629e-11\\
+};
+\addlegendentry{\scriptsize  10}
+
+\end{axis}
+
+\end{tikzpicture}%
+\end{document}

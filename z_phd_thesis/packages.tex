@@ -1,0 +1,160 @@
+% %% Sets page size and margins
+%\usepackage[margin=1.5cm]{geometry}
+\usepackage[a5paper,inner=1.75cm,outer=1.75cm,top=2cm,bottom=1.5cm]{geometry}
+% \usepackage[a4paper,inner=2.5cm,outer=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+% \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
+% \usepackage[colorinlistoftodos]{todonotes}
+
+%% Language, font encodings and style
+\usepackage{lipsum}
+\usepackage[tuenc]{fontspec}
+\setmainfont{FreeSerif}
+%\usepackage[utf8]{inputenc} % allows the user to input accented characters directly from the keyboard
+%\usepackage[T1]{fontenc} % is oriented to output, that is, what fonts to use for printing characters, T1 font encoding for letters with accents or ...
+\usepackage[ngerman,english]{babel} % man­ages cul­tur­ally-de­ter­mined ty­po­graph­i­cal (and other) rules, and hy­phen­ation pat­terns
+%\usepackage{mathptmx} % This pack­age de­fines Adobe Times Ro­man (or equiv­a­lent) as de­fault text font
+\usepackage{upgreek} % up­right Greek let­ters
+\usepackage{enumerate}
+\usepackage{multirow} % create tabular cells spanning multiple rows
+\usepackage{longtable}
+\usepackage{booktabs} % For \toprule etc. in tables
+\usepackage{enumitem} % enu­mer­ate, item­ize and de­scrip­tion
+\usepackage{fancyhdr} % Ex­ten­sive con­trol of page head­ers and foot­ers 
+%\setlength{\headheight}{15.2pt}
+\pagestyle{fancy}
+\fancyhead[OER]{\thepage}
+\fancyhead[LO]{\nouppercase{\leftmark}}
+\fancyhead[LE]{\nouppercase{\rightmark}}
+\fancyfoot{}
+%%\renewcommand{\headrulewidth}{0.3pt}
+%\renewcommand{\footrulewidth}{0.3pt}
+%%\fancyhead[EL]{ }
+%\fancyheadoffset[OER]{0\textwidth}
+%\fancyfoot{}
+% https://en.wikibooks.org/wiki/LaTeX/Customizing_Page_Headers_and_Footers
+\usepackage{csquotes}
+\usepackage{parskip} % removes the indentation from new paragraphs
+
+\usepackage{siunitx} % a comprehensive (SI) units package
+%\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{listings} % typeset source code listings using LATEX
+\usepackage[ruled,lined]{algorithm2e}
+
+%% figures and graphics
+\usepackage[space]{grffile}  % spaces in the figure path
+\usepackage{graphicx} % in­clude­graph­ics
+\usepackage{float} % \begin{figure}[H]
+\usepackage{wrapfig} % Al­lows fig­ures or ta­bles to have text wrapped around them
+\usepackage{epstopdf}
+\usepackage{xcolor,color,colortbl}
+\usepackage[justification=centering]{caption}
+\usepackage{subcaption}
+\usepackage[final]{pdfpages} % include pdf
+\usepackage{placeins} % \FloatBar­rier
+\usepackage{mdframed} % break­able framed and coloured boxes
+\usepackage{pgf} % PGF is a macro pack­age for cre­at­ing graph­ics
+\usepackage{psfrag} % replace strings in encapsulated PostScript figures (eps)
+\usepackage{pgfplots} % create normal/logarithmic plots in two and three dimensions
+\pgfplotsset{compat=1.16}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usepackage{environ}
+\usetikzlibrary{calc,intersections,through,backgrounds,decorations.text,patterns}
+\usetikzlibrary{matrix,positioning,decorations.pathreplacing}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{er,positioning}
+% http://www.texample.net/tikz/examples/simple-flow-chart/
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+%\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+%minimum height=2em]
+\tikzstyle{cloud} = [rectangle, draw, fill=gray!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+%\usetikzlibrary{external}
+%\tikzexternalize
+
+% math
+\usepackage{amsmath,amsthm,amstext,amssymb,mathtools,mathrsfs}
+\usepackage{array}
+\def\arraystretch{1.25}
+\usepackage{arydshln}
+\usepackage{bm}
+
+\usepackage[colorlinks=true, allcolors=blue]{hyperref} % [hidelinks]
+\usepackage{xparse} % \NewDocumentCommand
+
+
+%\usepackage[sorting=none, backend=biber]{biblatex}
+%\usepackage[style=alphabetic, sorting=ynt, backend=biber]{biblatex}
+\usepackage[style=authoryear, sorting=nyt, backend=biber, giveninits=true,firstinits=true, dashed=false, citestyle=authoryear,parentracker=true,maxnames=10]{biblatex}
+\DeclareNameAlias{sortname}{last-first}
+%style
+%alphabetic authoryear
+% https://de.overleaf.com/learn/latex/Biblatex_bibliography_styles
+
+%Bibliography sorting options
+%nty	sort by name, title, year
+%nyt	sort by name, year, title
+%nyvt	sort by name, year, volume, title
+%anyt	sort by alphabetic label, name, year, title
+%anyvt	sort by alphabetic label, name, year, volume, title
+%ydtn	sort by year (descending), name, title
+%none	entries are processed in citation order
+% https://de.overleaf.com/learn/latex/Bibliography_management_in_LaTeX
+
+% \usepackage{natbib}
+%\usepackage[backend= bibtex,sorting=none,citestyle=numeric,bibstyle=numeric]{biblatex}
+% \usepackage{cite} % com­pressed, sorted lists of nu­mer­i­cal ci­ta­tions, and also deals with var­i­ous punc­tu­a­tion
+\usepackage{cleveref} %
+%\usepackage{doi} %
+%\renewcommand*{\doipunct}{\addcomma\space}
+\DeclareFieldFormat{doi}{ \href{http://doi.org/#1}{[CrossRef]} }
+\DeclareFieldFormat{url}{ \href{#1}{[url]} }
+\renewbibmacro*{doi+eprint+url}{%
+	\setunit{\addspace}\newblock
+	\iftoggle{bbx:doi}
+	{\printfield{doi}}
+	{}%
+	\setunit{\addspace}\newblock
+	\iftoggle{bbx:eprint}
+	{\usebibmacro{eprint}}
+	{}%
+	\setunit{\addspace}\newblock
+	\iftoggle{bbx:url}
+	{\usebibmacro{url+urldate}}
+	{}%
+}
+
+%\RequirePackage{doi}
+%\renewcommand*{\doi}[1]{\href{http://dx.doi.org/#1}{doii: #1}}
+%%\newcommand{\doi}[1]{\href{http://dx.doi.org/#1}{doii: #1}}
+%\renewcommand{\doitext}{doiss:}
+%https://latex.org/forum/viewtopic.php?t=28552
+
+\usepackage{soul} % To highlight text \hl{}
+\newcommand{\highlight}[1]{\colorbox{yellow}{#1}}
+
+%\renewcommand\lstlistingname{Algorithm}
+%\crefname{listing}{algorithm}{algorithms}
+% \usepackage{xspace}
+%\clubpenalty=5000
+%\widowpenalty=5000
+%\setlength{\emergencystretch}{2cm}
+
+% load package with ``framed'' and ``numbered'' option.
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+%sudo cp /home/alameddin/src/tex/templates/mcode.sty /usr/share/texlive/texmf-local/tex/latex/mcode.sty
+%sudo texhash
+%https://www.math.ias.edu/computing/faq/local-latex-style-files
+%/home/alameddin/.config/texstudio/templates/user
+
+%overfull / Underfull \hbox (badness 10000) in paragraph
+%\begin{sloppypar}
+%*******
+%\end{sloppypar}
+
+
+\usepackage{emptypage}

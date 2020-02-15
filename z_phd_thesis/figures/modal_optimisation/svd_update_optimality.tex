@@ -1,0 +1,119 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\documentclass[tikz]{standalone}
+\usepackage[tuenc]{fontspec}
+\setmainfont{FreeSerif}
+\usepackage{pgfplots}
+\usepackage{grffile}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{amsmath}
+
+\begin{document}
+	\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+	\scriptsize
+	\begin{tikzpicture}
+	\useasboundingbox (-10mm,-10mm) rectangle (29mm,20mm);
+\begin{axis}[%
+width=29mm,
+height=20mm,
+at={(-2mm,-3.5mm)},
+	scale only axis,
+point meta min=2.24971950790742e-18,
+point meta max=1,
+axis on top,
+xmin=0.5,
+xmax=6.5,
+xlabel style={font=\color{white!15!black}},
+xlabel={SVD spatial mode number},
+ymin=0.5,
+ymax=6.5,
+ylabel style={font=\color{white!15!black},yshift=-3,xshift=-3},
+ylabel={PGD spatial mode number},
+%xtick={1,...,6},
+%ytick={1,...,6},
+axis background/.style={fill=white},
+legend style={legend cell align=left, align=left, draw=white!15!black},
+colormap={mymap}{[1pt] rgb(0pt)=(1,1,1); rgb(63pt)=(0,0,0)},
+colorbar
+]
+\addplot [forget plot] graphics [xmin=0.5, xmax=6.5, ymin=0.5, ymax=6.5] {svd_update_optimality-1.png};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	0.5\\
+0.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+1.5	0.5\\
+1.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+2.5	0.5\\
+2.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+3.5	0.5\\
+3.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+4.5	0.5\\
+4.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+5.5	0.5\\
+5.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+6.5	0.5\\
+6.5	6.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	0.5\\
+6.5	0.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	1.5\\
+6.5	1.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	2.5\\
+6.5	2.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	3.5\\
+6.5	3.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	4.5\\
+6.5	4.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	5.5\\
+6.5	5.5\\
+};
+\addplot [color=gray, line width=0.0pt]
+  table[row sep=crcr]{%
+0.5	6.5\\
+6.5	6.5\\
+};
+\end{axis}
+\end{tikzpicture}%
+\end{document}

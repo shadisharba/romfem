@@ -1,0 +1,167 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\documentclass[tikz]{standalone}
+\usepackage[tuenc]{fontspec}
+\setmainfont{FreeSerif}
+\usepackage{pgfplots}
+\usepackage{grffile}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{amsmath}
+
+\begin{document}
+\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+\scriptsize
+\begin{tikzpicture}
+\useasboundingbox (-8mm,-8mm) rectangle (49mm,30mm);
+\begin{axis}[%
+width=44mm,
+height=8mm,
+at={(1mm,19.5mm)},
+scale only axis,
+bar shift auto,
+xmin=0.5,
+xmax=10.5,
+%xtick={ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10},
+xticklabels={},
+xlabel style={font=\color{white!15!black}},
+ymin=0,
+ymax=0.12,
+ytick={0,0.1 },
+ylabel style={font=\color{white!15!black},yshift=-1mm},
+ylabel={err $[\%]$},
+axis background/.style={fill=white},
+title style={font=\bfseries,yshift=-2.5ex},
+title={Damage},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black},
+y tick label style={/pgf/number format/.cd,
+	fixed,
+	fixed zerofill,
+	precision=2,
+	/tikz/.cd},
+]
+\addplot[ybar, bar width=0.8, fill=mycolor1, draw=black, area legend] table[row sep=crcr] {%
+1	0.0767486894170202\\
+2	0.0557489335549939\\
+3	0.0326969873499599\\
+4	0.110944468400057\\
+5	0.0762196417642289\\
+6	0.102685677061625\\
+7	0.0856695410438648\\
+8	0.0750915854301053\\
+9	0.0748082328760298\\
+10	0.0732507852491378\\
+};
+\addplot[forget plot, color=white!15!black] table[row sep=crcr] {%
+-0.2	0\\
+11.2	0\\
+};
+
+\end{axis}
+
+\begin{axis}[%
+width=44mm,
+height=8mm,
+at={(1mm,8.8mm)},
+scale only axis,
+bar shift auto,
+xmin=0.5,
+xmax=10.5,
+%xtick={ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10},
+xlabel style={font=\color{white!15!black}},
+xticklabels={},
+ymin=0,
+ymax=0.027,
+ytick={0,0.02,0.04 },
+ylabel style={font=\color{white!15!black},yshift=-1mm},
+ylabel={err $[\%]$},
+axis background/.style={fill=white},
+title style={font=\bfseries,yshift=-2.5ex},
+title={Stress},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black},
+scaled ticks=false,
+y tick label style={/pgf/number format/.cd,
+	fixed,
+	fixed zerofill,
+	precision=2,
+	/tikz/.cd},
+]
+\addplot[ybar, bar width=0.8, fill=mycolor1, draw=black, area legend] table[row sep=crcr] {%
+1	0.00113802593771088\\
+2	0.0040937332197527\\
+3	0.00539900512968477\\
+4	0.0172747445801633\\
+5	0.0136300509171699\\
+6	0.0253692051676352\\
+7	0.0117954350333701\\
+8	0.011184542537292\\
+9	0.0125917820526499\\
+10	0.0130899760200818\\
+};
+\addplot[forget plot, color=white!15!black] table[row sep=crcr] {%
+-0.2	0\\
+11.2	0\\
+};
+
+
+\end{axis}
+
+\begin{axis}[%
+width=44mm,
+height=8mm,
+at={(1mm,-2mm)},
+scale only axis,
+bar shift auto,
+xmin=0.5,
+xmax=10.5,
+xtick={ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10},
+xlabel style={font=\color{white!15!black},yshift=3},
+xlabel={Number of cycles},
+ymin=0,
+ymax=0.027,
+ytick={0,0.02},
+ylabel style={font=\color{white!15!black},yshift=-1mm},
+ylabel={err $[\%]$},
+axis background/.style={fill=white},
+title style={font=\bfseries,yshift=-2.5ex},
+title={Strain},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black},
+scaled ticks=false,
+y tick label style={/pgf/number format/.cd,
+	fixed,
+	fixed zerofill,
+	precision=2,
+	/tikz/.cd},
+]
+\addplot[ybar, bar width=0.8, fill=mycolor1, draw=black, area legend] table[row sep=crcr] {%
+1	0.0010122839923474\\
+2	0.00362091999941812\\
+3	0.0048475539103476\\
+4	0.0151180463149567\\
+5	0.0121342175417708\\
+6	0.0224611624224723\\
+7	0.00915713778508198\\
+8	0.00912878924596078\\
+9	0.010356675429367\\
+10	0.0108634409607189\\
+};
+\addplot[forget plot, color=white!15!black] table[row sep=crcr] {%
+-0.2	0\\
+11.2	0\\
+};
+
+\end{axis}
+\end{tikzpicture}%
+\end{document}

@@ -1,0 +1,52 @@
+\documentclass[twoside,a5paper,openright,9pt]{extbook}
+\usepackage{titlesec}
+\titleformat{\chapter}[display]{\Huge\bfseries}{\chaptertitlename\ \thechapter:}{-5pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-50pt}{25pt}
+\input{./packages}
+\input{./symbols}
+\usepackage[mode=tex,obeyclassoptions=true]{standalone}
+
+\title{A Semi-incremental Model Order Reduction Approach for Fatigue Damage Computations}
+\author{Shadi Alameddin}
+\date{06.02.2020}
+% ISBN: 978-3-935732-51-2
+% IBNM: F20/02
+\addbibresource{./sorted_ref_thesis.bib}
+\pagenumbering{gobble}
+
+\begin{document}
+\thispagestyle{empty}
+\input{./z_ibnm/front.tex}
+\cleardoublepage
+\begin{sloppypar}
+	\input{./all_chapters.tex}
+	\cleardoublepage
+	\input{./z_ibnm/ibnmlist.tex}
+\end{sloppypar}
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{refsection}
+%\input{./chapters/abstract.tex}
+%\end{refsection}
+
+%use with
+%\usepackage{natbib}
+%\bibliographystyle{plainnat}
+%\bibliography{/home/alameddin/src/tex/templates/library.bib}
+%
+%\printbibliography
+%\printbibliography[heading=bibintoc,title={Whole bibliography}]
+%\printbibliography[heading=subbibintoc,type=article,title={Articles only}]
+%
+%\printbibliography[type=article,title={Articles only}]
+%\printbibliography[type=book,title={Books only}]
+%\printbibliography[keyword={physics},title={Physics-related only}]
+%\printbibliography[keyword={latex},title={\LaTeX-related only}]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% NOTES COMANDS %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\cbox{\textbf{test}\\hhh}
+%\todo[inline, color=green!40]{implement ...}
+%\todo{Implementation}
+%\note{arg1}
+%\mcmd{arg1}

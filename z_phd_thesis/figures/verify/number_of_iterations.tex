@@ -1,0 +1,58 @@
+% This file was created by matlab2tikz.
+%
+%The latest updates can be retrieved from
+%  http://www.mathworks.com/matlabcentral/fileexchange/22022-matlab2tikz-matlab2tikz
+%where you can also make suggestions and rate matlab2tikz.
+%
+\documentclass[tikz]{standalone}
+\usepackage[tuenc]{fontspec}
+\setmainfont{FreeSerif}
+\usepackage{pgfplots}
+\usepackage{grffile}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{amsmath}
+
+\begin{document}
+	\definecolor{mycolor1}{rgb}{0.00000,0.44700,0.74100}%
+	\scriptsize
+	\begin{tikzpicture}
+	\useasboundingbox (-8mm,-8mm) rectangle (49mm,30mm);
+	\begin{axis}[%
+	width=44mm,
+	height=31.5mm,
+at={(0.5mm,-3mm)},
+	scale only axis,
+bar shift auto,
+xmin=0.5,
+xmax=10.5,
+xtick={ 1,  2,  3,  4,  5,  6,  7,  8,  9, 10},
+xlabel style={font=\color{white!15!black},yshift=3},
+xlabel={Number of cycles},
+ymin=0,
+ymax=25,
+ylabel style={font=\color{white!15!black}},
+ylabel={Number of iterations},
+axis background/.style={fill=white},
+xmajorgrids,
+ymajorgrids,
+legend style={legend cell align=left, align=left, draw=white!15!black}
+]
+\addplot[ybar, bar width=0.8, fill=mycolor1, draw=black, area legend] table[row sep=crcr] {%
+1	11\\
+2	16\\
+3	13\\
+4	19\\
+5	16\\
+6	21\\
+7	15\\
+8	18\\
+9	13\\
+10	14\\
+};
+
+\end{axis}
+\end{tikzpicture}%
+\end{document}
