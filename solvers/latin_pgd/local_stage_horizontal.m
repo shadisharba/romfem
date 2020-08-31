@@ -1,5 +1,7 @@
 function local_fields = local_stage_horizontal(numerical_model, old_global_fields, iter)
 
+include_damage = true;
+
 number_of_local_modes = old_global_fields.strain.size + 1; % 2*iter old_global_fields.strain.size+n
 rejection_tol = 1e-8;
 
@@ -96,7 +98,7 @@ else
         isotropic_hardening(row, :) = compute_isotropic_hardening(material, internal_isotropic(row, :));
 
         Y = compute_energy_release_rate(stress(row6, col), inv_elasticity, old_one_minus_damage);
-        internal_damage_rate(:, col) = damage_evolution(material, Y, plastic_multiplier, old_one_minus_damage, 1);
+        internal_damage_rate(:, col) = include_damage * damage_evolution(material, Y, plastic_multiplier, old_one_minus_damage, 1);
         % evaluate_damage_evolution_condition(material, equivalent_stress(row, col), internal_isotropic(row, col))
         internal_damage(row, :) = old_global_fields.initial_values.internal_damage(row, :) + temporal_cumulative_integration(internal_damage_rate, numerical_model.temporal);
 
