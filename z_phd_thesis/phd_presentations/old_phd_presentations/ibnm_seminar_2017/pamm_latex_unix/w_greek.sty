@@ -1,0 +1,121 @@
+%%
+%% This is file `w-greek.sty',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% w-greek.dtx  (with options: `package')
+%% ====================================================================
+%% @LaTeX-file{
+%%   version   = "0.01",
+%%   date      = "2002/03/17",
+%%   author    = "WILEY-VCH Verlag GmbH \& Co. KGaA, Weinheim",
+%%   copyright = "Copyright 2002 WILEY-VCH Verlag GmbH \& Co. KGaA, Weinheim,
+%%                all rights reserved.  Copying of this file is
+%%                authorized only if either:
+%%                (1) you make absolutely no changes to your copy,
+%%                including name; OR
+%%                (2) if you do make changes, you first rename it
+%%                to some other name.",
+%% }
+%% ====================================================================
+%% $Id: w-greek.dtx,v 1.8 2005/10/03 21:43:58 uwe Exp $
+%% ====================================================================
+\newif\if@slantedgreek
+\let\if@slantedgreek\iftrue
+\DeclareOption{slantedgreek}{\let\if@slantedgreek\iftrue}
+\DeclareOption{uprightgreek}{\let\if@slantedgreek\iffalse}
+\ExecuteOptions{slantedgreek}
+\ProcessOptions
+\DeclareMathSymbol{\varGamma}{\mathalpha}{letters}{"00}
+\DeclareMathSymbol{\varDelta}{\mathalpha}{letters}{"01}
+\DeclareMathSymbol{\varTheta}{\mathalpha}{letters}{"02}
+\DeclareMathSymbol{\varLambda}{\mathalpha}{letters}{"03}
+\DeclareMathSymbol{\varXi}{\mathalpha}{letters}{"04}
+\DeclareMathSymbol{\varPi}{\mathalpha}{letters}{"05}
+\DeclareMathSymbol{\varSigma}{\mathalpha}{letters}{"06}
+\DeclareMathSymbol{\varUpsilon}{\mathalpha}{letters}{"07}
+\DeclareMathSymbol{\varPhi}{\mathalpha}{letters}{"08}
+\DeclareMathSymbol{\varPsi}{\mathalpha}{letters}{"09}
+\DeclareMathSymbol{\varOmega}{\mathalpha}{letters}{"0A}
+\let\itGamma\varGamma
+\let\itDelta\varDelta
+\let\itTheta\varTheta
+\let\itLambda\varLambda
+\let\itXi\varXi
+\let\itPi\varPi
+\let\itSigma\varSigma
+\let\itUpsilon\varUpsilon
+\let\itPhi\varPhi
+\let\itPsi\varPsi
+\let\itOmega\varOmega
+\newcommand{\greeksym}[1]{\usefont{U}{psy}{m}{n}#1}
+\newcommand{\greeksymbold}[1]{{\usefont{U}{psy}{b}{n}#1}}
+\newcommand{\allmodesymb}[2]{\relax\ifmmode{\mathchoice
+{\mbox{\fontsize{\tf@size}{\tf@size}#1{#2}}}
+{\mbox{\fontsize{\tf@size}{\tf@size}#1{#2}}}
+{\mbox{\fontsize{\sf@size}{\sf@size}#1{#2}}}
+{\mbox{\fontsize{\ssf@size}{\ssf@size}#1{#2}}}}
+\else
+\mbox{#1{#2}}\fi}
+\newcommand{\upalpha}{\allmodesymb{\greeksym}{a}}
+\newcommand{\upbeta}{\allmodesymb{\greeksym}{b}}
+\newcommand{\upchi}{\allmodesymb{\greeksym}{c}}
+\newcommand{\updelta}{\allmodesymb{\greeksym}{d}}
+\newcommand{\upepsilon}{\allmodesymb{\greeksym}{e}}%
+\newcommand{\upphi}{\allmodesymb{\greeksym}{f}}%
+\newcommand{\upgamma}{\allmodesymb{\greeksym}{g}}
+\newcommand{\upeta}{\allmodesymb{\greeksym}{h}}%
+\newcommand{\upiota}{\allmodesymb{\greeksym}{i}}%
+\newcommand{\upvarphi}{\allmodesymb{\greeksym}{j}}%
+\newcommand{\upkappa}{\allmodesymb{\greeksym}{k}}%
+\newcommand{\uplambda}{\allmodesymb{\greeksym}{l}}%
+\newcommand{\upmu}{\allmodesymb{\greeksym}{m}}
+\newcommand{\upnu}{\allmodesymb{\greeksym}{n}}
+\newcommand{\upo}{\allmodesymb{\greeksym}{o}}%
+\newcommand{\uppi}{\allmodesymb{\greeksym}{p}}
+\newcommand{\uptheta}{\allmodesymb{\greeksym}{q}}%
+\newcommand{\uprho}{\allmodesymb{\greeksym}{r}}%
+\newcommand{\upsigma}{\allmodesymb{\greeksym}{s}}%
+\newcommand{\uptau}{\allmodesymb{\greeksym}{t}}
+\newcommand{\upupsilon}{\allmodesymb{\greeksym}{u}}%
+\newcommand{\upvarpi}{\allmodesymb{\greeksym}{v}}%
+\newcommand{\upomega}{\allmodesymb{\greeksym}{w}}%
+\newcommand{\upxi}{\allmodesymb{\greeksym}{x}}%
+\newcommand{\uppsi}{\allmodesymb{\greeksym}{y}}%
+\newcommand{\upzeta}{\allmodesymb{\greeksym}{z}}%
+\newcommand{\upvartheta}{\allmodesymb{\greeksym}{J}}%
+\newcommand{\upvarsigma}{\allmodesymb{\greeksym}{V}}
+\if@slantedgreek \else
+\let\alpha\upalpha
+\let\beta\upbeta
+\let\chi\upchi
+\let\delta\updelta
+\let\epsilon\upepsilon
+\let\phi\upphi
+\let\gamma\upgamma
+\let\eta\upeta
+\let\iota\upiota
+\let\varphi\upvarphi
+\let\kappa\upkappa
+\let\lambda\uplambda
+\let\mu\upmu
+\let\nu\upnu
+\let\o\upo
+\let\pi\uppi
+\let\theta\uptheta
+\let\rho\uprho
+\let\sigma\upsigma
+\let\tau\uptau
+\let\upsilon\upupsilon
+\let\varpi\upvarpi
+\let\omega\upomega
+\let\xi\upxi
+\let\psi\uppsi
+\let\zeta\upzeta
+\let\vartheta\upvartheta
+\let\varsigma\upvarsigma
+\fi
+\endinput
+%%
+%% End of file `w-greek.sty'.

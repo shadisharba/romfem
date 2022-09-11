@@ -1,0 +1,208 @@
+% TODO: include fluctuating loads here and make it transparent
+% %\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+%
+
+\documentclass{beamer}
+
+\input{/home/alameddin/src/tex/templates/presentation/packages}
+\input{/home/alameddin/src/tex/templates/presentation/layout}
+\input{./symbols}
+\usepackage{transparent}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[A Semi-incremental Scheme for Fatigue Damage Computations]{A Semi-incremental Scheme for Fatigue Damage Computations}
+\subtitle[ ]{ }
+\author[S. Alameddin]{{S. Alameddin}\textsuperscript{\dag} ,  A. Fau\textsuperscript{\dag},\\
+	U. Nackenhorst\textsuperscript{\dag}, D. N{\'e}ron\textsuperscript{\ddag}, P. Ladev{\`e}ze\textsuperscript{\ddag}}
+%\institute[IBNM - LUH]{Institut für Baumechanik und Numerische Mechanik\\ Leibniz Universität Hannover} %German version
+\institute[IBNM - LUH]{\dag \ IBNM, Leibniz Universit\"{a}t Hannover \\
+\ddag \ LMT, ENS Cachan, CNRS, Universit{\'e} Paris Saclay}
+\date[\tddate \ \ \hhmm \tdtime]{06.08.2019}
+\titlegraphic{
+	\hspace{-5cm}
+	\begin{tikzpicture}[overlay]
+    \node (fig1) at (2.7,2.2)
+{\includegraphics[height=0.5\textheight,width=0.6\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/fluctuating_load.png}};
+\node (fig2) at (2.2,1.9)
+{\includegraphics[width=0.5\linewidth,trim=0.6cm 0.5cm 0 0 ,clip]{/home/alameddin/src/tex/phd_thesis/figures/latin/latin_iter.pdf}}; 
+	\end{tikzpicture}
+%	\includegraphics[scale=0.32]{fig/pgd/eps_p_dot.eps}
+%	\includegraphics[height=90px]{/home/alameddin/src/tex/phd_thesis/templates/tex_figures/latin_iter.pdf}
+	%		\includegraphics[width=0.6\textwidth,clip]{/home/alameddin/src/tex/phd_thesis/figures/intro/latin_iter.pdf}\\
+	}
+
+% Short names in [] for footline
+% Names in {} for title page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[style=authortitle,backend=bibtex]{biblatex}
+
+%\usepackage{biblatex}
+%\addbibresource{library}
+%\bibliographystyle{unsrt} %{ieeetr} % plain / alpha / unsrt
+%\bibliography{library}
+% Begin of presentation
+
+\usepackage{animate}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{calc,intersections,through,backgrounds,decorations.text,patterns}
+\usetikzlibrary{matrix,positioning,decorations.pathreplacing}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{er,positioning}
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [rectangle, draw, fill=gray!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\usepackage{adjustbox}
+
+%\usepackage{enumitem}
+%\setitemize{label=\usebeamerfont*{itemize item}%
+%	\usebeamercolor[fg]{itemize item}
+%	\usebeamertemplate{itemize item}}
+%\setlist[itemize]{leftmargin=*}
+
+\usepackage[labelfont=bf]{caption}
+\usepackage[timeinterval=10]{tdclock}
+
+\begin{document}
+\newcommand{\twocol}[3]{
+\vspace*{-0.5cm}
+\begin{columns}[t] % align columns
+	\begin{column}{.50\textwidth}
+		% \color{red}\rule{\linewidth}{4pt}
+		#1
+	\end{column}%
+%	\hfill%
+%\hspace{-0.5cm}
+\vspace{-1cm}
+	\begin{column}{.55\textwidth}
+		% \color{blue}\rule{\linewidth}{4pt}
+		#2
+	\end{column}%
+\end{columns}
+#3
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+{
+\centering
+ \specialTitleDesign
+ \begin{frame}
+ \vspace*{0.2cm}
+  \titlepage
+\begin{figure}
+	%	Funded by:\\[-0.3cm]
+	\begin{flushright}
+		\setlength{\unitlength}{\textwidth}
+		\begin{picture}(0.47,-0.5)
+		\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/dfg_logo.eps}
+		\end{picture}
+	\end{flushright}\vspace*{-0.3cm}
+	\qquad \qquad \quad {\scriptsize IRTG-1627}
+\end{figure}
+\initclock
+ \end{frame}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table of contents
+%\frame{\frametitle{Outline}
+%\tableofcontents
+%%[pausesections]
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\captionsetup[figure]{labelformat=empty}% redefines the caption setup of the figures environment in the beamer class.
+
+\frame{\frametitle{LATIN linearisation scheme}
+		Solve {\color{luhBlue}iteratively} {\color{red} (\textbf{AD.})} and {\color{luhBlue}(\textbf{CM.})} \\[0.4cm]
+		\begin{adjustbox}{max totalsize={0.95\textwidth}{.7\textheight},center}
+			\begin{tikzpicture}
+			\node [block] (primal) {Primal variable $\fu$};
+			\node [cloud, left=0.5cm of primal] (dirichlet) {Dirichlet B.C.};
+			\node [block, below=2.5cm of primal] (strain) {Strain $\feps$};
+			\node [block, right=4cm of strain] (dual) {Dual variable $\fsigma$};
+			\node [cloud, above=2.5cm of dual] (bodyf) {Body force $\fb$};
+			\node [cloud, right=0.5cm of dual] (neumann) {Neumann B.C.};
+			% paths
+			\path [line,-,ultra thick] (primal) -- node { }(dirichlet);
+			\path [line,ultra thick,-,color={luhBlue}] (dual) -- node[above]{\color{luhBlue} Non-linear constitutive} node [below]{\color{luhBlue} model (\textbf{CM.})} (strain);
+			\path [line,ultra thick,-,color={red}] (strain) -- node[above, sloped]{\color{red} Kinematic} node [below, sloped]{\color{red} admissibility}(primal);
+			\path [line,-,ultra thick,color={red}] (dual) -- node[above, sloped]{\color{red} Static} node [below, sloped]{\color{red} admissibility}(bodyf);
+			\path [line,-,ultra thick] (dual) -- node{ }(neumann);
+			\draw [color={red},ultra thick,<->, >=stealth] (0.7,-2) -- node [above]{(\textbf{AD.})} (5.5cm,-2cm) ;
+			\end{tikzpicture}
+		\end{adjustbox}\\[0.4cm]
+		for all time steps {\color{red} simultaneously}.
+}
+
+\frame{\frametitle{What does simultaneously mean?}
+	\centering %autoplay
+	\animategraphics[width=.6\textwidth,controls,loop]{2}{/home/alameddin/src/tex/phd_thesis/figures/latin/frame-}{0}{14}
+}
+
+\frame{\frametitle{LATIN solution algorithm}
+\begin{itemize}
+	\item Start with an elastic initialisation $s_0$\\[0.3cm]
+	\item Evaluate {\color{luhBlue} (\textbf{CM.})} to get {\color{luhBlue} ${s}_{\rm local}$} (local stage)\\[0.3cm]
+	\only<1>{\item Solve {\color{red} (\textbf{AD}.)} to get {\color{red} ${s}_{\rm global}$} (global stage)\\[0.3cm]}
+	\item Transfer data using affine relations (search direction eq.)
+	\vspace{-0.3cm}
+	\begin{align*}
+	( {\color{red} {\fsigma}_{\rm global}} - {\color{luhBlue} {\fsigma}_{\rm local}} ) -{\ffH^\mp} : ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} ) = \fzero
+	\end{align*}
+	%\begin{align*}
+	%%\small 
+	%&&(&& \stepk[ ]{\fsigma} &&-&& \stepj[ ]{\fsigma} &&) -{\ffH^-} &&(&& \stepk[]{\feps} &&-&& \stepj[]{\feps} &&) &= \fzero \\
+	%&&(&& \stepj[]{\fsigma} &&-&& \stepi[]{\fsigma} &&) +  {\ffH^+} &&(&& \stepj[]{\feps} &&-&& \stepi[]{\feps} &&)  &=\fzero
+	%\end{align*}
+	\item Iterate until convergence with an energy error indicator
+\end{itemize}
+}
+
+\frame[t]{\frametitle{Proper Generalised Decomposition}
+	\begin{itemize}
+			\item Low-rank approximation\\[-0.7cm]
+			\begin{align*}
+			\fu(\fx,t) = \sum_{j=1}^{N} {\fv_j}(\fx) \circ \flambda_j(t)
+			\end{align*}
+			\vfill
+			\item Enrichment to ($\mu$) previously generated modes\\[-0.7cm]
+			\begin{align*}
+			\Delta \fu_{i+1}(\fx,t) = {\fv}_{\color{red}\mu+1}(\fx) \circ \flambda_{\color{red}\mu+1}(t)
+			\end{align*}
+			\vfill
+			\item POD-like update of ($\mu$) previously generated modes\\[-0.7cm]
+			\begin{align*}
+			\Delta \fu_{i+1}(\fx,t) = \sum_{j=1}^{{\color{red} \mu}} \underbrace{{\fv_j}(\fx)}_{\color{luhBlue} \text{known}} \ \circ \ \Delta \flambda_j(t)
+			\end{align*}
+	\end{itemize}
+}
+
+\section{Challenges and workarounds}
+
+\frame{\frametitle{Challenges in a PGD framework} % Goals // challenges 
+	
+	\begin{itemize} % \frownie{} \dSmiley
+		\item Efficient variable amplitude and frequency simulations
+		\item The cost of integration over all generalised coordinates\\[-0.8cm]
+		\begin{align*}
+		\intT \intS \bullet \ \d \Omega \d t \qquad {\color{gray}\frownie}
+		\end{align*}
+
+		\item The fast increase in the number of modes\\[-0.8cm]
+		\begin{align*}
+		\fu(\fx,t) = \sum_{j=1}^{\mu} {\fv_j}(\fx) \circ \flambda_j(t) \text{ with large } \mu \quad {\color{red} \frownie}
+		\end{align*}
+
+		\item The cost of the error indicator and the local stage
+	\end{itemize}
+}
+
+
+\end{document}

@@ -1,0 +1,955 @@
+%%
+%% 2015-11-03 -UK- aktualisiert
+%% ====================================================================
+\documentclass[pamm,a4paper,fleqn]{w-art}
+\usepackage{times,cite,w-thm}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+%% By default the equations are consecutively numbered. This may be changed by
+%% the following command.
+%% \numberwithin{equation}{section}
+%%
+%%
+%% The usage of multiple languages is possible.
+%% \usepackage{ngerman}% or
+%% \usepackage[english,ngerman]{babel}
+%% \usepackage[english,french]{babel}
+\usepackage{graphicx}
+%% 
+
+\newcommand{\mK}{\mat{K}}
+\newcommand{\mI}{\mat{I}}
+%\makeatletter
+%\renewenvironment{titlepage}
+%{%
+%	\if@twocolumn
+%	\@restonecoltrue\onecolumn
+%	\else
+%	\@restonecolfalse\newpage
+%	\fi
+%%	\thispagestyle{plain}%
+%}
+%{%
+%	\if@restonecol
+%	\twocolumn
+%	\else
+%	\newpage
+%	\fi
+%}
+%\makeatother
+\captionsetup{justification=centering}
+\usepackage{placeins}
+\usepackage{wrapfig}
+\usepackage{tikz,pgfplots}
+\usetikzlibrary{calc,intersections,through,backgrounds,decorations.text,patterns}
+\usetikzlibrary{decorations.pathreplacing,decorations.markings}
+
+\newcommand{\eq}[2]{\begin{equation} 
+	{#1}
+	%	\ifthenelse{\equal{#2}{}}{Empty.}{Nonempty.}
+	{\label{#2}}
+	\end{equation}}
+\newcommand{\note}[1]{{\cred \textbf{TODO: #1}}\\[1em]}
+
+% SCHRIFTGROESSE
+\newcommand{\ds}{\displaystyle}
+\newcommand{\sM}{\begin{array}{ccccccccc}}
+	\newcommand{\eM}{\end{array}}
+\newcommand{\mcmd}[1]{{\cblue\texttt{#1}}}
+\newcommand{\Ds}{\displaystyle}
+\newcommand{\Ts}{\textstyle}
+\newcommand{\Ss}{\scriptstyle}%
+% OPERATOREN
+\newcommand{\rA}{{\rm A}}
+\newcommand{\rB}{{\rm B}} 
+\newcommand{\rC}{{\rm C}}
+\newcommand{\rD}{{\rm F}}
+\newcommand{\rE}{{\rm E}}
+\newcommand{\rF}{{\rm F}}
+\newcommand{\rG}{{\rm G}}
+\newcommand{\rH}{{\rm H}}
+\newcommand{\rJ}{{\rm J}}
+\newcommand{\rK}{{\rm K}}
+\newcommand{\rL}{{\rm L}}
+\newcommand{\rM}{{\rm M}}
+\newcommand{\rN}{{\rm N}}
+\newcommand{\rO}{{\rm O}}
+\newcommand{\rP}{{\rm P}}
+\newcommand{\rQ}{{\rm Q}}
+\newcommand{\rR}{{\rm R}}
+\newcommand{\rS}{{\rm S}}
+\newcommand{\rT}{{\rm T}}
+\newcommand{\rU}{{\rm U}}
+% \newcommand{\rV}{{\rm V}}
+\newcommand{\rW}{{\rm W}}
+\newcommand{\rX}{{\rm X}}
+\newcommand{\rY}{{\rm Y}}
+\newcommand{\rZ}{{\rm Z}}
+\renewcommand{\d}{{\,\rm  d}}
+\newcommand{\D}{{\,\rm  D}}
+\newcommand{\dt}{\triangle t}
+% \newcommand{\T}[1]{{#1}^{\sf  T}}
+\newcommand{\T}[1]{{#1}^{\sf  T}}
+\renewcommand{\TH}[1]{{#1}^{\sf  T_H}}
+\newcommand{\I}[1]{{#1}^{\rm -1}}
+%\newcommand{ \I}[1]{{#1}^{{\mbox{\rule[0.7mm]{0.9mm}{0.2mm}}\sf 1}}}
+\newcommand{\IT}[1]{{#1}^{\sf  -T}}
+%\newcommand{\IT}[1]{{#1}^{{\mbox{\rule[0.7mm]{0.9mm}{0.2mm}}\sf T}}}
+% \newcommand{\pd}[2]{\displaystyle\frac{\partial #1}{\partial #2}}
+
+% Derivatives
+\newcommand{\pd}[2]{\displaystyle\frac{\displaystyle\partial #1}{\displaystyle\partial #2}}
+\newcommand{\pdII}[2]{\displaystyle\frac{\displaystyle\partial^2 #1}{\displaystyle\partial {#2}^2}}
+\newcommand{\pdpd}[3]{\displaystyle\frac{\displaystyle\partial^2 #1}{\displaystyle\partial #2 \ \partial #3}}
+\newcommand{\td}[2]{\frac{{\rm d} #1}{{\rm d} #2}}
+\newcommand{\pdf}[2]{\displaystyle{\partial #1}{/\partial #2}}
+\newcommand{\tdf}[2]{\displaystyle{\d #1}{/\d #2}}
+\newcommand{\z}[1]{{\tilde{#1}}}
+\newcommand{\abs}[1]{|#1|}
+\newcommand{\absg}[1]{\left\lvert #1 \right\rvert}
+% \DeclarePairedDelimiter\absg{\left\lvert}{\right\rvert}
+% \DeclarePairedDelimiter\normg{\left\lVert}{\right\rVert}
+%\newcommand{\normg}[1]{\left\lVert #1 \right\rVert}
+\newcommand{\normg}[2]{\lVert #1 \rVert_{#2}}
+%\newcommand{\normg}[2]{\left\lVert #1 \right\rVert_{#2}}
+\newcommand{\normM}[3]{\left\lVert #1 \right\rVert_{#2}^{#3}}
+\newcommand{\norm}[1]{| #1 |}
+% \newcommand{\normg}[1]{\left\Vert \, #1 \, \right\Vert}
+% \newcommand{\sign}[1]{{\rm sgn}\left( #1 \right)}
+\newcommand{\grad}[1]{{\rm \nabla} #1 }
+\renewcommand{\div}[1]{{\rm \nabla \cdot }\left( #1 \right)}
+%\newcommand{\rot}[1]{{\rm rot }\left( #1 \right)}
+\newcommand{\rot}[1]{{\rm curl }\left( #1 \right)}
+\newcommand{\Grad}[1]{{\rm Grad}\left( #1 \right)}
+\newcommand{\Div}[1]{{\rm Div }\left( #1 \right)}
+\newcommand{\Rot}[1]{{\rm Curl }\left( #1 \right)}
+%\newcommand{\Rot}[1]{{\rm Rot }\left( #1 \right)}
+\newcommand{\tr}[1]{{\rm tr  }( #1 )}
+\newcommand{\cof}[1]{{\rm cof  }( #1 )}
+\renewcommand{\det}[1]{{\rm det }( #1 )}
+\newcommand{\rg}[1]{{\rm rg }( #1 )}
+\newcommand{\dev}[1]{{\rm dev}( #1 )}
+\newcommand{\fsym}[1]{{\rm sym }( #1 )}
+\newcommand{\fskw}[1]{{\rm skw }( #1 )}
+\newcommand{\unit}[1]{\,{\rm #1}}
+\newcommand{\lb}{\left(}
+\newcommand{\rb}{\right)}
+\newcommand{\lbr}{\left\lbrace}
+\newcommand{\rbr}{\right\rbrace}
+\newcommand{\la}{\langle}
+\newcommand{\ra}{\rangle}
+\newcommand{\ls}{\{}
+\newcommand{\rs}{\}}
+\newcommand{\sv}{\lb\begin{array}{ccccccccccccccccc}}
+	% \newcommand{\sV}{\left[\begin{array}{ccccccccccccccccc}}
+	\newcommand{\sV}{\begin{bmatrix}}
+		\newcommand{\eV}{\end{bmatrix}}
+	% \newcommand{\eV}{\end{array}\right]}
+	\newcommand{\ev}{\end{array}\rb}
+
+% Farben
+%\newcommand{\cred}{}
+%\newcommand{\cblue}{}
+%\newcommand{\cgreen}{}
+\newcommand{\cred }{\color{red}}
+\newcommand{\cblue }{\color{blue}}
+\newcommand{\cgreen }{\color{green}}
+%MARKER
+\newcommand{\ma}{$\bigstar$}
+\newcommand{\mb}{$\blacksquare\;$}
+% Auslassung
+\newcommand{\fempty}[1]{{}}
+
+% ABSCHNITT-STYLES
+\newcommand{\fliterature}[1]{{\tiny #1}}
+\newcommand{\f}[1]{\mbox{$ #1 $}}
+\newcommand{\topic}[1]{\vspace*{2mm}{\bf  #1.}}
+\newcommand{\supplement}[2]{\vspace{1mm}{\footnotesize $\blacktriangledown$ {\bf Ergänzung: #1.} #2}}
+% \newcommand{\example}[2]{\vspace{1mm}{\footnotesize $\blacktriangleright$ {\bf Beispiel: #1.} #2}}
+%\newcommand{\example}[2]{}
+
+% FORMEL BOXEN
+%
+% INDIZES
+\newcommand{\ta}{{}^n}
+\newcommand{\tb}{{}^{n+1}}
+\newcommand{\tba}{{}^{n+1}_i}
+\newcommand{\tbb}{{}^{n+1}_{i+1}}
+\renewcommand{\r}[2]{{#2_{\langle #1 \rangle}}}
+%
+% MENGEN
+\newcommand{\vect} {{\it Vect}}
+\newcommand{\ortp} {{\it Orth}^{\small +}}
+\newcommand{\ort} {{\it Orth}}
+\newcommand{\sym} {{\it Sym}}
+\newcommand{\skw} {{\it Skw}}
+\newcommand{\psym}{{\it Psym}}
+\newcommand{\unim}{{\it Unim}}
+\newcommand{\invp}{{\it Inv}^{\small +}}
+\newcommand{\inv}{{\it Inv}}
+\newcommand{\reell}{{\it R}}
+\newcommand{\reellp}{{\it R}^+}
+\newcommand{\lin} {{\it Lin}}
+\newcommand{\irr} {{\it Sym'}}
+\newcommand{\sop} {{{SO}(3)}}
+%
+% ROEMISCHE ZAHLEN
+\newcommand{\rI}{{\mathit{I}}}
+\newcommand{\rII}{{\mathit{II}}}
+\newcommand{\rIII}{{\mathit{III}}}
+\newcommand{\rIV}{{\mathit{IV}}}
+\newcommand{\rV}{{\mathit{V}}}
+% FETTE BUCHSTABEN
+%\newcommand{\sty}[1]{{\bf #1}}
+\newcommand{\sty}[1]{\mbox{\boldmath $#1$}}
+%\newcommand{\styy}[1]{\mbox{\boldmath $\sf #1$}}
+\newcommand{\styy}[1]{{\mathbb{#1}}}
+
+\newcommand{\fa}{\sty{ a}}
+\newcommand{\fb}{\sty{ b}}
+\newcommand{\fc}{\sty{ c}}
+\newcommand{\fd}{\sty{ d}}
+\newcommand{\fe}{\sty{ e}}
+\newcommand{\ff}{\sty{ f}}
+\newcommand{\fg}{\sty{ g}}
+\newcommand{\fh}{\sty{ h}}
+%\renewcommand{\fi}{\sty{ i}}
+\newcommand{\fj}{\sty{ j}}
+\newcommand{\fk}{\sty{ k}}
+\newcommand{\fl}{\sty{ l}}
+\newcommand{\fm}{\sty{ m}}
+\newcommand{\fn}{\sty{ n}}
+\newcommand{\fo}{\sty{ o}}
+\newcommand{\fp}{\sty{ p}}
+\newcommand{\fq}{\sty{ q}}
+\newcommand{\fr}{\sty{ r}}
+\newcommand{\fs}{\sty{ s}}
+\newcommand{\ft}{\sty{ t}}
+\newcommand{\fu}{\sty{ u}}
+\newcommand{\fv}{\sty{ v}}
+\newcommand{\fw}{\sty{ w}}
+\newcommand{\fx}{\sty{ x}}
+\newcommand{\fy}{\sty{ y}}
+\newcommand{\fz}{\sty{ z}}
+%
+\newcommand{\cfu}{\check{\fu}}
+\newcommand{\cfv}{\check{\fv}}
+\newcommand{\cfp}{\check{\fp}}
+\newcommand{\cfD}{\check{\fD}}
+\newcommand{\cfeps}{\check{\feps}}
+\newcommand{\cftau}{\check{\ftau}}
+\newcommand{\cfsigma}{\check{\fsigma}}
+%
+\newcommand{\hfu}{\hat{\fu}}
+\newcommand{\hfeps}{\hat{\feps}}
+\newcommand{\hfsigma}{\hat{\fsigma}}
+%
+\newcommand{\ffa}{\styy{ a}}
+\newcommand{\ffb}{\styy{ b}}
+\newcommand{\ffc}{\styy{ c}}
+\newcommand{\ffd}{\styy{ d}}
+\newcommand{\ffe}{\styy{ e}}
+\newcommand{\fff}{\styy{ f}}
+\newcommand{\ffg}{\styy{ g}}
+\newcommand{\ffh}{\styy{ h}}
+%\renewcommand{\fi}{\styy{ i}}
+\newcommand{\ffj}{\styy{ j}}
+\newcommand{\ffk}{\styy{ k}}
+\newcommand{\ffl}{\styy{ l}}
+\newcommand{\ffm}{\styy{ m}}
+\newcommand{\ffn}{\styy{ n}}
+\newcommand{\ffo}{\styy{ o}}
+\newcommand{\ffp}{\styy{ p}}
+\newcommand{\ffq}{\styy{ q}}
+\newcommand{\ffr}{\styy{ r}}
+\newcommand{\ffs}{\styy{ s}}
+\newcommand{\fft}{\styy{ t}}
+\newcommand{\ffu}{\styy{ u}}
+\newcommand{\ffv}{\styy{ v}}
+\newcommand{\ffw}{\styy{ w}}
+\newcommand{\ffx}{\styy{ x}}
+\newcommand{\ffy}{\styy{ y}}
+\newcommand{\ffz}{\styy{ z}}
+%
+\newcommand{\fA}{\sty{ A}}
+\newcommand{\fB}{\sty{ B}}
+\newcommand{\fC}{\sty{ C}}
+\newcommand{\fD}{\sty{ D}}
+\newcommand{\fE}{\sty{ E}}
+\newcommand{\fF}{\sty{ F}}
+\newcommand{\zfF}{\tilde{\sty{ F}}}
+\newcommand{\fG}{\sty{ G}}
+\newcommand{\fH}{\sty{ H}}
+\newcommand{\fI}{\sty{ I}}
+\newcommand{\fJ}{\sty{ J}}
+\newcommand{\fK}{\sty{ K}}
+\newcommand{\fL}{\sty{ L}}
+\newcommand{\fM}{\sty{ M}}
+\newcommand{\fN}{\sty{ N}}
+\newcommand{\fO}{\sty{ 0}}
+\newcommand{\fP}{\sty{ P}}
+\newcommand{\fQ}{\sty{ Q}}
+\newcommand{\fR}{\sty{ R}}
+\newcommand{\fS}{\sty{ S}}
+\newcommand{\fT}{\sty{ T}}
+\newcommand{\fU}{\sty{ U}}
+\newcommand{\fV}{\sty{ V}}
+\newcommand{\fW}{\sty{ W}}
+\newcommand{\fX}{\sty{ X}}
+\newcommand{\fY}{\sty{ Y}}
+\newcommand{\fZ}{\sty{ Z}}
+
+\newcommand{\zero}{\sty{ 0}}
+%
+\newcommand{\bfa}{\bar{\sty{ a}}}
+\newcommand{\bfb}{\bar{\sty{ b}}}
+\newcommand{\bfc}{\bar{\sty{ c}}}
+\newcommand{\bfd}{\bar{\sty{ d}}}
+\newcommand{\bfe}{\bar{\sty{ e}}}
+\newcommand{\bff}{\bar{\sty{ f}}}
+\newcommand{\bfg}{\bar{\sty{ g}}}
+\newcommand{\bfh}{\bar{\sty{ h}}}
+\newcommand{\bfi}{\bar{\sty{ i}}}
+\newcommand{\bfj}{\bar{\sty{ j}}}
+\newcommand{\bfk}{\bar{\sty{ k}}}
+\newcommand{\bfl}{\bar{\sty{ l}}}
+\newcommand{\bfm}{\bar{\sty{ m}}}
+\newcommand{\bfn}{\bar{\sty{ n}}}
+\newcommand{\bfo}{\bar{\sty{ o}}}
+\newcommand{\bfp}{\bar{\sty{ p}}}
+\newcommand{\bfq}{\bar{\sty{ q}}}
+\newcommand{\bfr}{\bar{\sty{ r}}}
+\newcommand{\bfs}{\bar{\sty{ s}}}
+\newcommand{\bft}{\bar{\sty{ t}}}
+\newcommand{\bfu}{\bar{\sty{ u}}}
+\newcommand{\bfv}{\bar{\sty{ v}}}
+\newcommand{\bfw}{\bar{\sty{ w}}}
+\newcommand{\bfx}{\bar{\sty{ x}}}
+\newcommand{\bfy}{\bar{\sty{ y}}}
+\newcommand{\bfz}{\bar{\sty{ z}}}
+%
+\newcommand{\bfA}{\bar{\sty{ A}}}
+\newcommand{\bfB}{\bar{\sty{ B}}}
+\newcommand{\bfC}{\bar{\sty{ C}}}
+\newcommand{\bfD}{\bar{\sty{ D}}}
+\newcommand{\bfE}{\bar{\sty{ E}}}
+\newcommand{\bfF}{\bar{\sty{ F}}}
+\newcommand{\bfG}{\bar{\sty{ G}}}
+\newcommand{\bfH}{\bar{\sty{ H}}}
+\newcommand{\bfI}{\bar{\sty{ I}}}
+\newcommand{\bfJ}{\bar{\sty{ J}}}
+\newcommand{\bfK}{\bar{\sty{ K}}}
+\newcommand{\bfL}{\bar{\sty{ L}}}
+\newcommand{\bfM}{\bar{\sty{ M}}}
+\newcommand{\bfN}{\bar{\sty{ N}}}
+\newcommand{\bfO}{\bar{\sty{ 0}}}
+\newcommand{\bfP}{\bar{\sty{ P}}}
+\newcommand{\bfQ}{\bar{\sty{ Q}}}
+\newcommand{\bfR}{\bar{\sty{ R}}}
+\newcommand{\bfS}{\bar{\sty{ S}}}
+\newcommand{\bfT}{\bar{\sty{ T}}}
+\newcommand{\bfU}{\bar{\sty{ U}}}
+\newcommand{\bfV}{\bar{\sty{ V}}}
+\newcommand{\bfW}{\bar{\sty{ W}}}
+\newcommand{\bfX}{\bar{\sty{ X}}}
+\newcommand{\bfY}{\bar{\sty{ Y}}}
+\newcommand{\bfZ}{\bar{\sty{ Z}}}
+\newcommand{\bfeps}{\bar{\feps}}
+\newcommand{\bfsigma}{\bar{\fsigma}}
+\newcommand{\bftau}{\bar{\ftau}}
+%
+\newcommand{\ffA}{\styy{ A}}
+\newcommand{\ffB}{\styy{ B}}
+\newcommand{\ffC}{\styy{ C}}
+\newcommand{\ffD}{\styy{ D}}
+\newcommand{\ffE}{\styy{ E}}
+\newcommand{\ffF}{\styy{ F}}
+\newcommand{\ffG}{\styy{ G}}
+\newcommand{\ffH}{\styy{ H}}
+\newcommand{\ffI}{\styy{ I}}
+\newcommand{\ffJ}{\styy{ J}}
+\newcommand{\ffK}{\styy{ K}}
+\newcommand{\ffL}{\styy{ L}}
+\newcommand{\ffM}{\styy{ M}}
+\newcommand{\ffN}{\styy{ N}}
+\newcommand{\ffO}{\styy{ O}}
+\newcommand{\ffP}{\styy{ P}}
+\newcommand{\ffQ}{\styy{ Q}}
+\newcommand{\ffR}{\styy{ R}}
+\newcommand{\ffS}{\styy{ S}}
+\newcommand{\ffT}{\styy{ T}}
+\newcommand{\ffU}{\styy{ U}}
+\newcommand{\ffV}{\styy{ V}}
+\newcommand{\ffW}{\styy{ W}}
+\newcommand{\ffX}{\styy{ X}}
+\newcommand{\ffY}{\styy{ Y}}
+\newcommand{\ffZ}{\styy{ Z}}
+%
+\newcommand{\falpha}{\mbox{\boldmath $\alpha$}}
+\newcommand{\fbeta}{\mbox{\boldmath $\beta$}}
+\newcommand{\fkappa}{\mbox{\boldmath $\kappa$}}
+\newcommand{\fnu}{\mbox{\boldmath $\nu$}}
+\newcommand{\fchi}{\mbox{\boldmath $\chi$}}
+\newcommand{\ftau}{\mbox{\boldmath $\tau$}}
+\newcommand{\fsigma}{\mbox{\boldmath $\sigma$}}
+\newcommand{\flambda}{\mbox{\boldmath $\lambda$}}
+\newcommand{\fmu}{\mbox{\boldmath $\mu$}}
+\newcommand{\fDelta}{\mbox{\boldmath $\Delta$}}
+\newcommand{\fdelta}{\mbox{\boldmath $\delta$}}
+\newcommand{\fomega}{\mbox{\boldmath $\omega$}}
+\newcommand{\fOmega}{\mbox{\boldmath $\Omega$}}
+\newcommand{\fLambda}{\mbox{\boldmath $\Lambda$}}
+\newcommand{\feta}{\mbox{\boldmath $\eta $}}
+\newcommand{\fxi}{\mbox{\boldmath $\xi $}}
+\newcommand{\fXi}{\mbox{\boldmath $\Xi $}}
+\newcommand{\feps}{\mbox{\boldmath $\varepsilon $}}
+\newcommand{\ftheta}{\mbox{\boldmath $\theta $}}
+\newcommand{\fgamma}{\mbox{\boldmath $\gamma $}}
+\newcommand{\fGamma}{\mbox{\boldmath $\Gamma $}}
+\newcommand{\fSigma}{\mbox{\boldmath $\Sigma $}}
+\newcommand{\fPi}{\mbox{\boldmath $\Pi $}}
+\newcommand{\fPhi}{\mbox{\boldmath $\Phi $}}
+\newcommand{\fphi}{\mbox{\boldmath $\phi $}}
+\newcommand{\fpi}{\mbox{\boldmath $\pi $}}
+\newcommand{\fvarphi}{\mbox{\boldmath $\varphi $}}
+\newcommand{\fpsi}{\mbox{\boldmath $\psi $}}
+\newcommand{\fPsi}{\mbox{\boldmath $\Psi $}}
+\newcommand{\fJota}{{\bf I}}
+\newcommand{\fepsi}{\mbox{\boldmath $\varepsilon $}}
+%
+\newcommand{\cA}{{\cal A}}
+\newcommand{\cB}{{\cal B}}
+\newcommand{\cC}{{\cal C}}
+\newcommand{\cD}{{\cal D}}
+\newcommand{\cE}{{\cal E}}
+\newcommand{\cF}{{\cal F}}
+\newcommand{\cG}{{\cal G}}
+\newcommand{\cH}{{\cal H}}
+\newcommand{\cI}{{\cal I}}
+\newcommand{\cJ}{{\cal J}}
+\newcommand{\cK}{{\cal K}}
+\newcommand{\cL}{{\cal L}}
+\newcommand{\cM}{{\cal M}}
+\newcommand{\cN}{{\cal N}}
+\newcommand{\cO}{{\cal O}}
+\newcommand{\cP}{{\cal P}}
+\newcommand{\cQ}{{\cal Q}}
+\newcommand{\cR}{{\cal R}}
+\newcommand{\cS}{{\cal S}}
+\newcommand{\cT}{{\cal T}}
+\newcommand{\cU}{{\cal U}}
+\newcommand{\cV}{{\cal V}}
+\newcommand{\cW}{{\cal W}}
+\newcommand{\cX}{{\cal X}}
+\newcommand{\cY}{{\cal Y}}
+\newcommand{\cZ}{{\cal Z}}
+
+\newcommand{\hA}{\ensuremath{\hat{A}}}
+\newcommand{\hB}{\ensuremath{\hat{B}}}
+\newcommand{\hC}{\ensuremath{\hat{C}}}
+\newcommand{\hD}{\ensuremath{\hat{D}}}
+\newcommand{\hE}{\ensuremath{\hat{E}}}
+\newcommand{\hF}{\ensuremath{\hat{F}}}
+\newcommand{\hG}{\ensuremath{\hat{G}}}
+\newcommand{\hH}{\ensuremath{\hat{H}}}
+\newcommand{\hI}{\ensuremath{\hat{I}}}
+\newcommand{\hJ}{\ensuremath{\hat{J}}}
+\newcommand{\hK}{\ensuremath{\hat{K}}}
+\newcommand{\hL}{\ensuremath{\hat{L}}}
+\newcommand{\hM}{\ensuremath{\hat{M}}}
+\newcommand{\hN}{\ensuremath{\hat{N}}}
+\newcommand{\hO}{\ensuremath{\hat{O}}}
+\newcommand{\hP}{\ensuremath{\hat{P}}}
+\newcommand{\hQ}{\ensuremath{\hat{Q}}}
+\newcommand{\hR}{\ensuremath{\hat{R}}}
+\newcommand{\hS}{\ensuremath{\hat{S}}}
+\newcommand{\hT}{\ensuremath{\hat{T}}}
+\newcommand{\hU}{\ensuremath{\hat{U}}}
+\newcommand{\hV}{\ensuremath{\hat{V}}}
+\newcommand{\hW}{\ensuremath{\hat{W}}}
+\newcommand{\hX}{\ensuremath{\hat{X}}}
+\newcommand{\hY}{\ensuremath{\hat{Y}}}
+\newcommand{\hZ}{\ensuremath{\hat{Z}}}
+\newcommand{\ha}{\ensuremath{\hat{a}}}
+\newcommand{\hb}{\ensuremath{\hat{b}}}
+\newcommand{\hc}{\ensuremath{\hat{c}}}
+\newcommand{\hd}{\ensuremath{\hat{d}}}
+\newcommand{\he}{\ensuremath{\hat{e}}}
+\newcommand{\hf}{\ensuremath{\hat{f}}}
+\newcommand{\hg}{\ensuremath{\hat{g}}}
+\newcommand{\hh}{\ensuremath{\hat{h}}}
+% \newcommand{\hi}{\ensuremath{\hat{i}}}
+\newcommand{\hj}{\ensuremath{\hat{j}}}
+\newcommand{\hk}{\ensuremath{\hat{k}}}
+\newcommand{\hl}{\ensuremath{\hat{l}}}
+\newcommand{\hm}{\ensuremath{\hat{m}}}
+\newcommand{\hn}{\ensuremath{\hat{n}}}
+\newcommand{\ho}{\ensuremath{\hat{o}}}
+\newcommand{\hp}{\ensuremath{\hat{p}}}
+\newcommand{\hq}{\ensuremath{\hat{q}}}
+\newcommand{\hr}{\ensuremath{\hat{r}}}
+\newcommand{\hs}{\ensuremath{\hat{s}}}
+\newcommand{\hatt}{\ensuremath{\hat{t}}}
+% \newcommand{\hatt}{\ensuremath{\hat{t}}}
+\newcommand{\hu}{\ensuremath{\hat{u}}}
+\newcommand{\hv}{\ensuremath{\hat{v}}}
+\newcommand{\hw}{\ensuremath{\hat{w}}}
+\newcommand{\hx}{\ensuremath{\hat{x}}}
+\newcommand{\hy}{\ensuremath{\hat{y}}}
+\newcommand{\hz}{\ensuremath{\hat{z}}}
+
+\newcommand{\htau}{\hat\tau}
+\newcommand{\hsigma}{\hat\sigma}
+\newcommand{\hSigma}{\hat\Sigma}
+\newcommand{\hbsigma}{\hat{\bar\sigma}}
+\newcommand{\heps}{\hat\varepsilon}
+\newcommand{\hbeps}{\hat{\bar\varepsilon}}
+\newcommand{\hbtau}{\hat{\bar\tau}}
+\newcommand{\hbd}{\hat{\bar d}}
+\newcommand{\hbq}{\hat{\bar q}}
+\newcommand{\hbr}{\hat{\bar r}}
+\newcommand{\hxi}{\hat\xi}
+\newcommand{\hchi}{\hat\chi}
+\newcommand{\hzeta}{\hat\zeta}
+\newcommand{\halpha}{\hat\alpha}
+\newcommand{\hbeta}{\hat\beta}
+\newcommand{\hgamma}{\hat\gamma}
+\newcommand{\hdelta}{\hat\delta}
+\newcommand{\hDelta}{\hat\Delta}
+\newcommand{\htheta}{\hat\theta}
+\newcommand{\hkappa}{\hat\kappa}
+\newcommand{\hlambda}{\hat\lambda}
+\newcommand{\h}{\hat\mu}
+\newcommand{\hLambda}{\hat\Lambda}
+\newcommand{\hnu}{\hat\nu}
+\newcommand{\hrho}{\hat\rho}
+\newcommand{\hzero}{\hat{0}}
+
+\newcommand{\hbR}{\hat{\bar{R}}}
+
+
+\newcommand{\scrI}{\mathscr{I}}
+\newcommand{\scrD}{\mathscr{D}}
+\newcommand{\scrF}{\mathscr{F}}
+\newcommand{\scrS}{\mathscr{S}}
+\newcommand{\scrB}{\mathscr{B}}
+
+
+\newcommand{\ba}{^{( \alpha )}}
+\newcommand{\bb}{^{( \beta )}}
+\newcommand{\bg}{^{( \gamma )}}
+\newcommand{\bk}{^{( k )}}
+\newcommand{\bm}{^{( m )}}
+\newcommand{\bn}{^{( n )}}
+\newcommand{\bi}{^{( i )}}
+\newcommand{\bj}{^{( j )}}
+
+\newcommand{\Ba}{_{( \alpha )}}
+\newcommand{\Bb}{_{( \beta )}}
+\newcommand{\Bg}{_{( \gamma )}}
+\newcommand{\Bk}{_{( k )}}
+\newcommand{\Bm}{_{( m )}}
+\newcommand{\Bn}{_{( n )}}
+\newcommand{\Bi}{_{( i )}}
+\newcommand{\Bj}{_{( j )}}
+
+\newcommand{\beps}{\bar{\varepsilon}}
+\newcommand{\fbeps}{\bar{\feps}}
+\newcommand{\fbsigma}{\bar{\fsigma}}
+\newcommand{\bffC}{\bar{\ffC}}
+\newcommand{\bffS}{\bar{\ffS}}
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+
+
+\newcommand{\ltab}{\raggedright\arraybackslash} % Tabellenabschnitt linksbündig
+\newcommand{\ctab}{\centering\arraybackslash} % Tabellenabschnitt zentriert
+\newcommand{\rtab}{\raggedleft\arraybackslash} % Tabellenabschnitt rechtsbündig
+
+% \newcommand{\ul}[1]{\underline{#1}}
+% \newcommand{\ull}[1]{\uline{\raisebox{-0.05em}{\uline{\raisebox{0.05em}{\ensuremath{#1}}}}}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ull}[1]{\ul{\ul{#1}}}
+\makeatletter
+\definecolor{Sblueaa}{cmyk}{1,0.6,0,0}
+\definecolor{Sbluea}{cmyk}{1,0.4,0,0}
+\definecolor{Sblueb}{cmyk}{0.7,0.2,0,0}
+\definecolor{Sbluec}{cmyk}{0.5,0.1,0,0}
+\definecolor{Sblued}{cmyk}{0.3,0.05,0,0}
+\definecolor{Sbluee}{cmyk}{0.15,0.04,0,0}
+\definecolor{Svbluea}{cmyk}{0.9,0.6,0,0}
+\definecolor{Svblueb}{cmyk}{0.68,0.4,0,0}
+\definecolor{Svbluec}{cmyk}{0.45,0.26,0,0}
+\definecolor{Svblued}{cmyk}{0.27,0.12,0,0}
+\definecolor{Sblacka}{cmyk}{0.5,0.2,0.2,0.85}
+\definecolor{Sblackb}{cmyk}{0.35,0.14,0.14,0.6}
+\definecolor{Sblackc}{cmyk}{0.25,0.1,0.1,0.43}
+\definecolor{Sblackd}{cmyk}{0.15,0.06,0.06,0.26}
+\definecolor{Sblacke}{rgb}{0.827451,0.8509804,0.8627451}
+%\colorlet{Sblackf}{Sblacke!70!white}
+
+\definecolor{Syellow}{cmyk}{0,0.1,1,0}
+\definecolor{Sorange}{cmyk}{0,0.7,1,0}
+\definecolor{Sred}{cmyk}{0,1,1,0}
+%\colorlet{Slred}{Sred!40!white}
+\definecolor{Spink}{cmyk}{0,1,0,0}
+\definecolor{Spurple}{cmyk}{0.6,1,0,0}
+\definecolor{Scyan}{cmyk}{1,0,0.4,0}
+\definecolor{Sgreen}{cmyk}{0.5,0,1,0}
+% \definecolor{S}{cmyk}{}
+
+\newcommand{\cSblueaa}{\color{Sblueaa}}
+\newcommand{\cSbluea}{\color{Sbluea}}
+\newcommand{\cSblueb}{\color{Sblueb}}
+\newcommand{\cSbluec}{\color{Sbluec}}
+\newcommand{\cSblued}{\color{Sblued}}
+\newcommand{\cSbluee}{\color{Sbluee}}
+\newcommand{\cSvbluea}{\color{Svbluea}}
+\newcommand{\cSvblueb}{\color{Svblueb}}
+\newcommand{\cSvbluec}{\color{Svbluec}}
+\newcommand{\cSvblued}{\color{Svblued}}
+\newcommand{\cSblacka}{\color{Sblacka}}
+\newcommand{\cSblackb}{\color{Sblackb}}
+\newcommand{\cSblackc}{\color{Sblackc}}
+\newcommand{\cSblackd}{\color{Sblackd}}
+\newcommand{\cSblacke}{\color{Sblacke}}
+\newcommand{\cSyellow}{\color{Syellow}}
+\newcommand{\cSorange}{\color{Sorange}}
+\newcommand{\cSred}{\color{Sred}}
+\newcommand{\cSdred}{\color{Sred!50!black}}
+\newcommand{\cSlred}{\color{Sred!50!white}}
+\newcommand{\cSpink}{\color{Spink}}
+\newcommand{\cSpurple}{\color{Spurple}}
+\newcommand{\cScyan}{\color{Scyan}}
+\newcommand{\cSgreen}{\color{Sgreen}}
+\newcommand{\cSdgreen}{\color{Sgreen!50!black}}
+% \newcommand{\mcode}[1]{{\cSblueb \texttt{#1}}}
+
+\newcommand{\TB}[1]{{\left({#1}\right)}^{\sf  T}}
+
+%\usepackage[ruled,lined]{algorithm2e}
+%\SetAlgoSkip{bigskip}
+%\LinesNumbered
+%\g@addto@macro{\@algocf@init}{\SetKwInOut{Input}{Input}}
+%\g@addto@macro{\@algocf@init}{\SetKwInOut{Output}{Output}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\Sbfit}[1]{{\cSbluea\it\bfseries{#1}}}
+\newcommand{\Sbf}[1]{{\cSbluea\bf #1}}
+\newcommand{\Sit}[1]{{\cSbluea\it #1}}
+\newcommand{\Sbfcyan}[1]{{\cScyan\bf #1}}
+\newcommand{\Sbfitcyan}[1]{{\cScyan\it\bfseries #1}}
+\newcommand{\Sitcyan}[1]{{\cScyan\it #1}}
+\newcommand{\Sbfgreen}[1]{{\cSgreen\bf #1}}
+\newcommand{\Sbfitgreen}[1]{{\cSgreen\it\bfseries #1}}
+\newcommand{\Sitgreen}[1]{{\cSgreen\it #1}}
+\newcommand{\Sbfred}[1]{{\cSred\bf #1}}
+\newcommand{\Sbfitred}[1]{{\cSred\it\bfseries #1}}
+\newcommand{\Sitred}[1]{{\cSred\it #1}}
+\newcommand{\Sbfpink}[1]{{\cSpink\bf #1}}
+\newcommand{\Sbfitpink}[1]{{\cSpink\it\bfseries #1}}
+\newcommand{\Sitpink}[1]{{\cSpink\it #1}}
+\newcommand{\Sbfpurple}[1]{{\cSpurple\bf #1}}
+\newcommand{\Sbfitpurple}[1]{{\cSpurple\it\bfseries #1}}
+\newcommand{\Sitpurple}[1]{{\cSpurple\it #1}}
+\newcommand{\Sbfyellow}[1]{{\cSyellow\bf #1}}
+\newcommand{\Sbfityellow}[1]{{\cSyellow\it\bfseries #1}}
+\newcommand{\Sityellow}[1]{{\cSyellow\it #1}}
+\newcommand{\Sbforange}[1]{{\cSorange\bf #1}}
+\newcommand{\Sbfitorange}[1]{{\cSorange\it\bfseries #1}}
+\newcommand{\Sitorange}[1]{{\cSorange\it #1}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\makeatother
+
+\newcommand{\epse}{\varepsilon^{\rm e}}
+\newcommand{\epsp}{\varepsilon^{\rm p}}
+
+\newcommand{\epst}{\varepsilon}
+\newcommand{\sig}{\sigma}
+\newcommand{\sigy}{\sigma_{\rm y}}
+\newcommand{\Fp}{f^{\rm p}}
+\newcommand{\Fd}{f^{\rm d}}
+
+\newcommand{\epsd}{\feps_{\rm d}}
+\newcommand{\epsm}{\varepsilon_{\rm m}}
+\newcommand{\epseq}{\varepsilon_{\rm eq}}
+\newcommand{\epseqc}{\varepsilon_{\rm eq}^{\rm c}}
+\newcommand{\epsz}{\varepsilon_0}
+\newcommand{\sigmaz}{\sigma_0}
+
+\newcommand{\mT}{\mat{T}}
+\newcommand{\mJ}{\mat{J}}
+\newcommand{\vf}{\vec{f}}
+\newcommand{\vF}{\vec{F}}
+\newcommand{\vw}{\vec{w}}
+\newcommand{\vxi}{\vec{\xi}}
+\newcommand{\vx}{\vec{x}}
+\newcommand{\vy}{\vec{y}}
+\newcommand{\vY}{\vec{Y}}
+\newcommand{\vZ}{\fZ}
+\newcommand{\vz}{\vec{z}}
+\newcommand{\bvx}{\vec{\bar{x}}}
+\newcommand{\vn}{\vec{n}}
+\newcommand{\vP}{\vec{P}}
+\newcommand{\vp}{\vec{p}}
+\newcommand{\vq}{\vec{q}}
+\newcommand{\vu}{\vec{u}}
+\newcommand{\vr}{\vec{r}}
+\newcommand{\vphi}{\vec{\phi}}
+
+\renewcommand{\vec}[1]{\underline{#1}}
+\newcommand{\mat}[1]{\underline{\underline{#1}}}
+\newcommand{\ns}{n_{\rm s}}
+\newcommand{\Nr}{N_{\rm r}}
+\newcommand{\Nc}{N_{\rm c}}
+\newcommand{\Ngp}{N_{\rm gp}}
+
+\newcommand{\vol}[1]{\langle #1 \rangle}
+\newcommand{\mS}{\mat{S}}
+\newcommand{\mE}{\mat{E}}
+\newcommand{\mEe}{\mat{E_e}}
+\newcommand{\mEp}{\mat{E_p}}
+\newcommand{\mSe}{\mat{S_e}}
+\newcommand{\mSp}{\mat{S_p}}
+\newcommand{\mM}{\mat{M}}
+\newcommand{\mV}{\mat{V}}
+\newcommand{\vV}{\vec{V}}
+\newcommand{\mEz}{\mat{\z E}}
+\newcommand{\mB}{\mat{B}}
+\newcommand{\mC}{\mat{C}}
+\newcommand{\mbC}{\mat{\bar C}}
+\newcommand{\vSig}{\vec{\sigma}}
+\newcommand{\vbSig}{\vec{\bar \sigma}}
+\newcommand{\mEt}{\T{\mat{E}}}
+\newcommand{\mBt}{\T{\mat{B}}}
+\newcommand{\mTt}{\T{\mat{T}}}
+\newcommand{\mTi}{{\mat{T_i}}}
+\newcommand{\vEps}{\vec{\varepsilon}}
+\newcommand{\vbEps}{\vec{\bar\varepsilon}}
+\newcommand{\vzero}{\vec{0}}
+\newcommand{\vdelta}{\vec{\delta}}
+\newcommand{\fepsp}{\feps^p}
+\newcommand{\fepse}{\feps^e}
+\newcommand{\fepst}{\feps^t}
+\newcommand{\epsmax}{\feps_{\rm max}}
+\newcommand{\vX}{\fX}
+\newcommand{\Hm}{H^-}
+\newcommand{\Hp}{H^+}
+\newcommand{\Xdot}{\begin{bmatrix}
+		\ \ \dot{\hat{\epst}}^{\rm p}_{i+1/2} - {\dot{\epst}^{\rm p}_i}  \\
+		- (\hat{\dot\vX}_{i+1/2} - \dot\fX_i)
+\end{bmatrix}}
+\newcommand{\Y}{\begin{bmatrix}
+		\hat\sigma_{i+1/2} - \sigma_i\\
+		\hat\fZ_{i+1/2} - \fZ_i
+\end{bmatrix}}
+\newcommand{\Xdotglobal}{\begin{bmatrix}
+		\ \ \dot{\epst}^{\rm p}_{i+1} - \dot{\hat{\epst}}^{\rm p}_{i+1/2}  \\
+		- (\dot{\vX} _{i+1}- \dot{\hat{\vX}}_{i+1/2} )
+\end{bmatrix}}
+\newcommand{\Yglobal}{\begin{bmatrix}
+		\sigma_{i+1} - \hat{\sigma}_{i+1/2}\\
+		\fZ_{i+1} - \hat{\fZ}_{i+1/2}
+\end{bmatrix}}	
+\newcommand{\intern}{\begin{bmatrix}
+		\vX \\
+		D
+\end{bmatrix}}
+\newcommand{\conj}{\begin{bmatrix}
+		\vZ \\
+		Y
+\end{bmatrix}}
+\newcommand{\Xdotd}{\begin{bmatrix}
+		\ \ \dot{\hat{\epst}}^{\rm p}_{i+1/2} - {\dot{\epst}^{\rm p}_i}  \\
+		- (\hat{\dot\vX}_{i+1/2} - \dot\fX_i) \\
+		- (\hat{\dot D}_{i+1/2} - \dot D_i)
+\end{bmatrix}}
+\newcommand{\Yd}{\begin{bmatrix}
+		\hat\sigma_{i+1/2} - \sigma_i\\
+		\hat\fZ_{i+1/2} - \fZ_i \\
+		\hat Y_{i+1/2} -  Y_i
+\end{bmatrix}}
+\newcommand{\Xdotglobald}{\begin{bmatrix}
+		\ \ \dot{\epst}^{\rm p}_{i+1} - \dot{\hat{\epst}}^{\rm p}_{i+1/2}  \\
+		- (\dot\vX _{i+1}- \hat{\dot\vX}_{i+1/2} ) \\
+		- (\dot D _{i+1}- \hat{\dot D}_{i+1/2} )
+\end{bmatrix}}
+\newcommand{\Yglobald}{\begin{bmatrix}
+		\sigma_{i+1} - \hat\sigma_{i+1/2}\\
+		\fZ_{i+1} - \hat\fZ_{i+1/2} \\
+		Y_{i+1} - \hat Y_{i+1/2}
+\end{bmatrix}}	
+\newcommand{\sign}[1]{{\rm sign}\lb #1 \rb}
+\newcommand{\kd}{k_{\rm d}}
+\newcommand{\nd}{n_{\rm d}}
+\newcommand{\kp}{k_{\rm p}}
+\newcommand{\np}{n_{\rm p}}
+\newcommand{\phid}{\phi^{\rm d}}
+\newcommand{\phip}{\phi^{\rm p}}
+
+\begin{document}
+%% \def\leftmark{Session title}
+%%
+%%    The information for the title page will be placed between
+%%    \begin{document} and \maketitle. The order of most entries
+%%    is determined by the class file and cannot be changed by
+%%    rearranging them. The maketitle command follows after the
+%%    abstract.
+%%
+%%    The following commands will be updated by the publisher:
+%%
+%%    \renewcommand{\copyrightyear}{2016}
+%%    \DOIsuffix{pamm.20161zzzz}
+%%    \Volume{16} 
+%%    \Year{2016} 
+%%    \pagespan{1}{}
+%%
+%%    The short title is optional:
+
+\TitleLanguage[EN]
+\title[LATIN approach for fatigue damage computations]{Large time increment approach for fatigue damage computations }
+
+%% Please delete not needed author entries.
+%% Information for the first author.
+\author{\firstname{Shadi} \lastname{Alameddin}\inst{1,}%
+\footnote{Corresponding author: e-mail \ElectronicMail{shadi.alameddin@ibnm.uni-hannover.de}, 
+     phone +49\,511\,762\,2286,
+     fax +49\,511\,762\,19053}} 
+\address[\inst{1}]{\CountryCode[DE] IBNM,
+	Leibniz Universität Hannover, Appelstraße 9a, 30167 Hannover, Germany}
+%%
+%%    Information for the second author
+\author{\firstname{Mainak} \lastname{Bhattacharyya}\inst{1}}
+\address[\inst{2}]{\CountryCode[FR] LMT, ENS Paris Saclay, CNRS, Universit{\'e} Paris Saclay, 61 avenue du Président Wilson 94235 Cachan , France }
+
+%%    Information for the third author
+\author{\firstname{Amelie} \lastname{Fau}\inst{1}}
+\author{\firstname{Udo} \lastname{Nackenhorst}\inst{1}}
+\author{\firstname{David} \lastname{N{\'e}ron}\inst{2}}
+\author{\firstname{Pierre} \lastname{Ladev{\`e}ze}\inst{2}}
+
+%%
+%%    \dedicatory{This is a dedicatory.}
+%%
+%%    Abstract is required.
+\AbstractLanguage[EN]
+\begin{abstract}
+This contribution focuses on the use of an new method to reduce the computational demands of fatigue damage computations using continuum damage mechanics. The LArge Time INcrement (LATIN) method incorporates a model order reduction approach namely the proper generalised decomposition (PGD). LATIN has been extended to tackle damage problems.
+\end{abstract}
+%% maketitle must follow the abstract.
+\maketitle                   % Produces the title.
+
+\section{Introduction}
+Non-linear mechanical behaviour such as (visco)plasticity or damage is generally tackled with time incremental methods where the time domain is subdivided into incremental steps. Then a numerical scheme is carried out consequently for each time step. In contrast, in the LArge Time INcrement (LATIN) method \cite{bib1}, an approximation of the total time history process is sought directly. 
+LATIN has been well established to compute several types of problems including material non-linearities but not damage law which leads to a non-linear state equation. An extension of the method has been introduced by \cite{bib3} to tackle fatigue damage and then to benefit from a promising numerical framework for fatigue damage computation.
+
+
+
+\section{LATIN-PGD}
+
+LATIN \cite{bib1} involves an iterative sequence of two steps: tackling the linear equations such as the state equations and the mechanical equilibrium equation on one side (the global stage), and the nonlinear evolution equations on the other one (the local stage). The global stage, which is linear, can benefit from model reduction techniques such as the proper generalised decomposition (PGD), in order to obtain a substantial reduction of the computational cost. 
+
+\section{Extension of LATIN to account for damage}
+
+When damage is incorporated, compared to the aforementioned LATIN method, a new difficulty due to the nonlinear elastic state law appears. In this case, the global stage is nonlinear and it is not straightforward to solve such a problem. This is why, it was suggested by \cite{bib3} to incorporate the nonlinear elastic state law in the local step such that the global stage remains linear. 
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+	\begin{center}
+		\includegraphics[width=0.4\textwidth,clip]{img/latin_iter.pdf}	\caption{Illustration of the LATIN iterations}
+	\end{center}
+
+\end{wrapfigure}
+
+The quantities of interest are represented as $s$ and the starting point ${s}_{i} \in \cA$ is assumed to be known, typically from an elastic initialisation.  The LATIN iterations after the initialisation are illustrated in Fig.1. In these iterations, plastic corrections are computed following two steps:
+
+	\begin{enumerate}
+		\item \textbf{Local step} (local in space)\\	
+		Solve the nonlinear {constitutive equations} in addition to the nonlinear state equation at every space-time point, i.e. no integration of the nonlinear equations over the whole space domain. This step computes $\hat{s}_{i+\frac{1}{2}} \in \Gamma$ that satisfies the constitutive laws.
+		
+		\item \textbf{Global step} (computationally expensive due to the integration over the space domain) \\
+		The kinematically and statically admissible fields (KA and SA) are computed for the whole time-space domain with the help of a model reduction technique based on a separable form and a greedy algorithm which defines the space and time modes on-the-fly to obtain ${s}_{i+1} \in \cA$.
+	\end{enumerate}
+	
+	\clearpage
+	During the global step, an additive split of the stress and strain into two parts is introduced. One part depends only on the local step and consequently on the nonlinear state law while the other one is computed based on the plastic deformations. Therefore, $\Gamma$ includes the solution of the evolution equations in addition to the elastic state law while in the global step, the linear hardening state law and the admissibility equation are solved.
+		
+	These two steps form one LATIN iteration and they are repeated until convergence is reached at $s_{\rm e}$. Note that at every local and global step, the quantities of interest for all the space-time points are approximated.
+	
+\section{Damage prediction for a bar subjected to cyclic loading}
+%\section{Viscoplastic material with damage}
+The test case illustrated in Fig.2 is analysed within the small deformations framework. The material considered is a Cr-Mo steel at $580^\circ {\rm C}$ \cite{bib7}. The yield stress varies along the bars.
+ An isotropic damage with microdefects closure effect is assumed and a standard viscoplastic model which is a variant of Chaboche and Marquis viscoplastic model \cite{bib8} is considered. 
+
+%This damage is considered to be coupled only with the elastic response. Experiments have shown that below a specific damage limit, in stress or (strain) space, the material behaves totally elasto-viscoplastic without any development of damage. Hence, the situation is similar to visco-plasticity and a convex damage yield function is assumed to exist with an initial damage limit. {\color{red} energy threshold?}
+%\cite{holcomb1986detecting}. 
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth,clip]{img/eg.pdf}
+	\caption{Two bars under cyclic loading}
+	\label{fig:key}
+\end{figure}
+
+The damage evolution is illustrated in Fig.3 where the material variability effect can be seen clearly. The convergence of the method is shown in Fig.4. With only three PGD pairs the relative error as defined in \cite{bib3} can be minimised to approximately $10^{-9 }$ within $25$ LATIN iterations. The generated PGD time and space functions are plotted in Fig.5. The space functions, denoted by $\bar{\epst}^{\rm p}_i$, reflect the variation of the yield stresses along each bar. The derivatives of the time functions are referred to as $\dot{\lambda}_i$. The first time function captures the dominant information of the system while the following ones carry less and less governing details.
+
+\begin{figure}[h]
+\begin{minipage}{0.33\textwidth}
+		\includegraphics[width=1\textwidth,clip]{img/damage_d.png}\\
+	\caption{Damage evolution in bar 1}
+
+\end{minipage} \hfil \begin{minipage}{0.33\textwidth}
+	\includegraphics[width=1\textwidth,clip]{img/damage_error.pdf}\\
+\caption{Evolution of the relative error}
+\end{minipage}\hfil \begin{minipage}{0.33\textwidth}
+	\includegraphics[width=1\textwidth,clip]{img/damage_pairs.pdf}\\
+	\caption{Space-time modes approximating the plastic strain rate}
+\end{minipage}\\
+\end{figure}
+
+\section{Conclusion}
+The presented LATIN-PGD method has been extended in \cite{bib3} to predict damage evolution of 2D structures undergoing non-proportional fatigue loading. This method is promising to conduct fatigue damage analysis. However, in the case of large number of cycles, more sophisticated time treatment is required to benefit from a substantial reduction in the computational cost and such development is in progress.
+
+\begin{acknowledgement}
+	The support by the Deutsche Forschungsgemeinschaft (DFG) via IRTG 1627 is acknowledged.
+\end{acknowledgement}
+
+\vspace{\baselineskip}
+%% The style of the following references should be used in all documents.
+
+\begin{thebibliography}{1}
+
+\bibitem{bib1}% 
+P. Ladev{\`e}ze, \textit{Nonlinear computational structural mechanics: new approaches and non-incremental methods of calculation}. New York, NY: Springer New York, 1999.
+
+\bibitem{bib3}% 
+M. Bhattacharyya, A. Fau, U. Nackenhorst, D. N{\'e}ron, P. Ladev{\`e}ze, \textit {A LATIN-based model reduction approach for the simulation of cycling damage} in \textit{Multiscale Modelling of Heterogeneous Structures (MUMO)} (2017-accepted).
+%\textit {A LATIN-based model reduction approach for the simulation of cycling damage},
+%Computational Mechanics 2017 (\textit{submitted}).\\
+%M. Bhattacharyya, A. Fau, U. Nackenhorst, D. N{\'e}ron, P. Ladev{\`e}ze, \textit {},
+% (eds) (2017), \textit{} (\textit{accepted}).\\
+
+%@inbook{bib3,
+%	author = {M. Bhattacharyya, A. Fau, U. Nackenhorst, D. N{\'e}ron, P. Ladev{\`e}ze},
+%	title = {A model reduction technique in space and time for fatigue simulation},
+%	booktitle = {Multiscale Modelling of Heterogeneous Structures (MUMO)},
+%	date = {2017},
+%	OPTbookauthor = {bookauthor},
+%	OPTeditor = {P. Wriggers, O. Allix, J. Soric},
+%}
+
+
+\bibitem{bib7}
+J. Lemaitre and R. Desmorat. \textit{Engineering damage mechanics: ductile, creep, fatigue and brittle failures}. Springer Science \& Business Media, 2005.
+
+\bibitem{bib8}
+J.Y. Cognard, P. Ladev{\`e}ze, \textit{A large time increment approach for cyclic viscoplasticity}, Int. J. Plasticity 9 (1993) 114-157.
+
+\end{thebibliography}
+
+\end{document}        
+%% End of document.
+%%
+%% End of file `pamm-stpl.tex'.

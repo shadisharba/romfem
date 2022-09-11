@@ -1,0 +1,202 @@
+\documentclass[]{article}
+\usepackage[a4paper,inner=2.5cm,outer=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+%\renewcommand{\familydefault}{\sfdefault}
+\usepackage{tikz}
+\usepackage[space]{grffile}  % spaces in the figure path
+% \usepackage[german,ngerman]{babel}
+\usepackage[english]{babel}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{amsmath,amsthm,amstext,amssymb}
+\usepackage{xcolor,color}
+%\usepackage{arial}
+%\usepackage{pifont}
+%\usepackage{times}
+\usepackage{array}
+\usepackage{upgreek}
+\usepackage{enumerate}
+\usepackage{pgf}
+\usepackage{mathrsfs}
+\usepackage{psfrag}
+\usepackage{multirow}
+\usepackage{placeins}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}  
+\usepackage{epstopdf}
+%\usepackage[]{units}
+\usetikzlibrary{calc,intersections,through,backgrounds,decorations.text,patterns}
+
+%\usepackage{setspace		
+%	% \headsep=4mm
+%	% \footskip=4mm
+%	\parindent=0mm
+%	\parskip=6pt
+%	% \renewcommand{\footskip}{3pt}
+%	
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\usepackage{textpos}
+%	\setlength{\TPHorizModule}{1mm}%
+%	\setlength{\TPVertModule}{1mm}%
+%	% \headsep=5mm
+%	% \footskip=5mm
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\pagestyle{fancy}
+%	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%	\newcommand{\articleheading}[3]{
+%		{\large #1}\\[3mm]
+%		{\Large\bf #2}\\[3mm]
+%		{\large #3}
+%	}}
+\usepackage[final]{pdfpages}
+\usepackage{xcolor,colortbl}
+\usepackage{amsmath}
+\usepackage{mdframed}
+\usepackage{xspace}
+\usetikzlibrary{calc}
+\usepackage{tikz-qtree}
+
+\usetikzlibrary{matrix,positioning,decorations.pathreplacing}
+\DeclareMathOperator{\Mcol}{col}
+\DeclareMathOperator{\Mrow}{row}
+\DeclareMathOperator{\Mnull}{null}
+\usepackage[latin1]{inputenc}
+\usetikzlibrary{shapes,arrows}
+%\usepackage[active,tightpage,pdftex]{preview}
+\usepackage{mathtools}
+\newcommand{\shouldEq}{\stackrel{\mathclap{{!}}}=}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+\hypersetup{
+	colorlinks,
+	linkcolor={blue!80!black},
+	citecolor={blue!80!black},
+	urlcolor={blue!80!black}
+}
+\usepackage{pgfplots}
+\usepackage{siunitx}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes}
+\usepackage{amsmath}
+\usepackage{xspace}
+\newcommand{\A}{\ensuremath{\mathcal{A}}\xspace}
+\newcommand{\B}{\ensuremath{\mathcal{B}}\xspace}
+\newcommand\pa[1]{\ensuremath{\left(#1\right)}}
+
+
+\newcommand{\figref}[1]{Figure~\ref{#1}}
+\newcommand{\algref}[1]{Algorithm~\ref{#1}}
+\newcommand{\secref}[1]{Section~\ref{#1}}
+\newcommand{\funref}[1]{Function~\ref{#1}}
+
+\newcommand{\cbox}[1]{
+	%\mdfsetup{skipabove=\topskip,skipbelow=\topskip}
+	\begin{mdframed}[backgroundcolor=gray!30]
+		\vspace{.5em}
+		#1
+	\end{mdframed}
+	%\newrobustcmd\ExampleText{}}
+}
+
+\usepackage[justification=centering]{caption}
+
+\clubpenalty=5000
+\widowpenalty=5000
+
+\newcommand{\code}[5]{\fbox{\begin{minipage}{\textwidth}
+			\textbf{\large #1}\\
+			#2\\[1em]
+			\textbf{Function Documentation}
+			\begin{itemize}
+				\item \textbf{Parameters}   
+				#3
+				\item \textbf{Return Values}
+				#4
+			\end{itemize} 
+			%			\ifthenelse{\equal{#5}{}}{\text{...}}
+			{
+				\textbf{Extension}
+				#5
+			}
+		\end{minipage}}}
+		\setlength{\emergencystretch}{2cm}
+		
+		\usepackage{fancyhdr}
+		
+		\makeatletter
+		\newcommand{\theauthor}{Shadi Alameddin}
+		\makeatother
+		
+		\renewcommand{\headrulewidth}{0.3pt}
+		\renewcommand{\footrulewidth}{0.3pt}
+		\fancyfoot[OL,ER]{--} % inner
+		\fancyfoot[OR,EL]{\thepage} % outer
+		\fancyhead[OL,ER]{--} % inner 
+		\fancyhead[OR,EL]{--} % outer
+		\fancyfoot[C]{}
+		
+		\makeatletter
+		\renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
+			\hbox{}%
+			\thispagestyle{empty}%
+			\newpage%
+			\if@twocolumn\hbox{}\newpage\fi\fi\fi}
+		\makeatother
+		
+%		\input{emma_gen_latex}
+
+%\documentclass[]{article}
+%
+%%opening
+%\title{}
+%\author{}
+
+\begin{document}
+	\date{06.03.2017}
+\title{LATIN approach for fatigue damage computation}
+\author{Shadi Alameddin, Mainak Bhattacharyya, Amelie Fau,\\ Udo Nackenhorst, David N{\'e}ron and Pierre Ladev{\`e}ze}
+\maketitle
+
+
+Non-linear mechanical behaviour such as (visco)plasticity or damage is generally tackled with time incremental methods where the time domain is subdivided into incremental steps. Then a numerical scheme is carried out consequently for each time step. In contrast, in LArge Time INcrement (LATIN) method \nolinebreak {[1]}, an approximation of the total time history process is sought directly. This is done by an iterative sequence of two steps: tackling the global linear mechanical equilibrium equation on one side, and on the other one the local history process is determined. The global stage can benefit from model reduction techniques such as the proper generalised decomposition (PGD), in order to obtain a substantial reduction of the computational cost. Moreover, for parametric problems, efficient reduced models can easily be derived. 
+
+
+The LATIN method has been well established to compute several types of problems including material non-linearities \nolinebreak {[2]} but has not been extended to unilateral damage law which leads to a non-linear state equation. An extension of the method is then introduced herein to tackle this issue and then to benefit from a promising numerical framework for fatigue damage computation.\\[3em]
+
+\noindent [1] P. Ladev{\`e}ze, \textit{Nonlinear computational structural mechanics: new approaches and non-incremental methods of calculation}. New York, NY: Springer New York, 1999.\\
+
+\noindent [2] P. Ladev{\`e}ze, ``On reduced models in nonlinear solid mechanics," \textit{European Journal of Mechanics - A/Solids}, vol. 60, pp. 227 - 237, 2016.\\[6em]
+
+
+
+%The LATIN framework for fatigue computation will be discussed.
+\bigskip
+
+\noindent This abstract was submitted to damage and fracture mechanics section, organised by {\centering Martin Hofmann (Dresden) and Andreas Ricoeur (Kassel)} within the 88th Annual meeting of GAMM (Gesellschaft f�r Angewandte Mathematik und Mechanik - Internal Association for Applied Mathematics and Mechanics),  March 6-10, 2017, Weimar, Germany.\\
+
+%\cite{Ladeveze1999}
+%\cite{Ladeveze2016227}
+
+%a local non-linear one that describes the evolution of the quantities of interest over the whole time-space domain and a global and generally linear one that satisfy the statically and kinematically admissibility conditions.
+
+%Each LATIN iteration consists of the aforementioned local and global steps. Hence, it gives access to the whole time domain from the first LATIN iteration and it can benefit from model reduction techniques for the global stage such as the radial approximation, also known as the proper generalised decomposition (PGD), in order to obtain a substantial reduction of the computational cost.  % \cite{cognard1993large}
+
+
+%This presentation discusses the LATIN method, introduced in \cite{ladeveze1989large,Boisse1990}, and focuses on its rationale for a non-standard variation of Chaboche's viscoplastic model \cite{lemaitre1994mechanics} with damage.
+
+
+%In addition, it has been proved that this technique does not face the convergence challenges that usually affect the incremental methods \cite{vandoren2013novel} and it is able to tackle complex loading history without any special difficulties \cite{cognard1993large,cognard1999large}. This method was not able to model softening materials until it was extended in \cite{vandoren2013novel} (algorithmic and implementation details are provided in this article). One drawback is that this method is intrusive, i.e. the finite element code should be modified.
+
+%Note that in the global step, finding the optimal KA strain leads to a classical \textbf{primal} framework while determining the optimal SA stress fields leads to a \textbf{\cred dual} problem which is converted to a primal one using Lagrange multipliers that results in a \textbf{mixed formulation}.
+
+%\addcontentsline{toc}{part}{References} %
+%\bibliographystyle{ieeetr} %unsrt
+%\bibliography{library} 
+
+\clearpage
+
+\end{document}
+
+
+

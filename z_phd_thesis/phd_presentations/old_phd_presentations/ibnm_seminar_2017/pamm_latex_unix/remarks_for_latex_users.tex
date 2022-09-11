@@ -1,0 +1,168 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+
+\begin{document}
+\title{Introduction of new commands for the \texttt{w-art.cls}
+  classfile}
+\maketitle
+
+\section{Commands}
+
+
+The following commands will have no effect on the visual representation of the
+resulting pdf file. They will only be used by scripts to ease and automate the
+export of specific data that will then be used for the web presentation of the
+article. The country and language codes XX, EN, FR, DE, and GB are only
+examples. Please replace them according to your needs.
+
+\subsection{Title}
+
+
+\verb+\TitleLanguage[XX]+
+
+
+Indicates the language in which the title of the article appears, using a
+two-letter language code from ISO 639:1988. The most common codes are ``EN''
+(English; the default language), ``DE'' (German), and ``FR'' (French). 
+
+See \url{http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes}
+
+\paragraph{Note:} The language code applies both to the title and the optional
+shorttitle.  The title should be in sentence case, i.e., the first letter of
+the first word is (usually) capitalized, while others are all lower case
+except for names, etc., as follows:
+
+\begin{verbatim}
+\TitleLanguage[EN]
+\title[The short title]{This is the long form of the article title}
+\end{verbatim}
+Please  use always upper case letters for the language code. The command
+\verb+\TitleLanguage[XX]+ should be placed \emph{before and outside} the \verb+\title+ command.
+
+
+\subsection{Abstract}
+
+\verb+\AbstractLanguage[XX]+
+
+
+Specifies the language in which the abstract was written, using a two-letter
+language code from ISO 639:1988. The most common codes are ``EN''
+(English; the default language), ``DE'' (German), and ``FR'' (French). 
+
+See \url{http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes}
+
+Usage:
+\begin{verbatim}
+\AbstractLanguage[EN]
+\begin{abstract}
+  Text of the abstract.
+\end{abstract}
+\end{verbatim}
+Please  use always upper case letters for the language code. The command
+\verb+\AbstractLanguage[XX]+ should be placed \emph{before and outside} the \verb+\abstract+ environment.
+
+
+
+\subsection{Author}
+
+There are four new macros that should be used \emph{inside} the
+\verb+\author{}+ command:
+\begin{itemize}
+\item \verb+\firstname{First}+ (unabbreviated forename, given name, or Christian name)
+
+\item \verb+\lastname{Last}+ (surname, family name, or second name)
+
+\item \verb+\namesuffix{Jr}+ is used for family qualifications, such as 
+Jr, Sr, III, etc.
+\item \verb+\ElectronicMail{xx@yyy.zz}+ is used \emph{inside} the
+  \verb+\footnote+ command of the \verb+\author+ command in order to mark the
+  e-mail address of the respective author. The command
+  \verb+\ElectronicMail{xx@yyy.zz}+ should only be used at this place and not
+  in the text section.
+\end{itemize}
+Usage:
+\begin{verbatim}
+\author{\firstname{First} \lastname{Last}\inst{1,}%
+\footnote{Corresponding author: email \ElectronicMail{x.y@xxx.yyy.zz}}}
+\end{verbatim}
+
+
+\subsection{Address}
+
+\verb+\CountryCode[XX]+
+
+Two-letter ISO 3166 code indicating the country of the author's affiliated
+organization or institution.
+
+See \url{http://en.wikipedia.org/wiki/ISO_3166-1}
+
+The command \verb+\CountryCode[GB]+ should be placed \emph{inside} the
+\verb+\address{}+ command. Please note that country and language codes may
+differ, e.g., GB and EN.
+
+Usage:
+
+\verb+\address[\inst{1}]{\CountryCode[DE]First address}+
+\subsection{Relations between Authors and Addresses}
+
+To show the relations between authors and addresses, superscript numbers
+created by the \verb+\inst{}+ command are used. The numbers have to be 
+entered by the author. A simple example could be:
+\begin{verbatim}
+\author{\firstname{First} \lastname{Author}\inst{1}}
+\address[\inst{1}]{\CountryCode[XX]First address}
+\author{\firstname{Second} \lastname{Author}\inst{1}}
+\end{verbatim}
+Here, both authors are marked with a superscript 1 and the address  will also
+be marked by superscript 1. In both cases the superscript will be created by
+the \verb+\inst{1}+ command. In case of the \verb+\address+ command, the
+\verb+\inst{1}+ command will be placed in the optional part of the
+\verb+\address+ command, i.e. \verb+\address[\inst{1}]{...}+. 
+
+One author may have more than one address. For instance
+\begin{verbatim}
+\author{\firstname{First} \lastname{Author}\inst{1,2}}
+\address[\inst{1}]{\CountryCode[XX]First address}
+\author{\firstname{Second} \lastname{Author}\inst{1}}
+\address[\inst{2}]{\CountryCode[YY]Second address}
+\end{verbatim}
+Here, the first author has address 1 and 2. The second author has address 1.
+
+The information for the corresponding author and/or the e-mail address of an
+author will be placed in a footnote inside the \verb+\author{}+ command. The
+footnote follows immediately after the \verb+\inst{}+ marker of the
+\verb+\author{}+ command.
+\begin{verbatim}
+\author{name part\inst{1,}\footnote{\ElectronicMail{x.y@xxx.yyy.zz}}}
+\end{verbatim}
+If a footnote follows after the \verb+\inst{}+ command, a comma has to be put
+inside the \verb+\inst{1,}\footnote{...}+ command. (This will then be rendered
+as $^{1,*}$.)
+
+Usually there is  only one \textit{corresponding author} per article. You may, however,
+give the e-mail addresses for the other authors in their respective footnotes too.
+
+\subsection{General remarks}
+
+\begin{itemize}
+
+\item Please do not use self-defined macros inside the title
+  or the abstract. This restriction is necessary because the title and
+  abstract text will be exported and used in a web page for the article. The
+  rendering of the \LaTeX-parts is done using a minimal \LaTeX-installation
+  where no user defined macros are known.
+
+\item Please define your self-defined macros inside the preamble of your
+  \LaTeX-document. The preamble is the place immediately after the
+  \verb+\documentclass+ line and before the \verb+\begin{document}+ 
+ line. 
+
+\end{itemize}
+
+Happy LaTeXing!
+
+\end{document}

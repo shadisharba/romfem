@@ -1,0 +1,946 @@
+% TODO: include fluctuating loads here and make it transparent
+% %\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+% RSVD of fulle tensor + figures PCA + PGD
+% set of linear subspaces
+% pca from my msc thesis
+%https://tex.stackexchange.com/questions/112343/beautiful-table-samples
+
+%Use a different viewer than Adobe Reader (PDF-X-change viewer does not have this problem) or add \pdfpageattr {/Group << /S /Transparency /I true /CS /DeviceRGB>>} to the preamble of your document. This will make Adobe Reader use the RGB rendering model for pages with transparency. –
+
+%\PassOptionsToPackage{cmyk}{xcolor}
+\documentclass{beamer}
+\pdfpageattr {/Group << /S /Transparency /I true /CS /DeviceRGB>>}
+
+\input{./packages}
+\input{./layout}
+\input{./symbols}
+\usepackage{transparent}
+\renewcommand{\hl}[1]{\colorbox{lightGray}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[A Semi-incremental MOR Approach for Fatigue Damage Computations]{A Semi-incremental Model Order Reduction Approach for Fatigue Damage Computations}
+%\subtitle[ ]{ }
+\author[S. Alameddin]{{Shadi Alameddin}}
+%\institute[IBNM - LUH]{Institut für Baumechanik und Numerische Mechanik\\ Leibniz Universität Hannover} %German version
+\institute[IBNM - LUH]{IBNM, Leibniz Universit\"{a}t Hannover}
+\date[\tddate \ \ \hhmm \tdtime]{06. February 2020\\[1cm]}
+\titlegraphic{
+	\hspace{-5cm}
+	\begin{tikzpicture}[overlay]
+\only<1>{\node (fig1) at (2.7,2.2) {\includegraphics[height=0.5\textheight,width=0.6\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/fluctuating_load.png}};
+\node (fig2) at (2.2,1.9)
+{\includegraphics[width=0.5\linewidth,trim=0.6cm 0.5cm 0 0 ,clip]{/home/alameddin/src/tex/phd_thesis/figures/latin/latin_iter.pdf}};}
+\only<2>{\node (fig1) at (2.7,2.2) {\includegraphics[height=0.5\textheight,width=0.6\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/tex/fluctuating_load.pdf}};}
+	\end{tikzpicture}
+	}
+
+% Short names in [] for footline
+% Names in {} for title page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[style=authortitle,backend=bibtex]{biblatex}
+
+%\usepackage{biblatex}
+%\addbibresource{library}
+%\bibliographystyle{unsrt} %{ieeetr} % plain / alpha / unsrt
+%\bibliography{library}
+% Begin of presentation
+
+\usepackage{animate}
+\usepackage{tikz}
+\usepackage{tikz-qtree}
+\usetikzlibrary{calc,intersections,through,backgrounds,decorations.text,patterns}
+\usetikzlibrary{matrix,positioning,decorations.pathreplacing}
+\usetikzlibrary{shapes,arrows}
+\usetikzlibrary{er,positioning}
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [rectangle, draw, fill=gray!20, 
+text width=5em, text centered, rounded corners, minimum height=4em]
+\usepackage{adjustbox}
+
+%\usepackage{enumitem}
+%\setitemize{label=\usebeamerfont*{itemize item}%
+%	\usebeamercolor[fg]{itemize item}
+%	\usebeamertemplate{itemize item}}
+%\setlist[itemize]{leftmargin=*}
+
+\usepackage[labelfont=bf]{caption}
+\usepackage[timeinterval=10]{tdclock}
+
+\begin{document}
+\newcommand{\twocol}[3]{
+\vspace*{-0.5cm}
+\begin{columns}[t] % align columns
+	\begin{column}{.50\textwidth}
+		% \color{red}\rule{\linewidth}{4pt}
+		#1
+	\end{column}%
+%	\hfill%
+%\hspace{-0.5cm}
+\vspace{-1cm}
+	\begin{column}{.55\textwidth}
+		% \color{blue}\rule{\linewidth}{4pt}
+		#2
+	\end{column}%
+\end{columns}
+#3
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+{
+\centering
+ \specialTitleDesign
+ \begin{frame}
+ \vspace*{0.2cm}
+  \titlepage
+\begin{figure}
+%	\qquad \qquad \quad {\scriptsize Funded by:\\}
+	\begin{flushleft}
+	\hspace*{0.58\linewidth} {\scriptsize IRTG-1627\\[0.2cm]}
+%	\vspace*{1cm}
+		\hspace*{0.58\linewidth} \begin{picture}(0.47,-0.5)
+		\includegraphics[height=16px]{/home/alameddin/src/tex/templates/logos/dfg_logo.eps}
+		\end{picture}
+	\end{flushleft}
+%\vspace*{-0.3cm}
+		\setlength{\unitlength}{\textwidth}
+\end{figure}
+\initclock
+ \end{frame}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table of contents
+%\frame{\frametitle{Outline}
+%\tableofcontents
+%%[pausesections]
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\captionsetup[figure]{labelformat=empty}% redefines the caption setup of the figures environment in the beamer class.
+
+
+
+\frame[t]{\frametitle{Fatigue damage}
+		\twocol{\begin{itemize}
+				\item Fluctuating loads \\[0.5cm]
+			\includegraphics[width=0.4\textwidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/abandoned-beach-black-and-white-464434.jpg} \hspace{0.05cm}
+			\includegraphics[width=0.4\textwidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/0close-up-propeller-renewable-energy-687692.jpg} \\[0.2cm]
+			\includegraphics[width=0.4\textwidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/2black-and-white-car-engine-chrome-1905742.jpg} \hspace{0.05cm}			
+			\includegraphics[width=0.4\textwidth]{/home/alameddin/src/tex/phd_thesis/figures/intro/1aeroplane-aircraft-airplane-4594022.jpg}
+		\end{itemize}
+			
+		}{
+			\centering
+			\uncover<2->{
+				\begin{itemize}
+					\item Large number of load cycles\\
+{\color{luhBlue} thousands or millions}\\[0.26cm]
+					\item Material degradation\\
+					{\color{luhBlue} lower load carrying capacity}\\[0.26cm]
+					% \item Virtual experiments
+					\item Continuum damage model\\
+					{\color{luhBlue} damage evolution in rate form}\\[0.26cm]
+%					{\color{luhBlue} $\dot{D} = \frac{\d D}{\d t}$}\\[0.26cm]
+%					$\dot{\fq} = \hat{g}{(\phi(\fsigma,\fQ))$
+					% \item Macro crack initiation\\[0.5cm]
+					\item Computational expense\\ % demand
+					{\color{luhBlue} memory and time}
+				\end{itemize}
+			}
+		}
+		{\uncover<3->{
+			\vspace{0.5cm}
+			\begin{block}{ \centering Model order reduction (MOR) techniques}
+			\end{block}
+		}}
+}
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\AtBeginSection[]{
+	\begin{frame}[noframenumbering]{Outline}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
+
+
+\section{Reduced order model for cyclic loading}
+
+
+\frame{\frametitle{Dimensionality Reduction}
+	\framesubtitle{Projection-based approach}
+Solutions lie close to a low-dimensional subspace
+\vfill
+\twocol{
+	\centering
+	\includegraphics[height=0.63\textheight,width=0.78\textheight]{/home/alameddin/src/tex/phd_thesis/figures/presentation/dataset_3d_plot.pdf}\\ \hspace{1cm}
+	{\small High-dimensional space}
+}{
+	\centering
+{\includegraphics[height=0.63\textheight,width=0.78\textheight]{/home/alameddin/src/tex/phd_thesis/figures/presentation/dataset_3d_plot2.pdf}\\ }
+\hspace{1cm}
+	{\small 2D subspace}
+}{ }	
+}
+
+\newcommand\FrameText[1]{%
+	\begin{textblock*}{\paperwidth}(0pt,\textheight)
+		\vspace*{-1cm}
+		---------------------\\[-0.25cm]
+		\footnotesize \raggedright \hspace{0.5cm} #1\hspace{.5em}
+\end{textblock*}}
+
+\newcommand\FrameTextt[1]{%
+	\begin{textblock*}{\paperwidth}(0pt,\textheight)
+		\vspace*{-0.5cm}
+		---------------------\\[-0.25cm]
+		\footnotesize \raggedright \hspace{0.5cm} #1\hspace{.5em}
+\end{textblock*}}
+
+\frame{\frametitle{Mechanical problem} \framesubtitle{Infinitesimal	strain and isothermal quasi-static settings}
+\vspace*{0.5cm}
+\begin{block}{ \centering Admissibility equations (\textbf{AD})}
+\end{block}
+\twocol{
+	{\hspace*{0.25cm} Static admissibility }
+		\vspace{-0.3cm}
+		\begin{align*}
+		\div{\fsigma}+\fb & =\fzero && \text{ in } \mathrm{\Omega} \times {\color{red} \cT}  \\
+		\fsigma \cdot \fn & =\bar{\boldsymbol{t}} && \text{ on } \mathrm{\partial\Omega_\mathrm{N}} \times {\color{red} \cT}\\
+		\fsigma & = \T{\fsigma}
+		\end{align*}}{
+{\hspace*{0.25cm} Kinematic admissibility}
+\vspace{-0.3cm}
+\begin{align*}
+\centering
+\feps & = \grads{\fu} && \text{ in } \mathrm{\Omega} \times {\color{red} \cT}  \\
+\fu & =\bar{\fu} && \text{ on } \mathrm{\partial\Omega_\mathrm{D}} \times {\color{red} \cT}
+\end{align*}}{}
+\begin{block}{ \centering Nonlinear constitutive model (\textbf{CM})}
+\end{block}
+\twocol{{\hspace*{0.25cm} State equations}
+		\vspace{-0.3cm}
+{\begin{align*}
+	\cF &= f(\psi(\feps,\cI))
+	\end{align*}}
+%\only<2>{\begin{align*}
+%	{\fsigma} &= f(\hl{$\psi$}(\feps,\fepsp,\fq)) \\ 
+%	{\fQ} &= g(\hl{$\psi$}(\feps,\fepsp,\fq))
+%	\end{align*}}
+}{
+{\hspace*{0.25cm} Evolution equations}
+\vspace{-0.3cm}
+{\begin{align*}
+%	{\dot{\epst}}^{\rm p} &= \hat{f}{(\phi(\fsigma,\cF))} \\
+	\dot{\cI} &= g({\phi^\ast(\fsigma,\cF)})
+	\end{align*}}
+%\only<2>{\begin{align*}
+%	{\dot{\epst}}^{\rm p} &= \hat{f}{(\hl{$\phi$}(\fsigma,\fQ))} \\
+%	\dot{\fq} &= \hat{g}{(\hl{$\phi$}(\fsigma,\fQ))}
+%	\end{align*}}
+}{\FrameText{[GSM by Halphen \& Nguyen 1975]}}
+%\vspace*{-2cm}
+%\hline
+%\footnote{text}
+}
+
+\frame[t]{\frametitle{LATIN vs. incremental schemes}
+	\framesubtitle{LATIN: large time increment}
+	\vspace{0.5cm}
+	An \textbf{incremental} scheme:\\[0.2cm]
+	Solve \\[0.4cm]
+%\begin{figure}
+	\hspace*{3.5cm}
+	\begin{tikzpicture}[remember picture,overlay]
+	\begin{pgflowlevelscope}{\pgftransformscale{0.7}}
+	\node [block] (primal) {Primal variable $\fu$};
+	\node [cloud, left=0.5cm of primal] (dirichlet) {Dirichlet B.C.};
+	\node [block, below=2.5cm of primal] (strain) {Strain $\feps$};
+	\node [block, right=2.5cm of strain] (dual) {Dual variable $\fsigma$};
+	\node [cloud, above=2.5cm of dual] (bodyf) {Body force $\fb$};
+	\node [cloud, right=0.5cm of dual] (neumann) {Neumann B.C.};
+	% paths
+	\path [line,-,ultra thick] (primal) -- node { }(dirichlet);
+	\path [line,ultra thick,-] (dual) -- node[above]{Constitutive} node [below]{model (\textbf{CM})} (strain);
+	\path [line,ultra thick,-] (strain) -- node[above, sloped]{Kinematic} node [below, sloped]{admissibility}(primal);
+	\path [line,-,ultra thick] (dual) -- node[above, sloped]{Static} node [below, sloped]{admissibility}(bodyf);
+	\path [line,-,ultra thick] (dual) -- node{ }(neumann);
+	\draw [ultra thick,<-, >=stealth] (0.7,-2) -- node [above]{} (1.7cm,-2cm) ;
+	\draw [ultra thick,->, >=stealth] (3,-2) -- node [above]{} (4cm,-2cm) ;
+	\path [ultra thick, >=stealth] (2,-2.35) -- node [above]{(\textbf{AD})} (2.7cm,-2.35cm);
+	\end{pgflowlevelscope}
+	\end{tikzpicture}\\
+%\end{figure}
+	\vspace{3.5cm}
+	for each time step {\color{red} consecutively}.
+	\FrameTextt{[de
+Souza Neto 2008]}
+}
+
+\frame[t]{\frametitle{LATIN vs. incremental schemes}
+		\framesubtitle{LATIN: large time increment}
+	\vspace{0.5cm}
+		A \textbf{LATIN} scheme:\\[0.2cm]
+		Solve {\color{luhBlue}iteratively} {\color{red} (\textbf{AD})} and {\color{luhBlue}(\textbf{CM})} \\[0.4cm]
+		%\begin{figure}
+		\hspace*{3.5cm}
+		\begin{tikzpicture}[remember picture,overlay]
+		\begin{pgflowlevelscope}{\pgftransformscale{0.7}}
+		\node [block] (primal) {Primal variable $\fu$};
+		\node [cloud, left=0.5cm of primal] (dirichlet) {Dirichlet B.C.};
+		\node [block, below=2.5cm of primal] (strain) {Strain $\feps$};
+		\node [block, right=2.5cm of strain] (dual) {Dual variable $\fsigma$};
+		\node [cloud, above=2.5cm of dual] (bodyf) {Body force $\fb$};
+		\node [cloud, right=0.5cm of dual] (neumann) {Neumann B.C.};
+		% paths
+		\path [line,-,ultra thick] (primal) -- node { }(dirichlet);
+		\path [line,ultra thick,-,color={luhBlue}] (dual) -- node[above]{\color{luhBlue} Constitutive} node [below]{\color{luhBlue} model (\textbf{CM})} (strain);
+		\path [line,ultra thick,-,color={red}] (strain) -- node[above, sloped]{\color{red} Kinematic} node [below, sloped]{\color{red} admissibility}(primal);
+		\path [line,-,ultra thick,color={red}] (dual) -- node[above, sloped]{\color{red} Static} node [below, sloped]{\color{red} admissibility}(bodyf);
+		\path [line,-,ultra thick] (dual) -- node{ }(neumann);
+		%			\draw [color={red},ultra thick,<->, >=stealth] (0.7,-2) -- node [above]{(\textbf{AD})} (4cm,-2cm) ;
+		\draw [color={red},ultra thick,<-, >=stealth] (0.7,-2) -- node [above]{} (1.7cm,-2cm) ;
+		\draw [color={red},ultra thick,->, >=stealth] (3,-2) -- node [above]{} (4cm,-2cm) ;
+		\path [color={red},ultra thick, >=stealth] (2,-2.35) -- node [above]{(\textbf{AD})} (2.7cm,-2.35cm) ;
+		\end{pgflowlevelscope}
+		\end{tikzpicture}\\
+		%\end{figure}
+		\vspace{3.5cm}
+		for all time steps {\color{red} simultaneously}.
+		\FrameTextt{[Ladevèze 1989,1999; Néron et al 2012]}
+}
+
+\frame{\frametitle{What does simultaneously mean?}
+\begin{tikzpicture}[overlay]
+\only<1>{\node (f0) at (0.47\linewidth,-0.05\textheight) {\animategraphics[width=.65\textwidth]{1}{/home/alameddin/src/tex/phd_thesis/figures/v0.1_no_pgd/fig/out}{}{}};}
+\only<2>{\node (f1) at (0.47\linewidth,-0.05\textheight) {\animategraphics[width=.65\textwidth,loop,autoplay]{2}{/home/alameddin/src/tex/phd_thesis/figures/v0.1_no_pgd/fig/out}{}{}};}
+\end{tikzpicture}
+}
+
+%\frame{\frametitle{What does simultaneously mean?}
+%	\centering %autoplay
+%	\animategraphics[width=.6\textwidth,controls,loop]{2}{/home/alameddin/src/tex/phd_thesis/figures/latin/frame-}{0}{14}
+%}
+
+\frame{\frametitle{LATIN solution algorithm}
+	\begin{itemize}
+		\item Elastic initialisation $\{(\feps_i,\cI_i), (\fsigma_i,\cF_i) \ | \ i=0\}$\\[0.3cm]
+		\vfill
+		\item Evaluate {\color{luhBlue} (\textbf{CM})} at the local stage
+		\vspace{-0.3cm}
+		\begin{align*}
+		{\qquad \text{given} (\fsigma_i,\cF_i) \qquad \text{seek} ({\color{luhBlue} \feps_{\rm local}},{\color{luhBlue} \cI_{\rm local}},{\color{luhBlue} \cF_{\rm local}}) }
+		\end{align*}
+		\vfill
+		\item Transfer data using affine relation (search direction eq.)
+		\vspace{-0.3cm}
+		\begin{align*}
+		( {\color{red} {\fsigma}_{\rm global}} - {\color{luhBlue} {\fsigma}_{\rm local}} ) - \alpha \ \ffC : ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} ) = \fzero \qquad \alpha \in \ ]0,1]
+		\end{align*}
+%		\item{Solve {\color{red} (\textbf{AD})} to get {\color{red} $( {\color{red} {\fsigma}_{\rm global}}, {\feps}_{\rm global})$} (global stage)} \\[0.3cm]
+		\only<1>{\item Solve {\color{red} (\textbf{AD})} to get {\color{red} $( {\color{red} {\fsigma}_{\rm global}}, {\feps}_{\rm global})$} at the global stage\\[0.3cm]}
+		\only<2>{\item\hl{Solve {\color{red} (\textbf{AD})} to get {\color{red} $( {\color{red} {\fsigma}_{\rm global}}, {\feps}_{\rm global})$} at the global stage} \\[0.3cm]}
+		\vfill
+		\item Iterate until convergence with an energy error indicator
+		\vspace{-0.3cm}
+		\begin{align*}
+		\small 
+		\xi^2 = \frac{1+\alpha^2}{2T} \intspt ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} ) : \ffC : ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} )  \ \d \Omega \d t
+		\end{align*}
+	\end{itemize}
+}
+
+
+
+\frame[t]{\frametitle{Proper Generalised Decomposition}
+	\framesubtitle{as set of linear subspaces}
+	\begin{itemize}
+			\only<1>{
+			\item Low-rank approximation $\fu(\fx,t,\bullet) = \sum_{j=1}^{N} {\color{red} {\fv_j}(\fx)} \circ {\color{blue} \flambda_j(t)} \circ {\color{blue!20!black!30!green} \fgamma(\bullet)}$\\[-0.5cm]
+%			\begin{center}
+			\includegraphics[height=3cm]{/home/alameddin/src/tex/phd_thesis/figures/presentation/tensor_decomposition.pdf}
+%			\end{center}
+%			\vfill
+			\FrameTextt{[Chinesta and Ladevèze 2014]}
+			}
+			\only<2>
+			{
+			\item Update of $\mu$ previously generated modes\\[-0.9cm]
+			\begin{align*}
+			\Delta \fu_{i+1}(\fx,t,\bullet) = \sum_{j=1}^{{\mu}} \underbrace{{\fv_j}(\fx)}_{ \text{const.}} \ \circ \ \colorbox{blue}{\color{white} $\Delta \flambda_j(t)$} \ \circ \underbrace{\fgamma_j(\bullet)}_{ \text{const.}} \\[-1.7cm]
+			\end{align*}
+			\includegraphics[height=2.5cm]{/home/alameddin/src/tex/phd_thesis/figures/presentation/tensor_decomposition_update.pdf}
+			
+			\item Enrichment to $\mu$ previously generated modes\\[-0.9cm]
+			\begin{align*}
+			\Delta \fu_{i+1}(\fx,t,\bullet) = {\color{red} {\fv}_{\mu+1}(\fx)} \circ { \color{blue} \flambda_{\mu+1}(t)} \circ { \color{blue!20!black!30!green} \fgamma_{\mu+1}(\bullet)}
+			\end{align*}
+			\vspace{-1.cm}
+			\includegraphics[height=2.5cm]{/home/alameddin/src/tex/phd_thesis/figures/presentation/tensor_decomposition_enrich.pdf}
+%			\vfill
+			
+%			\vfill
+			}
+	\end{itemize}
+}
+
+\frame{\frametitle{Alternated directions algorithm}
+\framesubtitle{Galerkin finite element discretisation}
+	\begin{itemize}
+		\item Temporal update step\\[-0.9cm]
+		\begin{equation*}
+		\begin{split}
+		\mat{\z{A}} \ &\T{\z{\mat{\Lambda}}} = \mat{\z{B}}  \qquad \ \z\mA \in \ffR^{\color{blue} \mu \times \mu} \qquad \mat{\z{B}} \in \ffR^{\color{blue} \mu  \times n_t} \\ &\z{\mat{\Lambda}}=[\Delta\vlambda_{1},\cdots,\Delta\vlambda_{\mu}]
+		\end{split}
+		\end{equation*}
+		\vfill
+		\item Spatial problem, with homogeneous boundary conditions
+		{\centering $\mK\ \vec{v} = \vec{f} \qquad \mK \in \ffR^{\color{red} n \times n} \qquad \vec{v}, \vec{f} \in \ffR^{\color{red} n}$}
+%		\begin{align*}
+%			
+%		\end{align*}
+%			\begin{align*}
+%			\footnotesize
+%			\intS \grads{\fv}^\ast : \left( \intT {\color{blue} \lambda} \ \ffH^- \ {\color{blue} \lambda} \d t \right) : {\color{red} \grads{\fv}} \ \d \Omega = - \intS \grads{\fv}^\ast : \left( \intT {\color{blue} \lambda}  \ \hf \d t \right)  \d \Omega
+%			\end{align*}
+\vfill
+		Temporal problem, with zero initial conditions
+%		\begin{align*}
+		{\centering $a\ \vlambda = \vb  \qquad\ \ \, a \in \ffR \qquad \ \, \vlambda, \vb \in \ffR^{\color{blue} n_t}$}
+%		\end{align*}
+%		\begin{align*}
+%		\footnotesize
+%		\intT \lambda^\ast \left( \intS  {\color{red} \grads{\fv}} : \ffH^- : {\color{red} \grads{\fv}} \d \Omega \right) {\color{blue} \lambda} \ \d t = - \intT \lambda^\ast \left( \intS  {\color{red} \grads{\fv}}  : \hf \   \d \Omega \right)  \d t
+%		\end{align*}
+%\vfill
+	\end{itemize}
+	%		\mediabutton[jsaction={anim.myAnim.playFwd();}]{\fbox{\strut Play}}
+	%		\mediabutton[jsaction={anim.myAnim.pause();}]{\fbox{\strut Pause}}
+	%		 \includegraphics[width=0.4\linewidth]{./img/lating-0.png}
+}
+
+
+\section{Challenges and workarounds}
+
+\frame[t]{\frametitle{Challenges in a PGD framework} % Goals // challenges 
+	\begin{itemize} % \frownie{} \dSmiley
+		\item Efficient variable amplitude and frequency scenarios\\[-0.8cm]
+		\begin{align*}
+		\intS \bullet \ \d \Omega \qquad \intT \bullet \ \d t 
+		\end{align*}
+		\vfill
+		\item The fast increase in the number of modes\\[-0.8cm]
+		\begin{align*}
+		\fu(\fx,t) = \sum_{j=1}^{\mu} {\fv_j}(\fx) \circ \flambda_j(t) \text{ with large } \mu 
+		\end{align*}
+		\vfill
+		\item The evaluation of the error indicator and the local stage
+	\end{itemize}
+}
+
+%\frame{\frametitle{Multiple cycles with variable load amplitudes}
+%	\begin{itemize}
+%		\item The stiffness\\
+%		\uncover<2>{\qquad Computed only once\\}
+%		\vfill
+%		\item The elastic solution\\
+%		\uncover<2>{\qquad Only once and parametrised over the load amplitude\\}
+%		\vfill
+%		\item An initial guess\\
+%		\uncover<2>{\qquad From the previous cycle\\}
+%	\end{itemize}
+%}
+
+\frame{\frametitle{Semi-incremental extension}
+\begin{itemize}
+\item The temporal domain is divided into cycles
+\item Cycles are simulated consecutively
+\vfill
+{
+	\hspace*{2cm}
+		\includegraphics[width=0.5\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_simtech_1.pdf}
+}
+\item Already generated $\{\lambda_j(t)\}_{j=1}^{\mu}$ are scaled to $\z{t} \in [0,1]$
+\item Scaled back to the temporal coordinate of the current cycle
+%\item Variable frequencies
+\FrameTextt{[Bhattacharyya et al 2018; Fritzen et al 2018]}
+\end{itemize}
+}
+
+\frame{\frametitle{Semi-incremental extension}
+	\begin{itemize}
+		\item Continuity of the temporal modes is an issue
+		\item Temporal modes are vertically scaled and shifted via \\[-0.8cm]
+		\begin{align*}
+		&\z{\lambda}_j^{(n+1)}(\z{t}) = m \ \z\lambda_j^{(n)}(\z{t}) + {\color{red} g \ \z{t} + h} \text{\quad with I.C. and B.C.}\\[-0.7cm]
+%		& \z{\lambda}_j^{(n+1)}(0) = \z\lambda_j^{(n)}(1) ,
+%		\quad
+%		\z{\lambda}_j^{(n+1)}(1) = \z{\lambda}_j^{(n+1)}(0).\\[-1cm]
+		\end{align*}
+		
+	\hspace*{2cm}
+	\includegraphics[width=0.5\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_simtech_2.pdf}
+	\begin{textblock*}{\textwidth}(12mm,0.88\textheight)
+	\begin{block}<2>{\centering Variable loading / integration over confined domains \dSmiley}
+	\end{block}
+	\end{textblock*}
+	\end{itemize}
+}
+
+
+\frame{\frametitle{SVD Compression of PGD}
+	\begin{itemize}
+		\item Large number of modes
+		\item Slow temporal update step
+		\begin{align*}
+		&\mat{\z{A}} \ \T{\z{\mat{\Lambda}}} = \mat{\z{B}} \\[0.2cm]
+		&\mat{\z{A}} \in \ffR^{\color{blue} \mu \times \mu} \qquad \z{\mat{\Lambda}} =[\Delta\vlambda_{1},\cdots,\Delta\vlambda_{\mu}] \qquad \mat{\z{B}} \in \ffR^{\color{blue} \mu  \times n_t}
+		\end{align*}
+		\vfill
+		\item Enrichment with a Gram-Schmidt scheme is not optimal
+		\item SVD is optimal but expensive to compute
+	\end{itemize}
+}
+
+\frame[t]{\frametitle{SVD Compression of PGD}
+	\begin{itemize}
+		\item Given a solution ${\mat{U}} = \mV \ \T{\mat{\Lambda}} \in \ffR^{n\times n_t}$ with\\[-0.9cm]
+		\begin{align*}
+		\mV=[\vec{v}_1,\cdots,\vec{v}_{\mu}] \in \ffR^{n\times \mu} \qquad \mat{\Lambda}=[\vlambda_1,\cdots,\vlambda_{\mu}] \in \ffR^{n_t \times \mu} 
+		\end{align*}
+		\vfill
+		\item Exploit the outer product format of PGD\\[-0.9cm]
+		\begin{align*}
+		\mV =  {\color{blue} \mat{Q}_v \ \mat{R}_v }\qquad \mat{\Lambda} = {\color{red} \mat{Q}_\lambda \ \mat{R}_\lambda} 
+		\end{align*}
+		\vfill
+		\item Compute SVD of a small matrix\\[-0.9cm]
+		\begin{align*}
+		\mat{T} = {\color{blue} \mat{R}_v} \ {\color{red} \T{\mat{R}}_\lambda}\in \ffR^{\mu\times\mu} \qquad \mat{T} \approxeq {\mat{\Theta}} \ {\mat{S}} \ \T{{\mat{W}}}
+		\end{align*}
+		\vfill
+		\item Solution with a compressed basis\\[-0.9cm]
+		\begin{align*}
+		{\mat{U}} \approxeq {\color{blue} \mat{Q}_v \ {\mat{\Theta}}} \quad {\mat{S}} \quad {\color{red} \T{{\mat{W}}} \T{\mat{Q}_\lambda}}
+		\end{align*}
+\end{itemize}
+\FrameTextt{[Bebendorf 2008]}
+\begin{textblock*}{\textwidth}(12mm,0.88\textheight)
+	\begin{block}<2>{\centering Non-demanding optimal decomposition \dSmiley}
+	\end{block}
+\end{textblock*}
+}
+
+
+
+\frame[t]{\frametitle{What is left?}
+	\begin{itemize}
+		\vfill
+		\item ${\color{red} {\feps}_{\rm global}}$ is approximated using PGD
+		\item ${\color{luhBlue} {\feps}_{\rm local}}$ is NOT!\\[-1cm]
+		\begin{align*}
+		( {\color{red} {\fsigma}_{\rm global}} - {\color{luhBlue} {\fsigma}_{\rm local}} ) - \alpha \ \ffC : ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} ) = \fzero\\[-0.5cm]
+		\end{align*}
+%		\vfill
+%		\pause
+		\vfill
+		\item Low-rank approximation of ${\color{luhBlue} {\feps}_{\rm local}}$			
+%		\pause
+		\item Randomised SVD (RSVD) algorithm\\[0.8cm]
+		\vfill
+		\item Dedicated arithmetic toolbox to handle operations on PGD
+%		\vfill
+	\end{itemize}
+}
+
+\newcommand{\mLambda}{\mat{\Lambda}}
+\frame[t]{
+	\frametitle{Stress decomposition}
+	\framesubtitle{Algebra on Low-rank Matrices}
+%	\vfil
+\begin{align*}
+\mA = \mV_A \ \mS_A \ \T{\mLambda_A} \qquad \qquad \qquad
+\mB = \mV_B \ \mS_B \ \T{\mLambda_B} \\[-1.4cm]	
+\end{align*}
+	\begin{itemize}
+		\vfil
+		\item Addition\\[-1cm]		
+		\begin{align*}
+		\small 
+		\mC = \mA + \mB =
+		\begin{bmatrix}
+		\mV_A & \mV_B
+		\end{bmatrix} \begin{bmatrix}
+		\mS_A & 0 \\
+		0 & \mS_B
+		\end{bmatrix} \T{\begin{bmatrix}
+			\mLambda_A & \mLambda_B
+			\end{bmatrix}}=\mV_C \ \mS_C \ \T{\mLambda_C}\\[-1.1cm]
+		\end{align*}
+		\vfill
+		\item Multiplication\\[-1cm]		
+\begin{align*}
+\small 
+\mA \ \vx &= \mV_A \ \mS_A \ \left( \T{\mLambda_A} \ \vx \right)\\[-1.1cm]
+\end{align*}
+\vfill
+\item Deviatoric Operation\\[-1cm]
+\begin{align*}
+\small 
+\mA_{\mathrm{dev}} &= \mat{P}_{\mathrm{dev}} \ \mV_A \ \mS_A \ \T{\mLambda_A} = \left( \mat{P}_{\mathrm{dev}} \ \mV_A \right) \ \mS_A \ \T{\mLambda_A}
+\label{eq_dev_pgd}
+\end{align*}
+	\end{itemize}
+\begin{textblock*}{\textwidth}(12mm,0.88\textheight)
+	\begin{block}<2>{\centering Most operations exploit the PGD decomposition \dSmiley}
+	\end{block}
+\end{textblock*}
+}
+
+%\frame{\frametitle{Neural network evaluation of CM}
+%
+%\begin{itemize}
+%	\item {\footnotesize ANN is trained to predict the evolution rates of the internal variables}\\[-0.8cm]
+%\begin{align*}
+%\vy^{(i)} = \mat{W}^{(i)} \vx^{(i-1)} + \vb^{(i)}
+%\end{align*}
+%\item {\footnotesize Basic structure of a neuron}
+%\begin{figure}[h!]
+%	\centering
+%	\includegraphics[width=0.8\linewidth]{/home/alameddin/src/tex/phd_thesis/figures/pgd_toolbox_ann/ann_basic.pdf}
+%\end{figure}
+%\end{itemize}
+%}
+
+
+\section{Numerical examples}
+
+\frame{\frametitle{Numerical results}
+\begin{itemize}
+\item A plate subjected to cyclic loading (Cr-Mo steel at $580^\circ \rm C$)
+\begin{figure}
+\centering
+\includegraphics[scale=0.7,clip]{/home/alameddin/src/tex/phd_thesis/figures/3d_plate_1_8.eps}
+\end{figure}
+\end{itemize}
+}
+
+\frame{\frametitle{Viscoplastic viscodamage material}
+\begin{itemize}
+	\item Stress--strain\\
+	
+	$
+	\fsigma = (1-D) \ \ffC : \fepse \hfill
+	\epspdot = \dot{\lambda} \ \fN
+	$
+	\vfill
+	\item Kinematic hardening\\
+
+	$\fbeta = \frac{2}{3} \  c \  \falpha \hfill
+	{\dot\falpha} =\dot{\lambda} \ \left( \z{\fN} - \frac{3 \ a}{2 \ c} \ \fbeta \right)$
+	\vfill
+	\item Isotropic hardening\\
+
+	$R = R_\infty \ (1-\mathrm{e}^{-b \ r}) \hfill
+	\dot{r} = \dot{\lambda}$
+	\vfill
+	\item Damage\\
+	
+	$Y = \frac{1}{2} \  \fepse :  \ffC :  \fepse \hfill
+	{\dot{D}} = \frac{\dot{\lambda}}{1-D} \ {\left( \frac{Y}{S} \right)}^{s}$
+\end{itemize}
+}
+
+%\begin{minipage}[t]{0.4\textwidth}
+%\begin{itemize}
+%{\item }
+%\vspace{-0.3cm}
+%\begin{equation*}
+%\begin{split}
+%\fsigma & = \ffC \ \fepse \ (1-D) \\
+%\fbeta &= C \ \falpha \\
+%Y & = \frac{1}{2} \fepse : \ffC \ \fepse
+%\end{split}
+%\end{equation*}
+%\end{itemize}
+%\end{minipage}\hfil\begin{minipage}[t]{0.5\textwidth}
+%\begin{itemize}
+%{\item Evolution equations}
+%\vspace{-0.3cm}
+%\small
+%\begin{equation*}
+%\begin{split}
+%{\dot{\epst}}^{\rm p} &=  k \ \vol{\Fp}_+^{n} \ \left[\frac{3}{2} \frac{\ftau}{J_{2}(\ftau)} \right] \frac{1}{1-D}\\
+%{\dot\alpha} &= k \ \vol{\Fp}_+^{n} \ \left[ \frac{3}{2} \frac{\ftau}{J_{2}(\ftau)} - \frac{a}{C} \fbeta \right] \\
+%{\dot{D}} &=  \kd  \vol{\Fd}_+^{\nd}
+%\end{split}
+%\end{equation*}
+%\end{itemize}
+%\end{minipage}
+%\vspace{0.5cm}
+
+% till here 10 slides
+
+\frame{\frametitle{Model verification}
+			\framesubtitle{$ 1884 \cdot 200 \cdot 10 $ DOF}
+\vspace{0.6cm} With respect to a modified Newton-Raphson scheme \\[1cm]
+\vfill
+\twocol{
+\centering
+\includegraphics[height=0.55\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/prescribed_displacement.pdf}\\ \hspace{1cm}
+{\small Prescribed displacement}
+}{
+\centering
+\includegraphics[height=0.55\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/damage_comparison.pdf}\\ \hspace{1cm}
+{\small Damage evolution}
+}{ }
+}
+% maximum reaches 12
+
+\frame{\frametitle{Model verification} 
+\begin{center}
+		$\left\lVert {\fe} \right\rVert_{\Omega\times\cT}^2 = \frac{1}{T \ \abs{\Omega}} \intT \intS \fe : \fe \ \d \Omega \d t \qquad \text{ (norm in Bochner space) }
+	$\\[0.8cm]
+\end{center}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.52\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/error_indicator.pdf}\\ \hspace{1cm}
+{\small 		Error indicator}
+	}{
+		\centering
+		\includegraphics[height=0.54\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/error_space_time.pdf}\\ \hspace{0.6cm}
+{\small 		Space-time average relative error}
+	}{ }
+}
+
+%\frame[c]{\frametitle{Model verification}
+%\vspace{0.6cm} Number of modes and iterations\\[1cm]
+%	\vfill
+%	\twocol{
+%		\centering
+%\includegraphics[height=0.53\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/number_of_pgd_modes.pdf}\\ \hspace{1cm}
+%{\small 		Number of modes}
+%	}{
+%		\centering
+%\includegraphics[height=0.53\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/number_of_iterations.pdf}\\ \hspace{1cm}
+%{\small 		Number of iterations}
+%	}{ }
+%}
+
+\frame{\frametitle{Model verification}
+\vspace{0.6cm} The first temporal and spatial modes \\[1cm]
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.54\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/first_temporal_mode.pdf}
+	}{
+		\centering
+		\begin{tikzpicture}[overlay]
+		\node (fig1) at (0,2.4)
+		{\includegraphics[width=0.8\linewidth,height=0.465\textheight]{/home/alameddin/src/tex/phd_thesis/figures/verify/first_strain_spatial_mode.png}};
+		\end{tikzpicture}
+	}{ }
+	\uncover<2>{\begin{block}{ \centering 12 modes / Speedup factor $\sim 25$ }
+	\end{block}}
+}
+
+\frame{\frametitle{Variable amplitudes \& frequencies}
+	Amplitudes: $[30,90]\cdot10^{-4}\unit{mm}$ \hfill Time periods: $[20,60]\unit{sec}$\\[0.5cm]
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_2_1.pdf}\\ \hspace{1cm}
+{\small 		Prescribed displacement}
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_2_2.pdf}\\ \hspace{0.8cm}
+{\small 		Damage evolution}
+	}{}
+}
+
+\frame{\frametitle{Variable amplitudes \& frequencies}
+	The growth of the ROB using an SVD scheme\\[0.5cm]
+	\vfill
+	\twocol{
+	\centering
+	\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_2_5.pdf}\\ \hspace{0.7cm}
+{\small 	Gram-Schmidt}
+}{
+	\centering
+	\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_2_4.pdf}\\ \hspace{0.5cm}
+{\small 	SVD scheme}
+}{}	
+}
+
+\frame{\frametitle{Different ortho. schemes} \framesubtitle{$50,547 \cdot 33 \cdot 100$ DOF}
+	In case of random loading and fine discretisation\\[0.5cm]
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/modal_optimisation/mgs_number_of_pgd_modes.pdf}\\ \hspace{0.7cm}
+{\small 	Gram-Schmidt}
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/modal_optimisation/excessive_svd_m8_number_of_pgd_modes.pdf}\\ \hspace{0.5cm}
+{\small 	SVD scheme}
+	}{ }
+}
+
+\frame{\frametitle{Different ortho. schemes}
+	The required time to update and orthonormalise the modes\\[0.5cm]
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.62\textheight]{/home/alameddin/src/tex/phd_thesis/figures/modal_optimisation/temporal_update_timing.pdf}\\
+		\hfil Temporal update
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.62\textheight]{/home/alameddin/src/tex/phd_thesis/figures/modal_optimisation/orthonormalisation_timing.pdf}\\
+		\hfil Orthonormalisation step
+	}{ }
+}
+
+\frame[t]{\frametitle{Random amplitude loading}
+	\framesubtitle{$ 1884 \cdot 41 \cdot 10^4 $ DOF}
+	\begin{itemize}
+		\item $10^4$ cycles, uniform distribution in $[53,56]\cdot 10^{-2} \unit{mm}$\\[0.5cm]
+	\end{itemize}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.51\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_3_1.pdf}\\
+		\only<1>{\hspace{0.7cm} \small Different damage realisations}
+		\uncover<2->{$\text{Critical damage value } D_{\mathrm{c}}=0.3$\\
+		$\ \text{Probability of failure } P_{\mathrm{f}}=5.4\%$}
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight,width=0.63\textheight]{/home/alameddin/src/tex/phd_thesis/figures/semi_incremental/temporal_scheme_3_2.pdf}\\
+		\only<1>{\hspace{0.6cm} \small The mean and SD of $D_f$}		
+		\uncover<2->{Requirements:\\ $[15-35]\unit{min}$ and $[1-1.5]\unit{GB}$}
+	}{
+	\uncover<3>{\begin{block}{ \centering Approx. 10 modes / Time-saving factors $50 \sim 100$}
+	\end{block}}
+	}
+}
+
+\section{Conclusions and current research}
+
+\frame{\frametitle{Conclusion and future research}
+\vspace{0.5cm}
+\begin{itemize}
+\item Efficient semi-incremental scheme for damage problems
+\item Can handle variable amplitude and frequency loadings
+\item Provides a minimal expansion of PGD
+\item Most operations are done over decomposed QoI
+\item Open-source code: \url{gitlab.com/shadialameddin/romfem}\\[0.3cm]
+\vfill
+\pause
+\textbf{Current tasks}
+\item Improve the documentation of the code 
+\item Reducing the cost of evaluating the constitutive model
+\end{itemize}
+\pause
+{\begin{block}{ \centering Thank you for your attention}
+\end{block}}
+}
+
+\frame{\frametitle{Alternated directions algorithm}
+	\begin{itemize}
+		\item Spatial problem, with homogeneous boundary conditions:\\[-0.8cm]
+					\begin{align*}
+					\footnotesize
+					\intS \grads{\fv}^\ast : \left( \intT {\color{blue} \lambda} \ \ffH^- \ {\color{blue} \lambda} \d t \right) : {\color{red} \grads{\fv}} \ \d \Omega = - \intS \grads{\fv}^\ast : \left( \intT {\color{blue} \lambda}  \ \hf \d t \right)  \d \Omega\\
+					\mK\ \vec{v} = \vec{f} \qquad \mK \in \ffR^{\color{red} n \times n} \qquad \vec{v}, \vec{f} \in \ffR^{\color{red} n} \qquad\qquad\qquad
+					\end{align*}
+		\vfill
+		Temporal problem, with zero initial conditions:\\[-0.8cm]
+				\begin{align*}
+				\footnotesize
+				\intT \lambda^\ast \left( \intS  {\color{red} \grads{\fv}} : \ffH^- : {\color{red} \grads{\fv}} \d \Omega \right) {\color{blue} \lambda} \ \d t = - \intT \lambda^\ast \left( \intS  {\color{red} \grads{\fv}}  : \hf \   \d \Omega \right)  \d t\\
+				{a\ \vlambda = \vb  \qquad\ \ \, a \in \ffR \qquad \ \, \vlambda, \vb \in \ffR^{\color{blue} n_t} \qquad\qquad\qquad}
+				\end{align*}
+		\vfill
+	\end{itemize}
+	%		\mediabutton[jsaction={anim.myAnim.playFwd();}]{\fbox{\strut Play}}
+	%		\mediabutton[jsaction={anim.myAnim.pause();}]{\fbox{\strut Pause}}
+	%		 \includegraphics[width=0.4\linewidth]{./img/lating-0.png}
+}
+\newcommand{\fhf}{\mbox{\ensuremath{\hat{\bm f}}}}
+\newcommand{\vv}{\vec{v}}
+\begin{frame}
+\frametitle{Alternated directions algorithm}
+\begin{itemize}
+	\item Temporal update step\\[-0.9cm]
+	\begin{equation*}
+	\begin{split}
+	\mat{\z{A}} \ &\T{\z{\mat{\Lambda}}} = \mat{\z{B}}  \qquad \ \z\mA \in \ffR^{\color{blue} \mu \times \mu} \qquad \mat{\z{B}} \in \ffR^{\color{blue} \mu  \times n_t} \\ &\z{\mat{\Lambda}}=[\Delta\vlambda_{1},\cdots,\Delta\vlambda_{\mu}]
+	\end{split}
+	\end{equation*}
+\end{itemize}	
+\begin{align*}
+\z{A}_{kl}  &= \alpha \intS \T{(\mB\ \vv_k)} \mC \ (\mB \ \vv_l) \ \d \Omega\\
+{\z{B}}_{kl}  &= - \intS \T{(\mB \ \vv_k)} \vec{\fhf}_{|t=t_l} \ \d \Omega
+\end{align*}
+\end{frame}
+
+
+\begin{frame}
+\begin{align*}
+& \psi(\fepse,\falpha,r,D) = \psi^{\mathrm{eD}}(\fepse,D) + \psi^{\mathrm{p}}(\falpha,r)\\
+& \psi = \frac{1}{2} \ \fepse : (1-D) \ \ffC : \fepse +  \frac{1}{3} \ c \ \falpha : \falpha + R_\infty \ \left(r+\frac{\mathrm{e}^{-b\ r}}{b}\right)
+\end{align*}
+
+%\newcommand{\phid}{\phi^{\rm d}}
+%\newcommand{\phip}{\phi^{\rm p}}
+\newcommand{\phibeta}{\phi^{\beta}}
+\begin{align*}
+& \phi^\ast(\fsigma,\fbeta,R)= \phip + \phibeta\\
+& \phip = \frac{\kp}{1+\np} {\left\langle \frac{\Fp}{\kp} \right\rangle}^{\np+1} \qquad
+& \Fp= \sqrt{3 J_{2}(\ftau) } - R - \sigy \\
+& \phibeta = \frac{3}{4} \frac{a}{c} \ \fbeta : \fbeta \\
+& \phid = \frac{S}{(s+1)(1-D)}  {\left( \frac{Y}{S} \right)}^{s+1} \\
+\end{align*}
+
+
+\end{frame}
+
+\frame{\frametitle{LATIN solution algorithm}
+	\begin{itemize}
+		\item Start with an elastic initialisation $s_0 = \{\fsigma_0,\fQ_0,\feps_0,\fq_0\}$\\[0.3cm]
+		\item Evaluate {\color{luhBlue} (\textbf{CM})} to get {\color{luhBlue} ${s}_{\rm local}$} (local stage)\\[0.3cm]
+		{\item Solve {\color{red} (\textbf{AD})} to get {\color{red} ${s}_{\rm global}$} (global stage)\\[0.3cm]}
+		\item Transfer data using affine relations (search direction eq.)
+		\vspace{-0.3cm}
+		\begin{align*}
+		( {\color{red} {\fsigma}_{\rm global}} - {\color{luhBlue} {\fsigma}_{\rm local}} ) -{\ffH^\mp} : ( {\color{red} {\feps}_{\rm global}} - {\color{luhBlue} {\feps}_{\rm local}} ) = \fzero
+		\end{align*}
+		%\begin{align*}
+		%%\small 
+		%&&(&& \stepk[ ]{\fsigma} &&-&& \stepj[ ]{\fsigma} &&) -{\ffH^-} &&(&& \stepk[]{\feps} &&-&& \stepj[]{\feps} &&) &= \fzero \\
+		%&&(&& \stepj[]{\fsigma} &&-&& \stepi[]{\fsigma} &&) +  {\ffH^+} &&(&& \stepj[]{\feps} &&-&& \stepi[]{\feps} &&)  &=\fzero
+		%\end{align*}
+		\item Iterate until convergence with an energy error indicator
+		\vspace{-0.3cm}
+		\begin{align*}
+		\small 
+		\xi =\frac{\normg{{\color{red} {s}_{\rm global}}-{\color{luhBlue} {s}_{\rm local}}}{}}{\frac{1}{2} \normg{{\color{red} {s}_{\rm global}}+{\color{luhBlue} {s}_{\rm local}}}{}}{} , \
+		\normg{s}{}^2 = \frac{1}{2T} \intspt (\fsigma : \ffC^{-1} : \fsigma + \feps : \ffC : \feps ) \ \d \Omega \d t.
+		\end{align*}
+	\end{itemize}
+}
+
+
+\end{document}
+
+
+

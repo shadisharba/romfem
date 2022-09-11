@@ -1,0 +1,324 @@
+% font definitions
+\usefonttheme{professionalfonts}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{subtitle}{series=\mdseries}
+\setbeamerfont{frametitle}{series=\mdseries}
+\setbeamerfont{footline}{series=\mdseries}%, size=\scriptsize}
+\linespread{1.2}
+
+% Color definitions
+\definecolor{luhBlue}{RGB}{0,80,155}
+\definecolor{luhBlue40}{RGB}{153,185,216}
+\definecolor{luhBlue20}{RGB}{204,220,235}
+\definecolor{luhGreen}{RGB}{200,211,23}
+\definecolor{darkGray}{RGB}{153,153,153}
+\definecolor{lightGray}{RGB}{204,204,204}
+
+\setbeamercolor{title}{fg=luhBlue}
+\setbeamercolor{subtitle}{fg=luhBlue40}
+\setbeamercolor{titlelike}{fg=luhBlue,parent=structure}
+\setbeamercolor{titlelike}{fg=luhBlue,bg=}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{alerted text}{fg=luhGreen}
+\setbeamercolor{example text}{fg=luhBlue20}
+\setbeamercolor{structure}{fg=black}
+
+
+\setbeamercolor{itemize item}{fg=darkGray}
+\setbeamercolor{itemize subitem}{fg=darkGray}
+\setbeamercolor{itemize subsubitem}{fg=darkGray}
+
+\setbeamercolor{item projected}{fg=white,bg=darkGray}
+\setbeamercolor{enumerate subitem}{fg=darkGray}
+\setbeamercolor{enumerate subsubitem}{fg=darkGray}
+
+%\setbeamertemplate{itemize items}[ball]
+%\setbeamertemplate{items}[ball]
+
+% Blocks
+\setbeamercolor{block body}{fg=black,bg=white}
+\setbeamercolor{block body alerted}{fg=black,bg=white}
+\setbeamercolor{block body example}{fg=black,bg=white}
+\setbeamercolor{block title}{fg=white,bg=luhBlue}
+\setbeamercolor{block title alerted}{use={normal text,alerted text},fg=black,bg=luhGreen}
+\setbeamercolor{block title example}{use={normal text,example text},fg=black,bg=luhBlue40}
+
+% Sidebar
+% \setbeamercolor{palette sidebar primary}{fg=white}
+% \setbeamercolor{palette sidebar secondary}{fg=luhBlue20}
+% \setbeamercolor{palette sidebar tertiary}{fg=white}
+% \setbeamercolor{palette sidebar quaternary}{fg=luhBlue}
+% \setbeamercolor{sidebar}{bg=luhBlue40}
+% \setbeamercolor{section in sidebar}{fg=luhBlue}
+% \setbeamercolor{section in sidebar shaded}{fg= luhBlue20}
+% \setbeamercolor{subsection in sidebar}{use=section in sidebar, fg=section in sidebar.fg}
+% \setbeamercolor{subsection in sidebar shaded}{use=section in sidebar shaded, fg=section in sidebar shaded.fg}
+
+% Layout
+\useinnertheme{rectangles}
+%\useoutertheme{miniframes}
+\beamertemplatenavigationsymbolsempty
+%\setbeamercovered{transparent} % hidden content is transparent
+\setbeamercovered{invisible} % hidden content is invisible
+\setbeamercolor{section number projected}{bg=darkGray,fg=white}
+\setbeamercolor{subsection number projected}{bg=darkGray,fg=white}
+\setbeamersize{sidebar width left=2px}
+
+% headline design
+\setbeamertemplate{headline}{
+\begin{picture}(0,-10)(-230,30)
+\put(15,6){\includegraphics[height=20px]{ens.png}}
+\end{picture}
+\begin{picture}(0,-10)(-275,30)
+\put(14,6){\includegraphics[height=20px]{IMAGES/Logos_intern/luh.eps}}
+\end{picture}
+}
+
+%\setbeamerfont{footline}{size=\fontsize{10}{12}\selectfont}
+
+%\addtobeamertemplate{frametitle}{\vskip1.8ex \hspace*{0.2cm}}{}
+
+%\addtobeamertemplate{framesubtitle}{\vskip0.8ex \hspace*{0.2cm}}{}
+%\setbeamertemplate{framesubtitle}{\vskip0.5cm \hskip0.25cm \insertframesubtitle}
+
+% extended footline starting on slide 2
+\setbeamertemplate{footline}{
+\color{lightGray}
+\rule{\textwidth}{18px}
+\begin{picture}(0,0)(0,0)
+\put(41.5,0){\includegraphics[height=18px]{IMAGES/Logos_intern/ibnmlogogruen.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(-2,0){\includegraphics[height=18px]{IMAGES/irtg_1627_Logo-neu2014_links.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(14.5,0){\includegraphics[height=18px]{LMT.jpg}}
+\end{picture}
+\begin{picture}(0,0)(-275,-15)
+\color{luhGreen}\rule{80px}{3px}
+\end{picture}
+\color{black}
+\begin{picture}(0,0)(-60,-7)
+\insertshortauthor\\ \insertshorttitle\\ \insertshortdate 
+\end{picture}
+\begin{picture}(0,0)(-346,-7)
+\insertframenumber
+\end{picture}
+}
+
+% sidebar design
+
+%\setbeamersize{sidebar width left=5px}
+\setbeamertemplate{sidebar canvas left}{
+\hspace*{-0.72cm}
+\includegraphics[height=1.2\textheight,width=14.5mm]{IMAGES/Logos_intern/Gitter_Rad_neu.eps}
+}
+
+% title page design
+\setbeamertemplate{title page}{
+\vspace{1cm}
+\hspace*{-0.8cm}
+\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par
+\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+\bigskip
+\begin{flushright}
+\usebeamerfont{author}\usebeamercolor[fg]{normal text}\insertauthor\par
+\usebeamerfont{institute}\insertinstitute\par
+\usebeamerfont{date}\insertdate\par
+\end{flushright}
+\hspace*{-0.8cm}
+\begin{picture}(0,0)(0,40)
+\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+\end{picture}
+}
+
+\newcommand{\specialTitleDesign}{
+
+% colored mesh on title page
+
+\setbeamertemplate{sidebar canvas left}{
+\hspace*{-0.72cm}
+\vspace*{-0.5cm}
+\includegraphics[height=1.2\textheight,width=14.3mm]{IMAGES/Logos_intern/Gitter_Rad_Gruen.eps}
+}
+
+% larger header on title page
+\setbeamertemplate{headline}{
+\begin{picture}(0,-10)(-190,30)
+\put(25,-1){\includegraphics[width=58px]{ens.png}}
+\end{picture}
+\begin{picture}(0,-10)(-275,30)
+\put(0,0){\includegraphics[width=80px]{IMAGES/Logos_intern/luh.eps}}
+\end{picture}	
+	
+%\begin{picture}(0,-10)(-50,50)
+%\put(0,3){\includegraphics[width=120px]{ens.png}}
+%%\put(0,3){\includegraphics[width=30px]{IMAGES/irtg_1627_Logo-neu2014_links.eps}}
+%%\put(33,17){\scalebox{.85}{ViVaCE `` Virtual Materials and their}}
+%%\put(33,10){\scalebox{.85}{Validation: German-French School of }}
+%%\put(33,3){\scalebox{.85}{Computational Engineering'' - IRTG 1627 }}
+%\end{picture}	
+%\begin{picture}(0,0)(-215,48)
+%\includegraphics[width=140px]{IMAGES/Logos_intern/luh.eps}
+%\end{picture}
+}
+
+% clean footline on title page
+\setbeamertemplate{footline}{
+\color{lightGray}
+\rule{\textwidth}{18px}
+\begin{picture}(0,0)(0,0)
+\put(41.5,0){\includegraphics[height=18px]{IMAGES/Logos_intern/ibnmlogogruen.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(-2,0){\includegraphics[height=18px]{IMAGES/irtg_1627_Logo-neu2014_links.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(14.5,0){\includegraphics[height=18px]{LMT.jpg}}
+\end{picture}
+%\begin{picture}(0,0)(0,0)
+%\put(20,0){\includegraphics[height=18px]{IMAGES/dfg_logo.eps}}
+%\end{picture}
+}
+\addtocounter{framenumber}{-1} % set title page to count 0
+}
+
+\newcommand{\dfgFunding}{
+	\begin{figure}
+\begin{flushright}
+Funded by:\\
+\includegraphics[width=0.15\textwidth]{IMAGES/Logos_extern/dfg_blue.eps}
+\end{flushright}
+\end{figure}
+}
+
+\newcommand{\contiFunding}{
+	\begin{figure}
+%	Funded by:\\[-0.3cm]
+	\begin{flushright}
+		\setlength{\unitlength}{\textwidth}
+		\begin{picture}(0.47,0)
+		\includegraphics[height=18px]{IMAGES/dfg_logo.eps}
+		\end{picture}
+%		\\[-0.5cm]
+%		{\flushleft \tiny \color{blue} IRTG 1627}
+	\end{flushright}\vspace*{-0.3cm}
+	\qquad \qquad \quad {\scriptsize IRTG-1627}
+\end{figure}
+}
+
+\setbeamertemplate{frametitle}{
+\vskip2ex \hspace*{-0.4cm} {\insertframetitle} \\[-0.2cm]
+\hskip0.15cm  {\small \insertframesubtitle}\\[-0.6cm] }
+
+
+\newcommand{\ltab}{\raggedright\arraybackslash} % Tabellenabschnitt linksbündig
+\newcommand{\ctab}{\centering\arraybackslash} % Tabellenabschnitt zentriert
+\newcommand{\rtab}{\raggedleft\arraybackslash} % Tabellenabschnitt rechtsbündig
+
+% \newcommand{\ul}[1]{\underline{#1}}
+% \newcommand{\ull}[1]{\uline{\raisebox{-0.05em}{\uline{\raisebox{0.05em}{\ensuremath{#1}}}}}}
+\newcommand{\ul}[1]{\underline{#1}}
+\newcommand{\ull}[1]{\ul{\ul{#1}}}
+\makeatletter
+\definecolor{Sblueaa}{cmyk}{1,0.6,0,0}
+\definecolor{Sbluea}{cmyk}{1,0.4,0,0}
+\definecolor{Sblueb}{cmyk}{0.7,0.2,0,0}
+\definecolor{Sbluec}{cmyk}{0.5,0.1,0,0}
+\definecolor{Sblued}{cmyk}{0.3,0.05,0,0}
+\definecolor{Sbluee}{cmyk}{0.15,0.04,0,0}
+\definecolor{Svbluea}{cmyk}{0.9,0.6,0,0}
+\definecolor{Svblueb}{cmyk}{0.68,0.4,0,0}
+\definecolor{Svbluec}{cmyk}{0.45,0.26,0,0}
+\definecolor{Svblued}{cmyk}{0.27,0.12,0,0}
+\definecolor{Sblacka}{cmyk}{0.5,0.2,0.2,0.85}
+\definecolor{Sblackb}{cmyk}{0.35,0.14,0.14,0.6}
+\definecolor{Sblackc}{cmyk}{0.25,0.1,0.1,0.43}
+\definecolor{Sblackd}{cmyk}{0.15,0.06,0.06,0.26}
+\definecolor{Sblacke}{rgb}{0.827451,0.8509804,0.8627451}
+\colorlet{Sblackf}{Sblacke!70!white}
+
+\definecolor{Syellow}{cmyk}{0,0.1,1,0}
+\definecolor{Sorange}{cmyk}{0,0.7,1,0}
+\definecolor{Sred}{cmyk}{0,1,1,0}
+\colorlet{Slred}{Sred!40!white}
+\definecolor{Spink}{cmyk}{0,1,0,0}
+\definecolor{Spurple}{cmyk}{0.6,1,0,0}
+\definecolor{Scyan}{cmyk}{1,0,0.4,0}
+\definecolor{Sgreen}{cmyk}{0.5,0,1,0}
+% \definecolor{S}{cmyk}{}
+
+\newcommand{\cSblueaa}{\color{Sblueaa}}
+\newcommand{\cSbluea}{\color{Sbluea}}
+\newcommand{\cSblueb}{\color{Sblueb}}
+\newcommand{\cSbluec}{\color{Sbluec}}
+\newcommand{\cSblued}{\color{Sblued}}
+\newcommand{\cSbluee}{\color{Sbluee}}
+\newcommand{\cSvbluea}{\color{Svbluea}}
+\newcommand{\cSvblueb}{\color{Svblueb}}
+\newcommand{\cSvbluec}{\color{Svbluec}}
+\newcommand{\cSvblued}{\color{Svblued}}
+\newcommand{\cSblacka}{\color{Sblacka}}
+\newcommand{\cSblackb}{\color{Sblackb}}
+\newcommand{\cSblackc}{\color{Sblackc}}
+\newcommand{\cSblackd}{\color{Sblackd}}
+\newcommand{\cSblacke}{\color{Sblacke}}
+\newcommand{\cSblackf}{\color{Sblackf}}
+\newcommand{\cSyellow}{\color{Syellow}}
+\newcommand{\cSorange}{\color{Sorange}}
+\newcommand{\cSred}{\color{Sred}}
+\newcommand{\cSdred}{\color{Sred!50!black}}
+\newcommand{\cSlred}{\color{Sred!50!white}}
+\newcommand{\cSpink}{\color{Spink}}
+\newcommand{\cSpurple}{\color{Spurple}}
+\newcommand{\cScyan}{\color{Scyan}}
+\newcommand{\cSgreen}{\color{Sgreen}}
+\newcommand{\cSdgreen}{\color{Sgreen!50!black}}
+\newcommand{\mcode}[1]{{\cSblueb \texttt{#1}}}
+
+\newcommand{\Sbfit}[1]{{\cSbluea\it\bfseries{#1}}}
+\newcommand{\Sbf}[1]{{\cSbluea\bf #1}}
+\newcommand{\Sit}[1]{{\cSbluea\it #1}}
+\newcommand{\Sbfcyan}[1]{{\cScyan\bf #1}}
+\newcommand{\Sbfitcyan}[1]{{\cScyan\it\bfseries #1}}
+\newcommand{\Sitcyan}[1]{{\cScyan\it #1}}
+\newcommand{\Sbfgreen}[1]{{\cSgreen\bf #1}}
+\newcommand{\Sbfitgreen}[1]{{\cSgreen\it\bfseries #1}}
+\newcommand{\Sitgreen}[1]{{\cSgreen\it #1}}
+\newcommand{\Sbfred}[1]{{\cSred\bf #1}}
+\newcommand{\Sbfitred}[1]{{\cSred\it\bfseries #1}}
+\newcommand{\Sitred}[1]{{\cSred\it #1}}
+\newcommand{\Sbfpink}[1]{{\cSpink\bf #1}}
+\newcommand{\Sbfitpink}[1]{{\cSpink\it\bfseries #1}}
+\newcommand{\Sitpink}[1]{{\cSpink\it #1}}
+\newcommand{\Sbfpurple}[1]{{\cSpurple\bf #1}}
+\newcommand{\Sbfitpurple}[1]{{\cSpurple\it\bfseries #1}}
+\newcommand{\Sitpurple}[1]{{\cSpurple\it #1}}
+\newcommand{\Sbfyellow}[1]{{\cSyellow\bf #1}}
+\newcommand{\Sbfityellow}[1]{{\cSyellow\it\bfseries #1}}
+\newcommand{\Sityellow}[1]{{\cSyellow\it #1}}
+\newcommand{\Sbforange}[1]{{\cSorange\bf #1}}
+\newcommand{\Sbfitorange}[1]{{\cSorange\it\bfseries #1}}
+\newcommand{\Sitorange}[1]{{\cSorange\it #1}}
+
+\setbeamercolor{cboxSblacka}{fg=white,bg=Sblacka}
+\setbeamercolor{cboxSblackb}{fg=white,bg=Sblackb}
+\setbeamercolor{cboxSblackc}{fg=white,bg=Sblackc}
+\setbeamercolor{cboxSblackd}{fg=black,bg=Sblackd}
+\setbeamercolor{cboxSblacke}{fg=black,bg=Sblacke}
+\setbeamercolor{cboxSbluea}{fg=white,bg=Sbluea}
+\setbeamercolor{cboxSblueb}{fg=white,bg=Sblueb}
+\setbeamercolor{cboxSbluec}{fg=white,bg=Sbluec}
+\setbeamercolor{cboxSblued}{fg=black,bg=Sblued}
+\setbeamercolor{cboxSvbluea}{fg=white,bg=Svbluea}
+\setbeamercolor{cboxSvblueb}{fg=white,bg=Svblueb}
+\setbeamercolor{cboxSvbluec}{fg=white,bg=Svbluec}
+\setbeamercolor{cboxSvblued}{fg=black,bg=Svblued}
+\setbeamercolor{cboxSred}{fg=white,bg=Sred}
+\setbeamercolor{cboxSredb}{fg=white,bg=Slred}
+\setbeamercolor{cboxSorange}{fg=Sblacka,bg=Sorange}
+\setbeamercolor{cboxSyellow}{fg=Sblacka,bg=Syellow}
+\setbeamercolor{cboxScyan}{fg=white,bg=Scyan}
+\setbeamercolor{cboxSpurple}{fg=white,bg=Spurple}
+\setbeamercolor{cboxSpink}{fg=white,bg=Spink}
+\setbeamercolor{cboxSgreen}{fg=black,bg=Sgreen}

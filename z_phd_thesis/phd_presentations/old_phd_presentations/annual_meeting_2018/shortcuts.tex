@@ -1,0 +1,77 @@
+\newcommand{\sign}[1]{{\rm sign}\lb #1 \rb}
+\newcommand{\kd}{k_{\rm d}}
+\newcommand{\nd}{n_{\rm d}}
+\newcommand{\kp}{k_{\rm p}}
+\newcommand{\np}{n_{\rm p}}
+\newcommand{\phid}{\phi^{\rm d}}
+\newcommand{\phip}{\phi^{\rm p}}
+
+\newcommand{\lb}{\left(}
+\newcommand{\rb}{\right)}
+
+\newcommand{\sty}[1]{\mbox{\boldmath $#1$}}
+
+\newcommand{\Hm}{H^-}
+\newcommand{\Hp}{H^+}
+\newcommand{\zero}{\sty{0}}
+\newcommand{\fX}{\sty{ X}}
+\newcommand{\vX}{\fX}
+\newcommand{\fZ}{\sty{ Z}}
+
+
+\newcommand{\Xdot}{\begin{bmatrix}
+		\ \ \dot{\hat{\epst}}^{\rm p}_{i+1/2} - {\dot{\epst}^{\rm p}_i}  \\
+		- (\hat{\dot\vX}_{i+1/2} - \dot\fX_i)
+\end{bmatrix}}
+\newcommand{\Y}{\begin{bmatrix}
+		\hat\sigma_{i+1/2} - \sigma_i\\
+		\hat\fZ_{i+1/2} - \fZ_i
+\end{bmatrix}}
+\newcommand{\Xdotglobal}{\begin{bmatrix}
+		\ \ \dot{\epst}^{\rm p}_{i+1} - \dot{\hat{\epst}}^{\rm p}_{i+1/2}  \\
+		- (\dot{\vX} _{i+1}- \dot{\hat{\vX}}_{i+1/2} )
+\end{bmatrix}}
+\newcommand{\Yglobal}{\begin{bmatrix}
+		\sigma_{i+1} - \hat{\sigma}_{i+1/2}\\
+		\fZ_{i+1} - \hat{\fZ}_{i+1/2}
+\end{bmatrix}}	
+\newcommand{\intern}{\begin{bmatrix}
+		\vX \\
+		D
+\end{bmatrix}}
+\newcommand{\conj}{\begin{bmatrix}
+		\vZ \\
+		Y
+\end{bmatrix}}
+\newcommand{\Xdotd}{\begin{bmatrix}
+		\ \ \dot{\hat{\epst}}^{\rm p}_{i+1/2} - {\dot{\epst}^{\rm p}_i}  \\
+		- (\hat{\dot\vX}_{i+1/2} - \dot\fX_i) \\
+		- (\hat{\dot D}_{i+1/2} - \dot D_i)
+\end{bmatrix}}
+\newcommand{\Yd}{\begin{bmatrix}
+		\hat\sigma_{i+1/2} - \sigma_i\\
+		\hat\fZ_{i+1/2} - \fZ_i \\
+		\hat Y_{i+1/2} -  Y_i
+\end{bmatrix}}
+\newcommand{\Xdotglobald}{\begin{bmatrix}
+		\ \ \dot{\epst}^{\rm p}_{i+1} - \dot{\hat{\epst}}^{\rm p}_{i+1/2}  \\
+ 		- (\dot\vX _{i+1}- \hat{\dot\vX}_{i+1/2} ) \\
+		- (\dot D _{i+1}- \hat{\dot D}_{i+1/2} )
+\end{bmatrix}}
+\newcommand{\Yglobald}{\begin{bmatrix}
+		\sigma_{i+1} - \hat\sigma_{i+1/2}\\
+		\fZ_{i+1} - \hat\fZ_{i+1/2} \\
+		Y_{i+1} - \hat Y_{i+1/2}
+\end{bmatrix}}	
+
+\renewcommand{\d}{{\,\rm  d}}
+\newcommand{\pl}[1]{{\rm{#1}}}
+\newcommand{\stepi}[2][]{{#2}_{i}^{\pl{#1}}}
+\newcommand{\stepj}[2][]{\hat{#2}_{i+1/2}^{\pl{#1}}}
+\newcommand{\stepk}[2][]{{#2}_{i+1}^{\pl{#1}}}
+\newcommand{\fzero}{\sty{ 0}}
+\newcommand{\fsigma}{\mbox{\boldmath $\sigma$}}
+\newcommand{\feps}{\mbox{\boldmath $\varepsilon $}}
+\newcommand{\rC}{{\boldsymbol {\mathrm C}}} 
+\newcommand{\hf}{\hat{f}}
+\newcommand{\grad}[1]{{\rm \nabla} #1 }

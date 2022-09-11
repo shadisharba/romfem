@@ -1,0 +1,19 @@
+w-art.cls ----------------
+
+v0.97b 2014-01-02
+
+"\vchcaption" is replaced by "\captionsetup{margin=4cc}\caption"
+================================================================
+
+The special command \vchcaption is replaced by the combined commands of the
+caption.sty package:
+
+\captionsetup{margin=4cc}\caption
+
+The result is the same as before: an indentation of the caption by 
+4 Ciceros = 18.0466667 millimeters.
+
+The \vchcaption command was only used inside the vchtable and vchfigure
+environment. The replacement should not result in any changes to the layout.
+
+

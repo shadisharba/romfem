@@ -1,0 +1,197 @@
+%%
+%% This is file `w-pamm.clo',
+%% generated with the docstrip utility.
+%%
+%% The original source files were:
+%%
+%% w-class.dtx  (with options: `pamm')
+%% ====================================================================
+%% @LaTeX-file{
+%%   version   = "0.9l",
+%%   date      = "2014/01/02",
+%%   author    = "WILEY-VCH Verlag GmbH \& Co. KGaA, Weinheim",
+%%   copyright = "Copyright 2002--2014 WILEY-VCH Verlag GmbH \& Co. KGaA, Weinheim,
+%%                all rights reserved.  Copying of this file is
+%%                authorized only if either:
+%%                (1) you make absolutely no changes to your copy,
+%%                including name; OR
+%%                (2) if you do make changes, you first rename it
+%%                to some other name.",
+%% }
+%% ====================================================================
+%% $Id: w-class.dtx,v 1.75 2004/02/08 11:48:49 uwe Exp $
+%% ====================================================================
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+\ProvidesFile{w-pamm.clo}
+              [2014/01/02 v0.9l
+      style option for Proceedings in Applied Mathematics and Mechanics]
+\setlength{\textheight}{55cc}
+\setlength{\textwidth}{39cc}
+\setlength{\headheight}{1cc}
+\setlength{\headsep}{1cc}
+\setlength{\topskip}{10pt}
+\setlength{\footskip}{1.5cc}
+\def\publname{Proceedings in Applied Mathematics and Mechanics}
+\journalname{PAMM}%
+{PAMM $\cdot$ Proc. Appl. Math. Mech.}%
+{Proceedings in Applied Mathematics and Mechanics}
+\copyrightinfo{2014}%                            % copyright year
+    {Wiley-VCH Verlag GmbH \& Co. KGaA, Weinheim}% copyright holder
+\journalurl{www.gamm-proceedings.com}
+\sectionfont{\normalfont\large\bfseries}
+\subsectionfont{\normalfont\normalsize\bfseries}
+\subsubsectionfont{\normalfont\normalsize\bfseries}
+\paragraphfont{\bfseries}
+\subparagraphfont{\bfseries}
+\authorfont{\normalsize\bfseries}
+\translatorfont{}
+\headingstextfont{\normalfont\small}
+\andfont{\normalfont}
+\indexsize{\normalsize}
+\bibsize{\small}
+\textheadindent{0mm}
+\headindent{4cc}
+\@firstlevelperiodfalse
+\@trailingperiodfalse
+\afterauthorskip{0.3}
+\afterkwskip{0}
+\afterscskip{0}
+\@authoratbotitlefalse
+\ExcludeTitleFromSkipfalse
+\def\FirstPageTopSkip{\global\topskip2.5cc\relax}
+\def\BeforeMainTextSkip{-10\p@\relax}
+\def\TitleAlignment{flushleft}
+\def\TitleSkip{4cc}
+\setlength{\vch@skip}{4cc minus 2cc}
+\if@separatedheads
+\setlength{\aux@tw}{\TitleSkip}
+\else
+\setlength{\aux@tw}{0mm}
+\fi
+\titlefont{\Large\bfseries}
+\pretitlefont{\Large\bfseries\itshape}
+\subtitlefont{\large\bfseries}
+\subjclasslabelfont{\bfseries}
+\subjclassfont{\small}
+\keywordsfont{\small}
+\keywordslabelfont{\bfseries}
+\dedicatoryfont{\small\itshape}
+\datesfont{\normalfont\small}
+\renewcommand{\received@name}{Received}
+\renewcommand{\revised@name}{, in revised form}
+\renewcommand{\accepted@name}{, accepted}
+\renewcommand{\@setdate}{\ifx\@empty\received@date\else%
+{\dt@font\noindent%
+\received@name\ \received@date%
+\ifx\@empty\revised@date\else\revised@name\ \revised@date\fi%
+\ifx\@empty\accepted@date\else\accepted@name\ \accepted@date\fi%
+\ifx\@empty\@dateposted\else\@setdateposted\fi%
+}\fi}
+\KeywordsinTitletrue
+\SubjClassinTitletrue
+\AddressinTitletrue
+\@hangaddrlabeltrue
+\DatesinTitletrue
+\addressfont{\normalfont\small}
+\addresslabelfont{\normalfont}
+\currentaddressfont{\itshape}
+\newcommand{\inst}[1]{\hbox{\@textsuperscript{\normalfont\unskip#1}}}
+\@noabstractnametrue
+\abstractfont{\small}
+\abstractlabelfont{\normalfont}
+\def\AbstractLeftMargin{4cc}
+\def\AbstractRightMargin{0pc}
+\def\BeforeAbstractSkip{\skip@5\p@}
+\EmbeddedAbstractHeadfalse
+\@abstreotitletrue
+\def\DedicatoryAlignment{}
+\SectNumUprightfalse
+\setlength{\MathIndentation}{4cc minus 2cc}
+\setcounter{tocdepth}{3}
+\HeadUnderltrue
+\@indentrunheadfalse
+\if@finallayout
+% \def\leftmark{\short@journalname\ {\bfseries\current@volume}, %
+% (\current@year){}{}\ /\ \journal@url}
+\def\leftmark{\short@journalname\ {\bfseries\current@volume} %
+(\current@year){}{}}
+\def\rightmark{\short@journalname\ {\bfseries\current@volume} %
+(\current@year){}{}}
+% (\current@year){}{}\ /\ \journal@url}
+\DOIprefix{10.1002}
+\newcommand{\DOI}{{\bfseries DOI}\ \doi@prefix/\doi@suffix}
+\def\ps@firstpage{\ps@empty
+  \def\@oddfoot{%
+    \normalfont\fontsize{6}{7\p@}\normalfont 
+    \raisebox{\z@}[\height+5mm][\depth]{\@publisherlogo}\hfil
+    \copyright\ \copyrightyear\ \copyrightholder
+    \global\topskip\normaltopskip}%
+  \let\@evenfoot\@oddfoot
+  \def\@oddhead{\vbox{\h@font\hsize\textwidth
+     \hbox to \textwidth{%\hspace{\TitleSkip}%
+          \short@journalname\ {\bfseries\current@volume}, %
+          \start@page\,--\,\end@page\ %
+  (\current@year)\ifx\@empty\doi@suffix\else\ /\ \DOI\fi\hfil}%
+     \ifHeadUnderl\vskip 2pt \hrule\fi}\hss}
+  \let\@evenhead\@oddhead % in case an article starts on a left-hand page
+}
+\else%@finallayout
+\def\leftmark{\abbr@journalname\ header will be provided by the publisher}
+\def\rightmark{\abbr@journalname\ header will be provided by the publisher}
+\def\ps@firstpage{\ps@empty
+  \def\@oddfoot{
+\normalfont\fontsize{6}{7\p@}\normalfont \hfil
+Copyright line will be provided by the publisher
+     \global\topskip\normaltopskip}%
+  \let\@evenfoot\@oddfoot
+  \def\@oddhead{\vbox{\h@font\hsize\textwidth
+     \hbox to \textwidth{%
+%        \abbr@journalname\ header will be provided by the publisher\hfil
+         \long@journalname, \today\hfil
+         }%
+     \ifHeadUnderl\vskip 2pt \hrule\fi}\hss}
+  \let\@evenhead\@oddhead % in case an article starts on a left-hand page
+}
+\fi%@finallayout
+\def\FloatAlignment{\raggedright}
+\AtBeginDocument{\if@captionpack
+\DeclareCaptionLabelSeparator*{enspace}{\enspace}
+\@ifundefined{captionlabeldelim}{\newcommand*\captionlabeldelim{\enskip}}{}%
+% \newcommand*\pammcaptionstyle{%
+%   \captionsetup{format=plain,labelfont=bf,font={small},indention=0pt,labelsep=enspace}
+% \@ifundefined{captionlabeldelim}{\newcommand*\captionlabeldelim{\enskip}}{}%
+% }
+% \else
+%   \newcommand*\pammcaptionstyle{%
+%   \newcommand*\captionfont{\normalfont\small}
+%   \newcommand*\captionlabelfont{\bfseries\small}
+%   \newcommand*\captionlabeldelim{\enskip}}
+\fi
+%\pammcaptionstyle%
+}
+\widowpenalty=10000
+\clubpenalty=10000
+\brokenpenalty=10000
+\newdimen\linespacing
+\lineskip=1pt \lineskiplimit=1pt
+\normallineskip=1pt \normallineskiplimit=1pt
+\let\baselinestretch=\@empty
+\newdimen\normalparindent
+\parindent=\normalparindent
+\endinput
+%%
+%% End of file `w-pamm.clo'.

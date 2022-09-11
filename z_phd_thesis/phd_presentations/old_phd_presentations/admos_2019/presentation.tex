@@ -1,0 +1,852 @@
+\documentclass{beamer}
+
+\input{/home/alameddin/src/tex/templates/presentation/packages}
+\input{/home/alameddin/src/tex/templates/presentation/layout}
+\input{./symbols}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[A Semi-incremental Scheme for Fatigue Damage Computations]{A Semi-incremental Scheme for Fatigue Damage Computations}
+\subtitle[ ]{ }
+\author[S. Alameddin]{{S. Alameddin}\textsuperscript{\dag} ,  A. Fau\textsuperscript{\dag},\\
+	U. Nackenhorst\textsuperscript{\dag}, D. N{\'e}ron\textsuperscript{\ddag}, P. Ladev{\`e}ze\textsuperscript{\ddag}}
+%\institute[IBNM - LUH]{Institut für Baumechanik und Numerische Mechanik\\ Leibniz Universität Hannover} %German version
+\institute[IBNM - LUH]{\dag \ IBNM, Leibniz Universit\"{a}t Hannover \\
+\ddag \ LMT, ENS Cachan, CNRS, Universit{\'e} Paris Saclay}
+\date[18.07.2019]{18. July 2019}
+\titlegraphic{
+%	\includegraphics[scale=0.32]{fig/pgd/eps_p_dot.eps}
+%	\includegraphics[height=90px]{/home/alameddin/phd_thesis/templates/tex_figures/latin_iter.pdf}
+	%		\includegraphics[width=0.6\textwidth,clip]{./fig/latin_iter.pdf}\\
+	}
+
+% Short names in [] for footline
+% Names in {} for title page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[style=authortitle,backend=bibtex]{biblatex}
+
+%\usepackage{biblatex}
+%\addbibresource{library}
+%\bibliographystyle{unsrt} %{ieeetr} % plain / alpha / unsrt
+%\bibliography{library}
+% Begin of presentation
+
+\begin{document}
+
+\newcommand{\twocol}[3]{
+\begin{columns}[t] % align columns
+	\begin{column}{.48\textwidth}
+		% \color{red}\rule{\linewidth}{4pt}
+		#1
+	\end{column}%
+%	\hfill%
+\vspace{-1cm}
+	\begin{column}{.55\textwidth}
+		% \color{blue}\rule{\linewidth}{4pt}
+		#2
+	\end{column}%
+\end{columns}
+#3
+% %	\hspace*{-.6cm}
+% \fboxsep=0pt
+% \begin{tikzpicture}[x=1mm,y=1mm,remember picture,overlay]
+%  \node at (28,4) {{%
+%     \begin{minipage}[t]{0.54\textwidth}
+%      
+%     \end{minipage}}};
+%  \node at (86,4) {{%
+%     \begin{minipage}[t]{0.54\textwidth}
+%      #2
+%     \end{minipage}}};
+%  \node at (57,-35) {{%
+%     \begin{minipage}{1.05\textwidth}
+%      #3
+%     \end{minipage}}};
+% \end{tikzpicture}
+
+ %	\begin{pspicture}(0,0)(2,2)
+ %	\psline[linecolor=red](0,0)(1,1)
+ %	\end{pspicture}
+ %\psframe(50,0){
+ %\fboxsep=0pt
+ %%\begin{picture}(300,150)(0,0)
+ %\rput[lt](-10,80){\fbox{%
+ %		\begin{minipage}{0.54\textwidth}
+ %		#1
+ %		\end{minipage}}}
+ %\rput[lt](158,65){\fbox{%
+ %		\begin{minipage}{0.54\textwidth}
+ %		#2
+ %		\end{minipage}
+ %	}}
+ %	\rput[lt](-5,-0){\fbox{%
+ %			\begin{minipage}{1.1\textwidth}
+ %			#3
+ %			\end{minipage}
+ %		}}
+ %	}
+
+ %\end{picture}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+{
+\centering
+ \specialTitleDesign
+ \begin{frame}
+ \vspace*{0.2cm}
+  \titlepage
+\begin{figure}
+	%	Funded by:\\[-0.3cm]
+	\begin{flushright}
+		\setlength{\unitlength}{\textwidth}
+		\begin{picture}(0.47,-0.5)
+		\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/dfg_logo.eps}
+		\end{picture}
+	\end{flushright}\vspace*{-0.3cm}
+	\qquad \qquad \quad {\scriptsize IRTG-1627}
+\end{figure}
+ \end{frame}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% table of contents
+%\frame{\frametitle{Outline}
+%\tableofcontents
+%%[pausesections]
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\captionsetup[figure]{labelformat=empty}% redefines the caption setup of the figures environment in the beamer class.
+
+\frame[t]{\frametitle{Fatigue damage}
+	\uncover<1->{
+		\twocol{	\begin{itemize}
+				\item Fluctuating loads\\[0.6cm]
+			\end{itemize}
+			\begin{tikzpicture}[scale=1]
+			\begin{axis}[axis x line=center, axis y line=center,
+			xticklabels={},yticklabels={},
+			 xlabel style={below}, %left
+			 ylabel style={left},
+			ymin=-1.7,ymax=1.5,xmin=0,xmax=8.5,
+			width=\textwidth,xlabel=$t$,ylabel=$f$]
+			\addplot [color=blue,thick,mark=none,domain=0:8,samples=400]{3*sin(pi / 8.8 * \x r) * sin(2*\x r)*0.5*sin(pi / 2 * 5 * \x r)} ;
+			\end{axis}
+			\end{tikzpicture}
+		}{
+			\centering
+			\only<2-6>{
+				\begin{itemize}
+					\item Material degradation\\[0.5cm]
+					\only<5->{
+						\item Continuum damage model\\[0.5cm]
+						% \item Virtual experiments
+						\item Large number of cycles\\[0.5cm]
+						\item Macro crack initiation\\[0.5cm]
+						\item Computationally expensive
+					}
+				\end{itemize}
+				
+				\only<2>{\includegraphics[width=0.7\textwidth]{./fig/0close-up-propeller-renewable-energy-687692.jpg}}
+				
+				\only<3>{\includegraphics[width=0.7\textwidth]{./fig/1aeroplane-aircraft-airplane-4594022.jpg}}
+
+				\only<4>{\includegraphics[width=0.7\textwidth]{./fig/2black-and-white-car-engine-chrome-1905742.jpg}}
+
+%				\only<5>{\includegraphics[width=0.7\textwidth]{./fig/3black-and-white-brand-broken-1966532.jpg}}
+			}
+		}
+	}
+	{
+	\uncover<6>{
+		\vspace{0.3cm}
+		\begin{block}{ \centering Model order reduction (MOR) techniques}
+		\end{block}
+	}
+}
+}
+
+
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{State of art}
+\begin{frame}{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+
+\frame{\frametitle{ROM for nonlinear problems}
+\begin{itemize}
+\item Short-term plastic/damage computations
+\begin{itemize}
+	\footnotesize
+	\item Proper orthogonal decomposition (POD)\\
+	\qquad [Kerfriden et al, 2011-2012; Ryckelynck, 2005-2011]. % Reese
+	\item Proper generalised decomposition (PGD)\\
+	\qquad [Vitse, 2016 ; Bhattacharyya et al, 2017]. % Allix et al, 1989; 
+\end{itemize}
+\vfill
+\item Long-term fatigue computations
+\begin{itemize}
+	\footnotesize
+	\item (Modified) jump cycle approach \\ {\qquad[Desmorat 2005; Bhattacharyya et al, 2018]}
+	\item Temporal homogenisation \\ {\qquad [Fish and Yu, 2002; Devulder et al, 2010]}
+	\item Space-time finite element method \\
+	{\qquad[Bhamare, 2014; Fritzen et al, 2018]} % Oden 1969
+\end{itemize}
+\end{itemize}
+}
+
+\section{Reduced order model for cyclic loading}
+\begin{frame}{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+
+\frame{\frametitle{Mechanical problem}
+\begin{block}{ \centering Admissibility equations (AE)}
+\end{block}
+\vspace{-0.5cm}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{itemize}
+{\item Static admissibility }
+\vspace{-0.5cm}
+\begin{align*}
+\centering
+\div{\fsigma}+\fb & =\fzero && \text{ in } \mathrm{\Omega} \times \cI      \\
+\fsigma \cdot \fn & =\bar{\boldsymbol{t}} && \text{ on } \mathrm{\partial\Omega_\mathrm{N}} \times \cI
+\end{align*}
+\end{itemize}
+\end{minipage}\hfil\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}
+{\item Kinematic admissibility}
+\vspace{-0.5cm}
+\begin{align*}
+\centering
+\feps & = \grads{\fu} && \text{ in } \mathrm{\Omega} \times \cI  \\
+\fu & =\bar{\fu} && \text{ on } \mathrm{\partial\Omega_\mathrm{D}} \times \cI
+\end{align*}
+\end{itemize}
+\end{minipage}
+\vspace*{0.2cm}
+%\begin{equation*}
+%\centering
+%\fu(\fx,t)|_{t=0} = \fu_0(\fx)
+%\end{equation*}
+
+\begin{block}{ \centering Nonlinear material model (CM)}
+\end{block}
+\vspace{-0.5cm}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{itemize}
+{\item State equations}
+\centering
+\vspace{-0.3cm}
+\begin{equation*}
+\begin{split}
+\fsigma &= f(\psi(\feps,\fepsp,\fq)) \\ 
+\fQ &= g(\psi(\feps,\fepsp,\fq))
+\end{split}
+\end{equation*}
+\end{itemize}
+\end{minipage}\hfil\begin{minipage}[t]{0.5\textwidth}
+\begin{itemize}
+{\item Evolution equations}
+\centering
+\vspace{-0.3cm}
+\begin{equation*}
+\begin{split}
+{\dot{\epst}}^{\rm p} &= \hat{f}{(\phi(\fsigma,\fQ))} \\
+\dot{\fq} &= \hat{g}{(\phi(\fsigma,\fQ))}
+\end{split}
+\end{equation*}
+\end{itemize}
+\end{minipage}
+
+}
+\frame{\frametitle{LATIN solution algorithm over a time interval}
+\begin{itemize}
+\item Start with an elastic initialisation
+\item Local stage, given initial conditions \\
+\qquad Solve the state and evolution equations (CM) to get $\stepj[]{\square}$
+\item Global stage\\
+\only<1>{\qquad Solve the admissibility equations (AE) to get $\stepk[]{\square}$}
+\only<2>{{\color{red} \qquad Solve the admissibility equations (AE) to get $\stepk[]{\square}$}}
+%\uncover<2>{\rule{\linewidth}{4pt}}
+%\\[0.2cm]
+\item Data flow between these stages
+\vspace{-0.3cm}
+\begin{align*}
+\small 
+&&(&& \stepk[ ]{\fsigma} &&-&& \stepj[ ]{\fsigma} &&) -{\ffH^-} &&(&& \stepk[]{\feps} &&-&& \stepj[]{\feps} &&) &= \fzero \\
+&&(&& \stepj[]{\fsigma} &&-&& \stepi[]{\fsigma} &&) +  {\ffH^+} &&(&& \stepj[]{\feps} &&-&& \stepi[]{\feps} &&)  &=\fzero
+\end{align*}
+\item Iterate until convergence with an energy error indicator
+\vspace{-0.3cm}
+\begin{align*}
+\small 
+\xi =\frac{\normg{\stepk[]{s}-\stepj[]{s}}{}}{\normg{ \left(\stepk[]{s} + \stepj[]{s}\right)/2}{}}{} , \
+\normg{\square}{}^2 = \frac{1}{2T} \intspt (\fsigma : \ffC^{-1} : \fsigma + \feps : \ffC : \feps ) \ \d \Omega \d t.
+\label{eq_error_indicator}
+\end{align*}
+%\begin{align*}
+%\footnotesize
+%\xi =\frac{\normg{\stepk[]{s}-\stepj[]{s}}{}}{\frac{1}{2} \normg{\stepk[]{s} + \stepj[]{s}}{} }{} , \qquad
+%\normg{s}{}^2 = \intspt (\fsigma:\ffC^{-1} \fsigma + \feps:\ffC \ \feps ) \ \d \Omega \d t
+%\end{align*}
+\end{itemize}
+}
+
+\frame[t]{\frametitle{Proper Generalised Decomposition}
+	\twocol{\begin{itemize}
+			\item Low-rank approximation\\[0.35cm]
+			\item Enrichment step\\[0.35cm]
+			\item Update step
+	\end{itemize}}{\vspace*{-0.18cm} \begin{itemize}
+	\item[] $\fu(\fx,t) = \sum_{j=1}^{N} {\fv_j}(\fx) \circ \flambda_j(t)$
+	\item[] $\Delta \fu(\fx,t) = {\fv}(\fx) \circ \flambda(t)$
+	\item[] $\Delta \fu(\fx,t) = \sum_{j=1}^{\mu} \underbrace{{\fv_j}(\fx)}_{known} \circ \Delta \flambda_j(t)$
+	\end{itemize}}{ }
+
+	\vspace{0.6cm}
+	Choosing the search directions as\\
+	\begin{equation*}
+	\footnotesize
+	{\ffH^+} = 0, \qquad {\ffH^-} = \alpha \ \ffC \qquad \alpha \in \ ]0,1]
+	\end{equation*}
+}
+
+\frame{\frametitle{Algorithmic point of view}
+% TODO: heilight n and nt
+\begin{itemize}
+\item Enrichment
+\only<1>{\begin{align*}
+	\gamma\ \mK\ \vec{v} &= \vec{f} \qquad\ \gamma \in \ffR \qquad \mK \in \ffR^{n \times n} \qquad \vec{v}, \vec{f} \in \ffR^{n} &&\text{ with B.C.}\\
+	a\ \vlambda &= \vb  \qquad\ \ \, a \in \ffR \qquad \ \, \vlambda, \vb \in \ffR^{n_t}  &&\text{ with I.C.}
+	\end{align*}}
+\only<2>{\begin{align*}
+	\gamma\ \mK\ \vec{v} &= \vec{f} \qquad\ \gamma \in \ffR \qquad \mK \in \ffR^{\color{red} n \times n} \qquad \vec{v}, \vec{f} \in \ffR^{n} &&\text{ with B.C.}\\
+	a\ \vlambda &= \vb  \qquad\ \ \, a \in \ffR \qquad \ \, \vlambda, \vb \in \ffR^{n_t}  &&\text{ with I.C.}
+	\end{align*}}
+\item Update\vspace{-0.2cm}
+\begin{equation*}
+\begin{split}
+\mat{\z{A}} \ \T{[\Delta\vlambda_{1},\cdots,\Delta\vlambda_{\mu}]} = \mat{\z{B}}  \qquad \ \z\mA \in \ffR^{\mu \times \mu} \qquad \mat{\z{B}} \in \ffR^{\mu  \times n_t}
+\end{split}
+\end{equation*}
+\end{itemize}
+}
+
+\frame{\frametitle{Semi-incremental scheme}
+\begin{itemize}
+\item The temporal domain is divided into intervals/cycles 
+\item Temporal modes are defined over $\z{t} \in [0,1]$ \\[-0.8cm]
+\begin{align*}
+&\z{\lambda}_{n_c+1}(\z{t}) = m \ \lambda_{n_c}(\z{t}) + g \ \z{t} + h \text{\quad with \quad}\\
+& \z{\lambda}_{n_c+1}(0) = \lambda_{n_c}(1) ,
+\quad
+\z{\lambda}_{n_c+1}(1) = \z{\lambda}_{n_c+1}(0).\\[-1cm]
+\end{align*}
+\begin{figure}
+\hspace{-1.5cm}
+\centering
+\definecolor{mycolor1}{rgb}{0.00000,0.0,0.0}%
+\definecolor{mycolor2}{rgb}{1,0,0}%
+%
+\begin{tikzpicture}[scale=0.35]
+\LARGE
+\begin{axis}[%
+width=4.932in,
+height=3.89in,
+at={(0.827in,0.525in)},
+scale only axis,
+xmin=0,
+xmax=7.51,
+ymin=-3.5,
+ymax=3,
+axis background/.style={fill=white},
+legend style={legend cell align=left, align=left, draw=white!15!black},
+ylabel={$\lambda(t)$},
+ytick={-3,...,3},
+yticklabels={,,,$0$,$A_{n_c}$, ,$A_{n_c+1}$},
+%xlabel={$t\ (\mathrm{sec})$},
+xtick={0,0.5,...,7.5},
+xticklabels={$\tau_{n_c-1}$,,,,,,,,,,$\tau_{n_c} = \tau_{n_c-1}+T_{n_c}$,,,,,$\tau_{n_c+1} = \tau_{n_c}+T_{n_c+1}$},
+xticklabel style={rotate=15,anchor=north east},
+grid=both
+]
+\addplot [color=mycolor1,line width=3.5]
+table[row sep=crcr]{%
+	0	-0.29552020666134\\
+	0.0505050505050505	-0.234950990561156\\
+	0.101010101010101	-0.173454530240126\\
+	0.151515151515152	-0.111273524132074\\
+	0.202020202020202	-0.0486533722603111\\
+	0.252525252525253	0.014158792244152\\
+	0.303030303030303	0.0769150784641643\\
+	0.353535353535354	0.139367816008635\\
+	0.404040404040404	0.201270532454419\\
+	0.454545454545455	0.262378926060365\\
+	0.505050505050505	0.32245182991468\\
+	0.555555555555556	0.381252163710549\\
+	0.606060606060606	0.438547869393799\\
+	0.656565656565657	0.494112826990015\\
+	0.707070707070707	0.54772774699678\\
+	0.757575757575758	0.599181035819153\\
+	0.808080808080808	0.648269630832925\\
+	0.858585858585859	0.694799801780022\\
+	0.909090909090909	0.738587915333329\\
+	0.95959595959596	0.779461159813536\\
+	1.01010101010101	0.817258227197891\\
+	1.06060606060606	0.851829949729265\\
+	1.11111111111111	0.883039888613143\\
+	1.16161616161616	0.910764872479215\\
+	1.21212121212121	0.934895483482504\\
+	1.26262626262626	0.955336489125606\\
+	1.31313131313131	0.972007218097855\\
+	1.36363636363636	0.98484187864813\\
+	1.41414141414141	0.993789818234836\\
+	1.46464646464646	0.998815723428351\\
+	1.51515151515152	0.999899759276992\\
+	1.56565656565657	0.997037647586515\\
+	1.61616161616162	0.990240683804187\\
+	1.66666666666667	0.979535692440819\\
+	1.71717171717172	0.964964921206678\\
+	1.76767676767677	0.946585874279072\\
+	1.81818181818182	0.924471085359637\\
+	1.86868686868687	0.898707831416951\\
+	1.91919191919192	0.869397788244216\\
+	1.96969696969697	0.83665662919135\\
+	2.02020202020202	0.80061356865512\\
+	2.07070707070707	0.761410852128956\\
+	2.12121212121212	0.719203194824969\\
+	2.17171717171717	0.674157171083693\\
+	2.22222222222222	0.626450556981264\\
+	2.27272727272727	0.576271628728467\\
+	2.32323232323232	0.523818419630542\\
+	2.37373737373737	0.469297938540208\\
+	2.42424242424242	0.41292535288829\\
+	2.47474747474747	0.35492313951617\\
+	2.52525252525253	0.29552020666134\\
+	2.57575757575758	0.234950990561157\\
+	2.62626262626263	0.173454530240125\\
+	2.67676767676768	0.111273524132074\\
+	2.72727272727273	0.0486533722603108\\
+	2.77777777777778	-0.014158792244152\\
+	2.82828282828283	-0.076915078464164\\
+	2.87878787878788	-0.139367816008636\\
+	2.92929292929293	-0.201270532454419\\
+	2.97979797979798	-0.262378926060365\\
+	3.03030303030303	-0.32245182991468\\
+	3.08080808080808	-0.381252163710549\\
+	3.13131313131313	-0.438547869393799\\
+	3.18181818181818	-0.494112826990015\\
+	3.23232323232323	-0.54772774699678\\
+	3.28282828282828	-0.599181035819153\\
+	3.33333333333333	-0.648269630832925\\
+	3.38383838383838	-0.694799801780022\\
+	3.43434343434343	-0.738587915333328\\
+	3.48484848484848	-0.779461159813537\\
+	3.53535353535354	-0.817258227197891\\
+	3.58585858585859	-0.851829949729264\\
+	3.63636363636364	-0.883039888613143\\
+	3.68686868686869	-0.910764872479215\\
+	3.73737373737374	-0.934895483482504\\
+	3.78787878787879	-0.955336489125606\\
+	3.83838383838384	-0.972007218097855\\
+	3.88888888888889	-0.98484187864813\\
+	3.93939393939394	-0.993789818234836\\
+	3.98989898989899	-0.998815723428351\\
+	4.04040404040404	-0.999899759276992\\
+	4.09090909090909	-0.997037647586515\\
+	4.14141414141414	-0.990240683804187\\
+	4.19191919191919	-0.979535692440819\\
+	4.24242424242424	-0.964964921206678\\
+	4.29292929292929	-0.946585874279072\\
+	4.34343434343434	-0.924471085359637\\
+	4.39393939393939	-0.898707831416952\\
+	4.44444444444444	-0.869397788244216\\
+	4.49494949494949	-0.83665662919135\\
+	4.54545454545455	-0.80061356865512\\
+	4.5959595959596	-0.761410852128956\\
+	4.64646464646465	-0.71920319482497\\
+	4.6969696969697	-0.674157171083693\\
+	4.74747474747475	-0.626450556981264\\
+	4.7979797979798	-0.576271628728467\\
+	4.84848484848485	-0.523818419630542\\
+	4.8989898989899	-0.469297938540209\\
+	4.94949494949495	-0.412925352888289\\
+	5	-0.35492313951617\\
+};
+\addlegendentry{$\lambda_{n_c}$}
+
+\addplot [color=mycolor2,line width=3.5]
+table[row sep=crcr]{%
+	5	-0.35492313951617\\
+	5.02525252525253	-0.16464883791219\\
+	5.05050505050505	0.0248820472088221\\
+	5.07575757575758	0.212929033289123\\
+	5.1010101010101	0.398757494042553\\
+	5.12626262626263	0.581641558688871\\
+	5.15151515151515	0.760866976634102\\
+	5.17676767676768	0.935733936291326\\
+	5.2020202020202	1.10555982691729\\
+	5.22727272727273	1.26968193256518\\
+	5.25252525252525	1.42746004752165\\
+	5.27777777777778	1.57827900290634\\
+	5.3030303030303	1.72155109446237\\
+	5.32828282828283	1.85671840195658\\
+	5.35353535353535	1.98325499103575\\
+	5.37878787878788	2.10066898884927\\
+	5.4040404040404	2.20850452524651\\
+	5.42929292929293	2.3063435318881\\
+	5.45454545454545	2.39380739217061\\
+	5.47979797979798	2.47055843545334\\
+	5.50505050505051	2.53630126969009\\
+	5.53030303030303	2.59078394720656\\
+	5.55555555555556	2.63379895902277\\
+	5.58080808080808	2.66518405379618\\
+	5.60606060606061	2.6848228781536\\
+	5.63131313131313	2.69264543588482\\
+	5.65656565656566	2.68862836418568\\
+	5.68181818181818	2.67279502586034\\
+	5.70707070707071	2.64521541711901\\
+	5.73232323232323	2.60600589133488\\
+	5.75757575757576	2.55532869985048\\
+	5.78282828282828	2.49339135164582\\
+	5.80808080808081	2.42044579439516\\
+	5.83333333333333	2.33678742014473\\
+	5.85858585858586	2.24275389953523\\
+	5.88383838383838	2.13872384917007\\
+	5.90909090909091	2.02511533738863\\
+	5.93434343434343	1.90238423434154\\
+	5.95959595959596	1.77102241287941\\
+	5.98484848484848	1.63155580735545\\
+	6.01010101010101	1.48454233800284\\
+	6.03535353535354	1.33056970907845\\
+	6.06060606060606	1.17025308946265\\
+	6.08585858585859	1.00423268486876\\
+	6.11111111111111	0.833171211243614\\
+	6.13636363636364	0.657751279330463\\
+	6.16161616161616	0.478672700716226\\
+	6.18686868686869	0.296649725994874\\
+	6.21212121212121	0.112408225946654\\
+	6.23737373737374	-0.0733171731422808\\
+	6.26262626262626	-0.25978598871418\\
+	6.28787878787879	-0.446254804286079\\
+	6.31313131313131	-0.631980203375014\\
+	6.33838383838384	-0.816221703423234\\
+	6.36363636363636	-0.998244678144586\\
+	6.38888888888889	-1.17732325675882\\
+	6.41414141414141	-1.35274318867197\\
+	6.43939393939394	-1.52380466229712\\
+	6.46464646464646	-1.68982506689101\\
+	6.48989898989899	-1.85014168650681\\
+	6.51515151515152	-2.0041143154312\\
+	6.54040404040404	-2.15112778478381\\
+	6.56565656565657	-2.29059439030777\\
+	6.59090909090909	-2.4219562117699\\
+	6.61616161616162	-2.54468731481699\\
+	6.64141414141414	-2.65829582659843\\
+	6.66666666666667	-2.76232587696359\\
+	6.69191919191919	-2.85635939757309\\
+	6.71717171717172	-2.94001777182352\\
+	6.74242424242424	-3.01296332907418\\
+	6.76767676767677	-3.07490067727884\\
+	6.79292929292929	-3.12557786876324\\
+	6.81818181818182	-3.16478739454737\\
+	6.84343434343434	-3.1923670032887\\
+	6.86868686868687	-3.20820034161404\\
+	6.89393939393939	-3.21221741331319\\
+	6.91919191919192	-3.20439485558196\\
+	6.94444444444444	-3.18475603122454\\
+	6.96969696969697	-3.15337093645113\\
+	6.99494949494949	-3.11035592463492\\
+	7.02020202020202	-3.05587324711845\\
+	7.04545454545454	-2.9901304128817\\
+	7.07070707070707	-2.91337936959897\\
+	7.0959595959596	-2.82591550931646\\
+	7.12121212121212	-2.72807650267487\\
+	7.14646464646465	-2.62024096627763\\
+	7.17171717171717	-2.50282696846412\\
+	7.1969696969697	-2.37629037938494\\
+	7.22222222222222	-2.24112307189073\\
+	7.24747474747475	-2.0978509803347\\
+	7.27272727272727	-1.94703202495001\\
+	7.2979797979798	-1.78925390999354\\
+	7.32323232323232	-1.62513180434566\\
+	7.34848484848485	-1.45530591371969\\
+	7.37373737373737	-1.28043895406246\\
+	7.3989898989899	-1.10121353611723\\
+	7.42424242424242	-0.918329471470916\\
+	7.44949494949495	-0.732501010717487\\
+	7.47474747474747	-0.544454024637182\\
+	7.5	-0.35492313951617\\
+};
+\addlegendentry{$\lambda_{n_c+1}$}
+\end{axis}
+\end{tikzpicture}%
+\end{figure}
+\end{itemize}
+}
+
+\frame[t]{\frametitle{SVD Compression of PGD}
+	\begin{itemize}
+		\item Large number of modes
+		\item Slow temporal update step
+		\uncover<2>{
+		\item {\color{red} Randomised SVD (RSVD) orthonormalisation step}	
+		\begin{align*}
+		\z{\mat{U}} &= \mV \ \T{\mat{\Lambda}} \in \ffR^{n\times n_t}\\
+		\mV &=  \mat{Q}_v \ \mat{R}_v, &&\mat{\Lambda} = \mat{Q}_\lambda \ \mat{R}_\lambda 
+		 &&\sim{\cal O} (\mu^2 \ (n+n_t))\\
+		\mat{T} &= \mat{R}_v \ \T{\mat{R}}_\lambda \in \ffR^{\mu\times\mu}, &&\mat{T} \approxeq \z{\mat{V}} \ \z{\mat{S}} \ \T{\z{\mat{\Lambda}}}\\
+		\z{\mat{U}} &\approxeq \mat{Q}_v \ \z{\mat{V}} \ \z{\mat{S}} \ \T{\z{\mat{\Lambda}}} \T{\mat{Q}_\lambda}
+		\end{align*}
+	}
+	\end{itemize}
+}
+
+\section{Numerical examples}
+
+\begin{frame}{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+
+\frame{\frametitle{Numerical results}
+\begin{itemize}
+\item A plate subjected to cyclic loading (Cr-Mo steel at $580^\circ \rm C$)
+\begin{figure}
+\centering
+\includegraphics[scale=0.7,clip]{/home/alameddin/phd_thesis/templates/figures/3d_plate_1_8.eps}
+\end{figure}
+\end{itemize}
+}
+
+\frame[t]{\frametitle{Viscoplastic viscodamage material model}
+\twocol{\begin{itemize}
+		\item State equations\\[0.5cm]
+	\end{itemize}
+	\begin{equation*}
+	\begin{split}
+	\fsigma &= (1-D) \ \ffC : \fepse \\
+	\fbeta &= \frac{2}{3} \  c \  \falpha \\
+	R & = R_\infty \ (1-\mathrm{e}^{-b \ r})\\
+	Y & = \frac{1}{2} \  \fepse :  \ffC :  \fepse
+	\end{split}
+	\end{equation*}}{
+	\begin{itemize}
+		\item Evolution equations\\[0.5cm]
+	\end{itemize}
+	\begin{equation*}
+	\begin{split}
+	\epspdot &= \dot{\lambda} \ \fN\\
+	{\dot\falpha} &=\dot{\lambda} \ \left( \z{\fN} - \frac{3 \ a}{2 \ c} \ \fbeta \right)\\
+	\dot{r} & = \dot{\lambda}\\
+	{\dot{D}} &= \frac{\dot{\lambda}}{1-D} \ {\left( \frac{Y}{S} \right)}^{s} \text{if } (r > p_{\rm D})\\
+	\end{split}
+	\label{eq:evolution_damage_detailed}
+	\end{equation*}}{ }
+
+%\begin{minipage}[t]{0.4\textwidth}
+%\begin{itemize}
+%{\item }
+%\vspace{-0.3cm}
+%\begin{equation*}
+%\begin{split}
+%\fsigma & = \ffC \ \fepse \ (1-D) \\
+%\fbeta &= C \ \falpha \\
+%Y & = \frac{1}{2} \fepse : \ffC \ \fepse
+%\end{split}
+%\end{equation*}
+%\end{itemize}
+%\end{minipage}\hfil\begin{minipage}[t]{0.5\textwidth}
+%\begin{itemize}
+%{\item Evolution equations}
+%\vspace{-0.3cm}
+%\small
+%\begin{equation*}
+%\begin{split}
+%{\dot{\epst}}^{\rm p} &=  k \ \vol{\Fp}_+^{n} \ \left[\frac{3}{2} \frac{\ftau}{J_{2}(\ftau)} \right] \frac{1}{1-D}\\
+%{\dot\alpha} &= k \ \vol{\Fp}_+^{n} \ \left[ \frac{3}{2} \frac{\ftau}{J_{2}(\ftau)} - \frac{a}{C} \fbeta \right] \\
+%{\dot{D}} &=  \kd  \vol{\Fd}_+^{\nd}
+%\end{split}
+%\end{equation*}
+%\end{itemize}
+%\end{minipage}
+%\vspace{0.5cm}
+
+}
+
+% till here 10 slides
+
+\frame[t]{\frametitle{Model verification}
+	\begin{itemize}
+		\item With respect to a classical Newton-Raphson scheme \\[0.5cm]
+	\end{itemize}
+\vfill
+\twocol{
+\centering
+\includegraphics[height=0.55\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_1_1.pdf}
+}{
+\centering
+\includegraphics[height=0.55\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_1_2.pdf}
+}{ }
+}
+
+\frame[t]{\frametitle{Variable amplitude and frequency loading}
+	\begin{itemize}
+		\item Amplitudes: $[30,90]\cdot10^{-4}\unit{mm}$ \hfill Time periods: $[20,60]\unit{sec}$\\[0.5cm]
+	\end{itemize}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_2_1.pdf}
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_2_2.pdf}
+	}{
+\uncover<2>{\begin{block}{ \centering Number of modes is eight}
+\end{block}}}
+}
+
+\frame[t]{\frametitle{Random amplitude loading}
+	\begin{itemize}
+		\item $100$ cycles with different orthonormalisation schemes
+	\end{itemize}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/modal_optimisation/mgs_number_of_pgd_modes.pdf}\\
+		\qquad \qquad Gram-Schmidt
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/modal_optimisation/excessive_svd_m8_number_of_pgd_modes.pdf}\\
+		\qquad SVD scheme
+	}{ }
+}
+
+\frame[t]{\frametitle{Random amplitude loading}
+	\begin{itemize}
+		\item Required time\\[0.5cm]
+	\end{itemize}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/modal_optimisation/temporal_update_timing.pdf}\\
+		\hfil Temporal update
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/modal_optimisation/orthonormalisation_timing.pdf}\\
+		\hfil Orthonormalisation step
+	}{ }
+}
+
+\frame[t]{\frametitle{Random amplitude loading}
+	\begin{itemize}
+		\item $10000$ cycles, uniform distribution in $[53,56]\cdot 10^{-2} \unit{mm}$\\[0.5cm]
+	\end{itemize}
+	\vfill
+	\twocol{
+		\centering
+		\includegraphics[height=0.51\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_3_1.pdf}
+	}{
+		\centering
+		\includegraphics[height=0.5\textheight]{/home/alameddin/phd_thesis/templates/figures/semi_incremental/temporal_scheme_3_2.pdf}
+	}{\vspace{-0.5cm}
+		\only<2>{
+			\begin{itemize}
+				\item $D_{\mathrm{c}}=0.3 \hfil \rightarrow \hfil  P_{\mathrm{f}}=5.4\%$
+				\item Requirements: $[15-35]\unit{min}$ and $[1-1.5]\unit{GB}$
+			\end{itemize}
+		}
+		\uncover<3>{\begin{block}{ \centering Time-saving factors $50 \sim 100$}
+	\end{block}}
+}
+}
+
+\section{Conclusions and future research}
+\begin{frame}{Outline}
+\tableofcontents[currentsection]
+\end{frame}
+
+\frame{\frametitle{Conclusion and future research}
+\vspace{0.5cm}
+\begin{itemize}
+\item Efficient cycle by cycle simulation for damage problems
+\item Open-source: \url{gitlab.com/shadialameddin/romfem}\\[0.3cm]
+\vfill
+\pause
+\textbf{Challenges}
+\item The computation of the local stage
+\item The integration of the error indicator\\[0.3cm]
+\vfill
+\pause
+\textbf{Future development}
+\item PGD of all QoI in the local stage
+\item Machine learning to approximate the constitutive manifold
+\end{itemize}
+\pause
+{\begin{block}{ \centering Thank you for your attention}
+\end{block}}
+}
+
+\frame{\frametitle{The global stage}
+	\begin{itemize}
+		\item Weak form at iteration $i+1$
+		\begin{equation*}
+		\hspace{-0.5cm} \footnotesize \intspt \stepk[]{\fsigma}:\feps(\su) \dspt = \intspt \fb \cdot \su  \d \Omega \d t+ \intt{\pOmegaN}  \bar{\ft} \cdot \su \d S \d t, \quad \forall \su \in \cal{U}_{\mathrm{0}}
+		\end{equation*}
+		\vfill
+		\item Correction $\Delta\stepk[]{\bullet}=\stepk[]{\bullet}-\stepi[]{\bullet}$
+		\begin{align*}
+		& \Delta\stepk[]{\fsigma} - {\ffH^-} \Delta\stepk[]{\feps} - \hf=\fzero, \ \  \hf  = \underbrace{(\stepj{\fsigma}-\stepi{\fsigma}) - {\ffH^-} (\stepj[]{\feps}-\stepi[]{\feps})}_{known} \\
+		\intspt & \Delta \stepk[]{\fsigma} : \feps(\Delta \su) \ \d \Omega \d t = 0
+		\end{align*}
+	\end{itemize}
+}
+
+\frame{\frametitle{Proper Generalised Decomposition}
+	\begin{itemize}
+		\item  Low-rank approximation of the solution
+		\begin{equation*}
+		{u}(\fx,t)=\ds \sum_{i=1}^{N} \lambda_i(t) \ v_i(\fx)
+		\end{equation*}
+		\item  Enriching with one mode
+		\begin{align*}
+		\Delta u = \lambda(t) \ v(\fx) \qquad \Delta u^\ast = \lambda^\ast \ v + \lambda \ v^\ast
+		\end{align*}
+		\item Updating $(\mu)$ previously generated time modes
+		\begin{align*}
+		\Delta u = \ds \sum_{i=1}^{\mu} \Delta \lambda_i(t) \ \underbrace{v_i(\fx)}_{known}
+		\end{align*}
+	\end{itemize}
+}
+
+\frame{\frametitle{Static admissibility}
+	\footnotesize
+	\begin{itemize}
+		\item  Static admissibility and global search direction
+		\footnotesize{\begin{align*}
+			\intspt  {\ffH^-} \Delta\stepk[]{\feps}  : \feps(\Delta \su) \ \d \Omega \d t & = - \intspt \hf : \feps(\Delta \su) \ \d \Omega \d t
+			\end{align*}}
+		\item Space problem: {\footnotesize $ \tiny \vol{\bullet} = \intT \bullet \ \d t$}, given $\lambda_j$
+		\footnotesize{
+			\begin{align*}
+			\vol{\lambda_j \lambda_j} \intS \grad{v}^\ast  : {\ffH^-}  \grad{v_{j+1}} \ \d \Omega & = - \vol{\lambda_j} \intS \grad{v}^\ast : \hf \d \Omega
+			\end{align*}}
+		\vspace{-0.2cm}
+		\item Time problem, given $v_{j+1}$:
+		\begin{align*}
+		\footnotesize
+		\intT \lambda^\ast \left[ \intS  \grad{v_{j+1}} : {\ffH^-} \ \grad{v_{j+1}} \d \Omega \right] \lambda_{j+1} \ \d t & = - \vol{\lambda^\ast} \intS  \grad{v_{j+1}} : \hf \d \Omega
+		\end{align*}
+	\end{itemize}
+	%		\mediabutton[jsaction={anim.myAnim.playFwd();}]{\fbox{\strut Play}}
+	%		\mediabutton[jsaction={anim.myAnim.pause();}]{\fbox{\strut Pause}}
+	%		 \includegraphics[width=0.4\linewidth]{./img/lating-0.png}
+}
+
+\end{document}

@@ -1,0 +1,154 @@
+\usefonttheme{professionalfonts}
+\setbeamerfont{title}{series=\bfseries}
+\setbeamerfont{subtitle}{series=\mdseries}
+\setbeamerfont{frametitle}{series=\mdseries}
+\setbeamerfont{footline}{series=\mdseries}%, size=\scriptsize}
+\linespread{1.2}
+
+\definecolor{luhBlue}{RGB}{0,80,155}
+\definecolor{luhBlue40}{RGB}{153,185,216}
+\definecolor{luhBlue20}{RGB}{204,220,235}
+\definecolor{luhGreen}{RGB}{200,211,23}
+\definecolor{darkGray}{RGB}{153,153,153}
+\definecolor{lightGray}{RGB}{204,204,204}
+
+\setbeamercolor{title}{fg=luhBlue}
+\setbeamercolor{subtitle}{fg=luhBlue40}
+\setbeamercolor{titlelike}{fg=luhBlue,parent=structure}
+\setbeamercolor{titlelike}{fg=luhBlue,bg=}
+\setbeamercolor{normal text}{fg=black}
+\setbeamercolor{alerted text}{fg=luhGreen}
+\setbeamercolor{example text}{fg=luhBlue20}
+\setbeamercolor{structure}{fg=black}
+
+\setbeamercolor{itemize item}{fg=darkGray}
+\setbeamercolor{itemize subitem}{fg=darkGray}
+\setbeamercolor{itemize subsubitem}{fg=darkGray}
+
+\setbeamercolor{item projected}{fg=white,bg=darkGray}
+\setbeamercolor{enumerate subitem}{fg=darkGray}
+\setbeamercolor{enumerate subsubitem}{fg=darkGray}
+
+\setbeamertemplate{itemize items}[ball]
+\setbeamertemplate{items}[ball]
+
+% Blocks
+%\setbeamercolor{block body}{fg=black,bg=white}
+%\setbeamercolor{block body alerted}{fg=black,bg=white}
+%\setbeamercolor{block body example}{fg=black,bg=white}
+\setbeamercolor{block title}{fg=white,bg=luhBlue}
+\setbeamercolor{block title alerted}{use={normal text,alerted text},fg=black,bg=luhGreen}
+\setbeamercolor{block title example}{use={normal text,example text},fg=black,bg=luhBlue40}
+
+% Layout
+\useinnertheme{rectangles} % rectangles circles
+\beamertemplatenavigationsymbolsempty
+%\setbeamercovered{transparent} % hidden content is transparent
+%\setbeamercovered{invisible} % hidden content is invisible
+\setbeamercolor{section number projected}{bg=darkGray,fg=white}
+\setbeamercolor{subsection number projected}{bg=darkGray,fg=white}
+
+% headline design
+\setbeamertemplate{headline}{
+\begin{picture}(0,-10)(-230,30)
+\put(15,6){\includegraphics[height=20px]{/home/alameddin/src/tex/templates/logos/ens.png}}
+\end{picture}
+\begin{picture}(0,-10)(-275,30)
+\put(14,6){\includegraphics[height=20px]{/home/alameddin/src/tex/templates/logos/luh.eps}}
+\end{picture}
+}
+
+%\setbeamerfont{footline}{size=\fontsize{10}{12}\selectfont}
+
+% extended footline starting on slide 2
+\setbeamertemplate{footline}{
+\color{lightGray}
+\rule{\textwidth}{18px}
+\begin{picture}(0,0)(0,0)
+\put(41.5,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/ibnmlogogruen.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(-2,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/irtg_1627_logo_neu2014_links.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(14.5,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/lmt.jpg}}
+\end{picture}
+\begin{picture}(0,0)(-275,-15)
+\color{luhGreen}\rule{80px}{3px}
+\end{picture}
+\color{black}
+\begin{picture}(0,0)(-60,-7)
+\insertshortauthor\\ \insertshorttitle\\ \insertshortdate 
+\end{picture}
+\begin{picture}(0,0)(-346,-7)
+\insertframenumber
+\end{picture}
+}
+
+% sidebar design
+%\setbeamersize{sidebar width left=5px}
+%\setbeamertemplate{sidebar canvas left}{
+%\hspace*{-0.72cm}
+%\includegraphics[height=1.3\textheight,width=12mm]{/home/alameddin/src/tex/templates/logos/gitter_rad_neu.eps}
+%}
+
+% title page design
+\setbeamertemplate{title page}{
+\vspace{1cm}
+\hspace*{-0.8cm}
+\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par
+\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par
+\bigskip
+\begin{flushleft}
+\hspace*{0.58\linewidth}
+%	\begin{center}
+		\usebeamerfont{author}\usebeamercolor[fg]{normal text}\insertauthor\par
+\hspace*{0.58\linewidth}
+		\usebeamerfont{institute}\insertinstitute\par
+\hspace*{0.58\linewidth}
+		\usebeamerfont{date}\insertdate\par
+%	\end{center}
+\end{flushleft}
+\hspace*{-0.8cm}
+\begin{picture}(0,40)(0,40)
+\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic
+\end{picture}
+}
+\newcommand{\specialTitleDesign}{
+% colored mesh on title page
+\setbeamertemplate{sidebar canvas left}{
+\hspace*{-0.72cm}
+\includegraphics[height=1.3\textheight,width=12mm]{/home/alameddin/src/tex/templates/logos/gitter_rad_gruen.eps}}
+% larger header on title page
+\setbeamertemplate{headline}{
+\begin{picture}(0,-10)(-190,30)
+\put(25,-1){\includegraphics[width=58px]{/home/alameddin/src/tex/templates/logos/ens.png}}
+\end{picture}
+\begin{picture}(0,-10)(-275,30)
+\put(0,0){\includegraphics[width=80px]{/home/alameddin/src/tex/templates/logos/luh.eps}}
+\end{picture}}
+% clean footline on title page
+\setbeamertemplate{footline}{
+\color{lightGray}
+\rule{\textwidth}{18px}
+\begin{picture}(0,0)(0,0)
+\put(41.5,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/ibnmlogogruen.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(-2,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/irtg_1627_logo_neu2014_links.eps}}
+\end{picture}
+\begin{picture}(0,0)(0,0)
+\put(14.5,0){\includegraphics[height=18px]{/home/alameddin/src/tex/templates/logos/lmt.jpg}}
+\end{picture}}
+\addtocounter{framenumber}{-1} % set title page to count 0
+}
+
+\setbeamertemplate{frametitle}{
+\hspace*{-0.5cm} {\insertframetitle} \\[-0.3cm]
+\hskip0.0cm  {\small \insertframesubtitle}\\[-0.4cm]}
+
+\newcommand{\ltab}{\raggedright\arraybackslash} % Tabellenabschnitt linksbündig
+\newcommand{\ctab}{\centering\arraybackslash} % Tabellenabschnitt zentriert
+\newcommand{\rtab}{\raggedleft\arraybackslash} % Tabellenabschnitt rechtsbündig
+
+\makeatletter

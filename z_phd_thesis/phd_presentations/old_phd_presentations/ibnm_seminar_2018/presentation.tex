@@ -1,0 +1,105 @@
+\documentclass{beamer}
+
+\input{/home/alameddin/src/tex/templates/presentation/packages}
+\input{/home/alameddin/src/tex/templates/presentation/layout}
+\input{./symbols}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title[Model order reduction for fatigue analysis]{Model order reduction for fatigue analysis}
+\subtitle[ ]{ }
+\author[S. Alameddin]{{S. Alameddin}\textsuperscript{\dag} ,  A. Fau\textsuperscript{\dag},\\
+	U. Nackenhorst\textsuperscript{\dag}, D. N{\'e}ron\textsuperscript{\ddag}, P. Ladev{\`e}ze\textsuperscript{\ddag}}
+%\institute[IBNM - LUH]{Institut für Baumechanik und Numerische Mechanik\\ Leibniz Universität Hannover} %German version
+\institute[IBNM - LUH]{\dag \ IBNM, Leibniz Universit\"{a}t Hannover \\
+\ddag \ LMT, ENS Cachan, CNRS, Universit{\'e} Paris Saclay}
+\date[08.08.2018]{08. August 2018}
+\titlegraphic{
+%	\includegraphics[scale=0.32]{fig/pgd/eps_p_dot.eps}
+	\includegraphics[height=90px]{/home/alameddin/src/tex/templates/tex_figures/latin_iter.pdf}
+	%		\includegraphics[width=0.6\textwidth,clip]{./fig/latin_iter.pdf}\\	
+	}
+
+% Short names in [] for footline
+% Names in {} for title page
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[style=authortitle,backend=bibtex]{biblatex}
+
+%\usepackage{biblatex}
+%\addbibresource{library}
+%\bibliographystyle{unsrt} %{ieeetr} % plain / alpha / unsrt
+%\bibliography{library} 
+% Begin of presentation
+
+\begin{document}
+
+\newcommand{\twocol}[3]{
+%	\hspace*{-.6cm}
+	\fboxsep=0pt
+
+	\begin{tikzpicture}[x=1mm,y=1mm,remember picture,overlay]
+	\node at (28,4) {{%
+					\begin{minipage}{0.54\textwidth}
+					#1
+					\end{minipage}}};
+	\node at (86,4) {{%
+			\begin{minipage}{0.54\textwidth}
+			#2
+			\end{minipage}}};	
+	\node at (57,-35) {{%
+			\begin{minipage}{1.05\textwidth}
+			#3
+			\end{minipage}}};	
+	\end{tikzpicture}
+	
+%	\begin{pspicture}(0,0)(2,2)
+%	\psline[linecolor=red](0,0)(1,1)
+%	\end{pspicture}
+%\psframe(50,0){
+%\fboxsep=0pt
+%%\begin{picture}(300,150)(0,0)
+%\rput[lt](-10,80){\fbox{%
+%		\begin{minipage}{0.54\textwidth}
+%		#1
+%		\end{minipage}}}
+%\rput[lt](158,65){\fbox{%
+%		\begin{minipage}{0.54\textwidth}
+%		#2
+%		\end{minipage}
+%	}}
+%	\rput[lt](-5,-0){\fbox{%
+%			\begin{minipage}{1.1\textwidth}
+%			#3
+%			\end{minipage}
+%		}}
+%	}
+
+%\end{picture}	
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Title page
+{
+	\specialTitleDesign
+	\hspace*{0.2cm}
+	\begin{frame}
+		\titlepage
+		% funding acknowledgements
+		%\dfgFunding
+		\contiFunding
+	\end{frame}	
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% table of contents
+%\frame{\frametitle{Outline}
+%\tableofcontents
+%%[pausesections]
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Content
+\include{content}
+
+
+\end{document}

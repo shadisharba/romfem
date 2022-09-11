@@ -1,0 +1,157 @@
+
+\frame{\frametitle<1-3>{The LATIN framework}
+	\frametitle<4->{The LATIN iterative scheme}
+%	\framesubtitle<1,4>{ \quad \color{white} 00000}
+%	\only<2>{\framesubtitle{iteration $i+1/2$}}
+%	\only<3>{\framesubtitle{iteration $i+1$}}
+%	%	\begin{center}
+%	%\vspace*{1cm}
+%	\hspace*{-0.5cm}
+%	\uncover<1->{\begin{minipage}[t]{0.6\linewidth}		
+
+
+\twocol{
+
+	\begin{flushleft}
+	\only<1>{\vspace*{1cm}
+		\begin{itemize}
+			\item {Assumptions}\\[0.2cm]
+			\begin{itemize}
+				\item Free energy function $\psi$\\
+				\Sbf{State equations}
+				\item Dissipation potential $\phi$
+				\Sbf{Evolution equations}\\
+				\item Here: no dynamic effects \\[0.4cm]
+			\end{itemize}
+		\end{itemize}
+		
+		\begin{itemize}
+			\item Linear initialisation\\[0.2cm]
+			\qquad $		\epst = \epse$
+		\end{itemize}	
+	}
+	\only<2>{
+		\begin{itemize}
+			\item {\color{red} Non-linear step}\\[0.3cm]
+			\item The evolution equations\\[0.3cm]
+			\hfil e.g. ${\dot {X}} =- \pd{\phi}{{Y}} $\\[0.3cm]
+			\item {\color{red} Local in space} (cheap)\\[0.3cm]
+%			\item Suitable for parallelisation
+		\end{itemize}	
+	}
+	
+	\only<3>{
+		\begin{itemize}
+			\item  {\color{blue} Linear step}\\[0.3cm]
+			\item {The equilibrium equation }\\[0.3cm]
+			\hfil ${\rm div}(\boldsymbol{\sigma}) = \boldsymbol{0}$ \\[0.3cm]
+			\item  {\color{blue} Global in space}\\[0.3cm]
+			\item Convenient to apply PGD			
+
+			%			$\int_{t} \int_{\Omega} \sigma : \varepsilon \ {\rm d}\Omega \ {\rm d}t = ....$
+			%			\item Integrate iteratively over time and space domains\\
+			%			$  \Delta \epsp(x,t) \approx \sum_{i=1}^{n} \bar{\varepsilon}^{\rm p}(x) \ \lambda(t) $
+			%			\item Update time functions
+			%			\item If needed add only one pair per iteration
+		\end{itemize}	
+	}
+
+\uncover<4->{
+%		\vspace*{1cm}
+	\only<4>{
+		\includegraphics[width=0.9\linewidth]{./img/lating-0.png}
+		%\animategraphics[loop,controls,width=\linewidth]{12}{./img/lating-}{0}{14}
+	}
+	\only<5>{\includegraphics[width=0.9\linewidth]{./img/lating-2.png}}
+	\only<6>{\includegraphics[width=0.9\linewidth]{./img/lating-4.png}}
+	\only<7>{\includegraphics[width=0.9\linewidth]{./img/lating-6.png}}
+	\only<8>{\includegraphics[width=0.9\linewidth]{./img/lating-8.png}}
+	\only<9-10>{\includegraphics[width=0.9\linewidth]{./img/lating-10.png}}
+}
+	
+\end{flushleft}
+}{
+
+	\newcommand{\cA}{{\cal A}}
+\begin{flushleft}
+	\begin{tikzpicture}[x=1cm,y=1cm,overlay]
+	\node at(2,-1) {\begin{tikzpicture}[xscale=0.9,yscale=0.9]
+		%\draw [help lines] (0,0) grid (7,7);
+		\uncover<1->{\draw [name path=evolution, rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={|\small  | Evolution equations}}}] (1,0) arc [radius=10,start angle=160, end angle=120] node[above] {$\Gamma$};}
+		
+		\uncover<2->{\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] (1,0) arc [radius=10,start angle=160, end angle=120]
+			node[pos=0.75,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s1)  {} ;}
+		%		node[above ] at (s1) {$\hat{s}_{1/2}$}
+		
+		\uncover<5->{
+			\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] node[pos=0.58,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s3)  {};}
+		
+		\uncover<6->{
+			\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] (1,0) arc [radius=10,start angle=160, end angle=120]
+			node[pos=0.44,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s5)  {};}
+		
+		\uncover<7->{
+			\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] (1,0) arc [radius=10,start angle=160, end angle=120]
+			node[pos=0.34,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s7)  {};}
+		
+		\uncover<8->{
+			\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] (1,0) arc [radius=10,start angle=160, end angle=120]
+			node[pos=0.27,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s9)  {};}
+		\uncover<9->{
+			\path [rotate=-15,ultra thick,postaction={decorate,decoration={text along path,raise=1ex,text align=center,text={}}}] (1,0) arc [radius=10,start angle=160, end angle=120] (1,0) arc [radius=10,start angle=160, end angle=120]
+			node[pos=0.225,circle,radius=1pt,fill=blue,inner sep=1.5pt] (s11)  {};	}
+		\uncover<1->{\begingroup
+			\footnotesize 
+			\draw [name path=KA_SA, ultra thick] (0.5,0.5) -- (7,1.2) node[pos=0.55,sloped,below,align=left]{\baselineskip=8pt Kinematic admissibility \\ Static admissibility \\ State equations} node[above] {$\cA$};
+			\endgroup}
+		\uncover<1->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.9,circle,radius=1pt,fill=red,inner sep=1.5pt] (s0) {}	;}
+		% node[label={[label distance=-0.25cm]30:$s_0$}] at (s0) {}
+		\uncover<3->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.685,circle,radius=1pt,fill=red,inner sep=1.5pt] (s2) {};	  ;}
+		%node[label={[label distance=-0.25cm]30:$s_1$}] at (s2) {}
+		\uncover<5->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.52,circle,radius=1pt,fill=red,inner sep=1.5pt] (s4) {};}
+		\uncover<6->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.4,circle,radius=1pt,fill=red,inner sep=1.5pt] (s6) {};}
+		\uncover<7->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.32,circle,radius=1pt,fill=red,inner sep=1.5pt] (s8) {};}
+		\uncover<8->{
+			\path (0.5,0.5) -- (7,1.2) 
+			node[pos=0.26,circle,radius=1pt,fill=red,inner sep=1.5pt] (s10) {};
+		}
+		\uncover<9->{
+			\draw [name intersections={of=evolution and KA_SA, by=s12}] node[circle,radius=1pt,fill=black,inner sep=1.8pt] at (s12) {}
+			node[above left] at (s12) {};}
+		\uncover<2->{\draw [>=latex,->,thick,red] (s0) -- (s1) node[pos=0.5,sloped,above,red]{} node [pos=0.4,sloped,below] {};}
+		\uncover<3->{\draw [>=latex,->,thick,blue] (s1) -- (s2) node[pos=0.5,sloped,above,blue]{} node [pos=0.6,sloped,below] {};}
+		\uncover<5->{\draw [>=latex,->,thick,red] (s2) -- (s3);}
+		\uncover<5->{\draw [>=latex,->,thick,blue] (s3) -- (s4);}
+		\uncover<6->{\draw [>=latex,->,thick,red] (s4) -- (s5);}
+		\uncover<6->{\draw [>=latex,->,thick,blue] (s5) -- (s6);}
+		\uncover<7->{\draw [>=latex,->,thick,red] (s6) -- (s7);}
+		\uncover<7->{\draw [>=latex,->,thick,blue] (s7) -- (s8);}
+		\uncover<8->{\draw [>=latex,->,thick,red] (s8) -- (s9);}
+		\uncover<8->{\draw [>=latex,->,thick,blue] (s9) -- (s10);}
+		\uncover<9->{\draw [>=latex,thick,red] (s10) -- (s11);}
+		\uncover<9->{\draw [>=latex,->,thick,blue] (s11) -- (s12);}
+		
+		%				\uncover<2>{\node at (3,-2) {\color{gray} Non-linear {\color{red} local step}};}
+		%				\uncover<3>{\node at (3,-2) {\color{gray} Linear {\color{blue} global step}};}
+		%	\fill [name intersections={of=line 1 and line 3}] (intersection-1) circle (1pt) node[above ]{$\hat{s}_{1/2}$};
+		
+		\end{tikzpicture}};
+\end{tikzpicture}
+\end{flushleft}
+
+}{\uncover<10>{\begin{block}{\scriptsize Established for viscoplasticity, contact and large deformations problems {\tiny [Surveys: Ladev{\`e}ze 1999, Chinesta 2014]}}
+	\end{block}}}
+}
+
+
+
